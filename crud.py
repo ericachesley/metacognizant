@@ -53,12 +53,12 @@ def create_response(user, pras, content, sub_date):
     return response
 
 
-user = create_user('first', 'last', 'email', 'secret')
-section = create_section('algebra', 'Oct 25, 1998', 'April 1, 1999')
-seas = create_section_assignment(user, section, 'student')
-prompt=create_prompt('What up?')
-pras = create_prompt_assignment(section, prompt, 'May 1, 2020')
-res = create_response(user, pras, 'Not much, you?', 'May 1, 2020')
+# user = create_user('first', 'last', 'email', 'secret')
+# section = create_section('algebra', 'Oct 25, 1998', 'April 1, 1999')
+# seas = create_section_assignment(user, section, 'student')
+# prompt=create_prompt('What up?')
+# pras = create_prompt_assignment(section, prompt, 'May 1, 2020')
+# res = create_response(user, pras, 'Not much, you?', 'May 1, 2020')
 
 
 if __name__ == '__main__':
