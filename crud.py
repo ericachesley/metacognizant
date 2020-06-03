@@ -3,6 +3,7 @@ from model import (db, connect_to_db, User, Section, SectionAssignment,
 import server
 
 
+#'create' functions
 def create_user(first, last, email, password):
     user = User(first_name=first, 
                 last_name=last, 
@@ -53,12 +54,10 @@ def create_response(user, pras, content, sub_date):
     return response
 
 
-# user = create_user('first', 'last', 'email', 'secret')
-# section = create_section('algebra', 'Oct 25, 1998', 'April 1, 1999')
-# seas = create_section_assignment(user, section, 'student')
-# prompt=create_prompt('What up?')
-# pras = create_prompt_assignment(section, prompt, 'May 1, 2020')
-# res = create_response(user, pras, 'Not much, you?', 'May 1, 2020')
+#'get' functions
+def get_user_by_email(email):
+    return User.query.filter(User.email==email).first()
+
 
 
 if __name__ == '__main__':
