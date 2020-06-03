@@ -17,6 +17,9 @@ class User(db.Model):
     #section_assignments
     #responses
 
+    def __repr__(self):
+        return f'<User id={self.user_id} name={self.first_name} {self.last_name}>'
+
 
 class Section(db.Model):
 
@@ -28,7 +31,10 @@ class Section(db.Model):
     end_date = db.Column(db.DateTime)
 
     #section_assignments
-    #question_assignments
+    #prompt_assignments
+
+    def __repr__(self):
+        return f'<Section id={self.section_id} name={self.name}>'
 
 
 class SectionAssignment(db.Model):
@@ -43,32 +49,41 @@ class SectionAssignment(db.Model):
     user = db.relationship('User', backref='section_assignments')
     section = db.relationship('Section', backref='section_assignments')
 
+    def __repr__(self):
+        return f'<SectionAssignment id={self.seas_id} user={self.user_id} section={self.section_id}>'
 
-class Question(db.Model):
 
-    __tablename__ = 'questions'
+class Prompt(db.Model):
 
-    question_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    question_type = db.Column(db.String)
+    __tablename__ = 'prompts'
+
+    prompt_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    prompt_type = db.Column(db.String)
     response_type = db.Column(db.String)
     content = db.Column(db.Text, nullable=False)
 
-    #question_assignments
+    #prompt_assignments
+
+    def __repr__(self):
+        return f'<Prompt id={self.prompt_id} content={self.content}>'
 
 
-class QuestionAssignment(db.Model):
+class PromptAssignment(db.Model):
 
-    __tablename__ = 'question_assignments'
+    __tablename__ = 'prompt_assignments'
 
-    quas_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    pras_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.section_id'))
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.question_id'))
+    prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'))
     due_date = db.Column(db.DateTime, nullable=False)
 
-    section = db.relationship('Section', backref='question_assignment')
-    question = db.relationship('Question', backref='question_assignment')
+    section = db.relationship('Section', backref='prompt_assignments')
+    prompt = db.relationship('Prompt', backref='prompt_assignments')
 
     #responses
+
+    def __repr__(self):
+        return f'<PromptAssignment id={self.pras_id} section={self.section_id} prompt={self.prompt_id}>'
 
 
 class Response(db.Model):
@@ -77,20 +92,22 @@ class Response(db.Model):
 
     response_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    quas_id = db.Column(db.Integer, 
-                             db.ForeignKey('question_assignments.quas_id'))
+    pras_id = db.Column(db.Integer, 
+                        db.ForeignKey('prompt_assignments.pras_id'))
     content = db.Column(db.Text, nullable=False)
     submission_date = db.Column(db.DateTime)
 
     user = db.relationship('User', backref='responses')
-    question_assignment = db.relationship('QuestionAssignment', 
-                                           backref='responses')
+    prompt_assignment = db.relationship('PromptAssignment', backref='responses')
 
 
+    def __repr__(self):
+        return f'<Response id={self.response_id} user={self.user_id} prompt_assignment={self.pras_id}>'
 
-def connect_to_db(flask_app, db_uri='postgresql:///ratings', echo=True):
+
+def connect_to_db(flask_app, db_uri='postgresql:///metacognizant', echo=True):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-    flask_app.config['SQLALCHEMY_ECHO'] = echo
+    #flask_app.config['SQLALCHEMY_ECHO'] = echo
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.app = flask_app
