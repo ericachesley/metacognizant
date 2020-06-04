@@ -35,9 +35,8 @@ class Login extends React.Component {
       password: this.state.password
     }
     $.post('/api/login', formData, (res) => {
-      alert(res);
-      if (res == 'Login successful.') {
-        this.props.setLoggedIn();
+      if (typeof res === 'number') {
+        this.props.setLoggedIn(res);
       }
     })
     this.setState({email: '', password: ''});
@@ -73,9 +72,17 @@ class Login extends React.Component {
 }
 
 class Overview extends React.Component {
+
     render() {
+        $.get('api/get_sections', {userId:this.props.userId}, (res) => {
+            console.log(res);
+        })
+
         return (
-            <p>You made it!</p>
+            <div>
+                <h3>Your classes {this.props.userId}</h3>
+            </div>
+
         )
     }
 }
@@ -85,14 +92,14 @@ class App extends React.Component {
         super(props);
         this.state = {
           loggedIn: false,
-          // redirect: null
+          user_id: null
         };
     this.setLoggedIn = this.setLoggedIn.bind(this);
     }
 
-  setLoggedIn() {
+  setLoggedIn(userId) {
     this.setState({loggedIn: true});
-    // this.setState({redirect: '/classes'});
+    this.setState({userId: userId});
   }
 
   render() {
@@ -102,7 +109,7 @@ class App extends React.Component {
         <Switch>
           <Route path={'/classes'}>
             {this.state.loggedIn ?
-            <Overview /> :
+            <Overview userId={this.state.userId} /> :
             <Redirect to='/' />
             }
             

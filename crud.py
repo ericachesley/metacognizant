@@ -59,6 +59,16 @@ def get_user_by_email(email):
     return User.query.filter(User.email==email).first()
 
 
+def get_sections_by_user_id(user_id):
+    assignments = (SectionAssignment.query
+                                    .options(db.joinedload('section'))
+                                    .filter(SectionAssignment.user_id==user_id)
+                                    .all())
+    sections = [(assignment.section, assignment.role) 
+                for assignment in assignments]
+    return sections
+
+
 
 if __name__ == '__main__':
     from server import app
