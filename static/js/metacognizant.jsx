@@ -90,7 +90,7 @@ class Overview extends React.Component {
         const buttons = [];
         for (const section of this.state.sections) {
             buttons.push(
-                <SectionButton section={section} />
+                <SectionButton section={section} key={section['section_id']}/>
             )
         }
         
@@ -111,7 +111,7 @@ class SectionButton extends React.Component {
             <div>
                 <button type='button' 
                         id={this.props.section['section_id']} 
-                        class={this.props.section['role']}>
+                        className={this.props.section['role']}>
                 {this.props.section['name']}
                 </button>
             </div>
