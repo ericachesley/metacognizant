@@ -19,8 +19,6 @@ def check_credentials():
     password = request.form.get('password')
     user = crud.get_user_by_email(email)
 
-    status = False
-
     if not user:
         status = 'That email address is not associated with a user in our system.'
     elif user.password == password:

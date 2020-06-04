@@ -1,5 +1,13 @@
 "use strict";
 
+const Router = window.ReactRouterDOM.BrowserRouter;
+const Route =  window.ReactRouterDOM.Route;
+const Link =  window.ReactRouterDOM.Link;
+const Prompt =  window.ReactRouterDOM.Prompt;
+const Switch = window.ReactRouterDOM.Switch;
+const Redirect = window.ReactRouterDOM.Redirect;
+
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -28,6 +36,9 @@ class Login extends React.Component {
     }
     $.post('/api/login', formData, (res) => {
       alert(res);
+      if (res == 'Login successful.') {
+        this.props.setLoggedIn();
+      }
     })
     this.setState({email: '', password: ''});
   }
@@ -61,10 +72,45 @@ class Login extends React.Component {
   }
 }
 
+class Overview extends React.Component {
+    render() {
+        return (
+            <p>You made it!</p>
+        )
+    }
+}
+
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          loggedIn: false,
+          redirect: null
+        };
+    this.setLoggedIn = this.setLoggedIn.bind(this);
+    }
+
+  setLoggedIn() {
+    this.setState({loggedIn: true});
+    this.setState({redirect: '/classes'});
+  }
+
   render() {
+
     return (
-      <Login />
+      <Router>
+        <Switch>
+          <Route path={'/classes'}>
+            <Overview />
+          </Route>
+          <Route path='/'>
+            {this.state.loggedIn ? 
+              <Redirect to={this.state.redirect} /> :
+              <Login setLoggedIn={this.setLoggedIn} />
+            }
+          </Route>
+        </Switch>
+      </Router>
     )
   }
 }
@@ -73,3 +119,5 @@ ReactDOM.render(
   <App />,
   document.querySelector('#app')
 );
+
+
