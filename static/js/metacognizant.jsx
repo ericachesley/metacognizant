@@ -85,14 +85,14 @@ class App extends React.Component {
         super(props);
         this.state = {
           loggedIn: false,
-          redirect: null
+          // redirect: null
         };
     this.setLoggedIn = this.setLoggedIn.bind(this);
     }
 
   setLoggedIn() {
     this.setState({loggedIn: true});
-    this.setState({redirect: '/classes'});
+    // this.setState({redirect: '/classes'});
   }
 
   render() {
@@ -101,11 +101,15 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route path={'/classes'}>
-            <Overview />
+            {this.state.loggedIn ?
+            <Overview /> :
+            <Redirect to='/' />
+            }
+            
           </Route>
           <Route path='/'>
             {this.state.loggedIn ? 
-              <Redirect to={this.state.redirect} /> :
+              <Redirect to='/classes' /> :
               <Login setLoggedIn={this.setLoggedIn} />
             }
           </Route>
