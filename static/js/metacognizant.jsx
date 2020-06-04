@@ -72,34 +72,66 @@ class Login extends React.Component {
 }
 
 class Overview extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          sections: []
+        };
+    }
+
+    componentDidMount() {
+        $.get('api/get_sections', {userId: this.props.userId}, (res) => {
+            this.setState({sections: res})
+        })
+    }
 
     render() {
-        $.get('api/get_sections', {userId:this.props.userId}, (res) => {
-            console.log(res);
-        })
-
+        
+        const buttons = [];
+        for (const section of this.state.sections) {
+            buttons.push(
+                <SectionButton section={section} />
+            )
+        }
+        
         return (
             <div>
                 <h3>Your classes {this.props.userId}</h3>
+                <div id='container'>{buttons}</div>
             </div>
 
         )
     }
 }
 
+
+class SectionButton extends React.Component {
+    render() {
+        return(
+            <div>
+                <button type='button' 
+                        id={this.props.section['section_id']} 
+                        class={this.props.section['role']}>
+                {this.props.section['name']}
+                </button>
+            </div>
+        )
+    }
+}
+
+
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           loggedIn: false,
-          user_id: null
+          userId: null
         };
     this.setLoggedIn = this.setLoggedIn.bind(this);
     }
 
   setLoggedIn(userId) {
-    this.setState({loggedIn: true});
-    this.setState({userId: userId});
+    this.setState({userId: userId, loggedIn:true});
   }
 
   render() {
@@ -112,7 +144,6 @@ class App extends React.Component {
             <Overview userId={this.state.userId} /> :
             <Redirect to='/' />
             }
-            
           </Route>
           <Route path='/'>
             {this.state.loggedIn ? 
