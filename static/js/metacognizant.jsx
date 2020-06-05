@@ -6,6 +6,7 @@ const Link =  window.ReactRouterDOM.Link;
 const Prompt =  window.ReactRouterDOM.Prompt;
 const Switch = window.ReactRouterDOM.Switch;
 const Redirect = window.ReactRouterDOM.Redirect;
+const useLocation = window.ReactRouterDOM.useLocation;
 
 
 class Login extends React.Component {
@@ -164,7 +165,9 @@ class Section extends React.Component {
         
         return (
             <div id='section'>
+                <h2>{this.props.sectionName}</h2>
                 <h3>Class assignments {this.props.sectionId}</h3>
+                <Link to='/test' >Hello</Link>
                 <div id='container'>{buttons}</div>
             </div>
         )
@@ -187,6 +190,17 @@ class AssignmentButton extends React.Component {
 }
 
 
+class Tester extends React.Component {
+    render() {
+        return(
+            <div id='tester'>
+                <p>Hello, world!</p>
+            </div>
+        )
+    }
+}
+
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -198,6 +212,7 @@ class App extends React.Component {
           sectionId: 5
         };
 
+        //REAL VERSION - DON'T DELETE!
         // this.state = {
         //   loggedIn: false,
         //   userId: null,
@@ -221,18 +236,22 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
+        <Route path='/test'>
+            <Tester />
+        </Route>
           <Route path='/classes/{this.state.sectionId}'>
             {(this.state.loggedIn && this.state.sectionId) ?
-            <Section sectionId={this.state.sectionId} /> :
+            <Section sectionId={this.state.sectionId} 
+                     sectionName={this.state.sectionName}/> :
             <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
-          {console.log(this.state.sectionId)}
             {(this.state.loggedIn && this.state.sectionId) ?
             <Redirect to='/classes/{this.state.sectionId}' /> :
             this.state.loggedIn ?
-            <Overview userId={this.state.userId} setSection={this.setSection} /> :
+            <Overview userId={this.state.userId} 
+                      setSection={this.setSection} /> :
             <Redirect to='/' />
             }
           </Route>
