@@ -242,10 +242,11 @@ class Assignment extends React.Component {
     const responses = [];
     for (const count in this.state.responses) {
       responses.push(
-        <p key={count}>
-          {this.state.responses[count].student}
-          {this.state.responses[count].content}
-          {this.state.responses[count].date}</p>
+        <tr key={count}>
+          <td>{this.state.responses[count].student}</td>
+          <td>{this.state.responses[count].content}</td>
+          <td>{this.state.responses[count].date}</td>
+        </tr>
       )
     }
     return (
@@ -253,7 +254,7 @@ class Assignment extends React.Component {
         <h2>{<Locator />}</h2>
         <h3>Prompt: {this.state.prompt}</h3>
         <h3>Responses {this.props.assignmentId}</h3>
-        <div id='container'>{responses}</div>
+        <table id='response-table'><tbody>{responses}</tbody></table>
       </div>
     )
   }
