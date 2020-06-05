@@ -75,5 +75,5 @@ def return_responses():
 
 if __name__ == '__main__':
     connect_to_db(app)
-    tests.get_test_user()
+    tests.find_test_teacher()
     app.run(host='0.0.0.0', debug=True)

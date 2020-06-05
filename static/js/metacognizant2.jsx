@@ -253,8 +253,16 @@ class Assignment extends React.Component {
       <div id='assignment'>
         <h2>{<Locator />}</h2>
         <h3>Prompt: {this.state.prompt}</h3>
-        <h3>Responses {this.props.assignmentId}</h3>
-        <table id='response-table'><tbody>{responses}</tbody></table>
+        <table id='response-table'>
+          <thead>
+            <tr>
+              <td><b>Student</b></td>
+              <td><b>Response</b></td>
+              <td><b>Submitted</b></td>
+            </tr>
+          </thead>
+          <tbody>{responses}</tbody>
+        </table>
       </div>
     )
   }
@@ -275,7 +283,8 @@ class Tester extends React.Component {
 function Locator() {
   let location = useLocation();
   console.log(location)
-  return (<p>{location.pathname}</p>)
+  const path_bits = location.pathname.split('/')
+  return (<p>{path_bits[path_bits.length-1]}</p>)
 }
 
 
@@ -284,19 +293,19 @@ class App extends React.Component {
     super(props);
 
     //FOR TESTING PURPOSES ONLY!
-    this.state = {
-      loggedIn: true,
-      userId: 3,
-      sectionId: 5,
-      assignmentId: 8
-    };
+    // this.state = {
+    //   loggedIn: true,
+    //   userId: 3,
+    //   sectionId: 5,
+    //   assignmentId: 8
+    // };
 
     //REAL VERSION - DON'T DELETE!
-    // this.state = {
-    //   loggedIn: false,
-    //   userId: null,
-    //   sectionId: null
-    // };
+    this.state = {
+      loggedIn: false,
+      userId: null,
+      sectionId: null
+    };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.setSection = this.setSection.bind(this);

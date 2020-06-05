@@ -8,13 +8,17 @@ def get_test_user():
 
 def find_test_teacher():
     SectionAssignment = model.SectionAssignment
-    teacher = (model.db.session.query(SectionAssignment.user_id)
+    teacher_id = (model.db.session.query(SectionAssignment.user_id)
                                 .filter(SectionAssignment.role=='teacher')
                                 .group_by(SectionAssignment.user_id)
                                 .having(model.db.func.count()>1)
-                                .first())
-    return teacher[0]
+                                .first())[0]
+    teacher = model.User.query.get(teacher_id)
+    print_user_info(teacher)
+    
 
+def print_user_info(user):
+    print(user.user_id, user.first_name, user.last_name, user.email, user.password)
 
 
 if __name__ == '__main__':
