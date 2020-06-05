@@ -7,14 +7,15 @@ app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
 
 
-@app.route('/')
-def show_app():
+@app.route('/', defaults={'path':''})
+@app.route('/<path:path>')
+def show_app(path):
     return render_template('index.html')
 
 
-@app.route('/classes')
-def show_classes():
-    return render_template('index.html')
+# @app.route('/classes')
+# def show_classes():
+#     return render_template('index.html')
 
 
 @app.route('/api/login', methods=['POST'])
@@ -50,14 +51,11 @@ def return_sections():
 @app.route('/api/get_pras')
 def return_assignments():
     section_id = request.args.get('sectionId')
-    print(section_id)
-    # section = crud.get_section_by_id(section_id)
     assignments = crud.get_assignments_by_section_id(section_id)
     assignments_info = []
     for assignment in assignments:
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date})
-    print(assignments_info)
     return jsonify(assignments_info)
 
 

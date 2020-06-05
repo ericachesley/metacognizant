@@ -195,12 +195,13 @@ class App extends React.Component {
         this.state = {
           loggedIn: true,
           userId: 23,
-          sectionId: null
+          sectionId: 5
         };
 
         // this.state = {
         //   loggedIn: false,
-        //   userId: null
+        //   userId: null,
+        //   sectionId: null
         // };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
@@ -220,7 +221,7 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route path='/classes/class'>
+          <Route path='/classes/{this.state.sectionId}'>
             {(this.state.loggedIn && this.state.sectionId) ?
             <Section sectionId={this.state.sectionId} /> :
             <Redirect to='/' />
@@ -229,7 +230,7 @@ class App extends React.Component {
           <Route path='/classes'>
           {console.log(this.state.sectionId)}
             {(this.state.loggedIn && this.state.sectionId) ?
-            <Redirect to='/classes/class' /> :
+            <Redirect to='/classes/{this.state.sectionId}' /> :
             this.state.loggedIn ?
             <Overview userId={this.state.userId} setSection={this.setSection} /> :
             <Redirect to='/' />
