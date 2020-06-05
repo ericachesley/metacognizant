@@ -65,7 +65,10 @@ def return_responses():
     content, responses = crud.get_responses_by_assignment_id(assignment_id)
     res_info = []
     for res in responses:
-        res_info.append({'content': res.content, 'date': res.submission_date})
+        name = f'{res.user.first_name} {res.user.last_name}'
+        res_info.append({'student': name,
+                         'content': res.content, 
+                         'date': res.submission_date})
     return jsonify([content, res_info])
 
 

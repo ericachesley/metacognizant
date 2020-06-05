@@ -242,7 +242,10 @@ class Assignment extends React.Component {
     const responses = [];
     for (const count in this.state.responses) {
       responses.push(
-        <p key={count}>{this.state.responses[count].content}{this.state.responses[count].date}</p>
+        <p key={count}>
+          {this.state.responses[count].student}
+          {this.state.responses[count].content}
+          {this.state.responses[count].date}</p>
       )
     }
     return (
@@ -283,8 +286,8 @@ class App extends React.Component {
     this.state = {
       loggedIn: true,
       userId: 3,
-      sectionId: null,
-      assignmentId: null
+      sectionId: 5,
+      assignmentId: 8
     };
 
     //REAL VERSION - DON'T DELETE!
