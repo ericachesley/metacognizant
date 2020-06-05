@@ -76,7 +76,15 @@ def get_assignments_by_section_id(section_id):
                                    .all())
     return assignments
 
-    
+
+def get_responses_by_assignment_id(assignment_id):
+    pras = PromptAssignment.query.get(assignment_id)
+    prompt_content = pras.prompt.content
+    responses = (Response.query
+                         .options(db.joinedload('prompt_assignment'))
+                         .filter(Response.pras_id==assignment_id)
+                         .count())
+    return [prompt_content, responses]
 
 
 if __name__ == '__main__':

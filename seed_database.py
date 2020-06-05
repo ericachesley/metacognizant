@@ -62,23 +62,32 @@ for _ in range(10):
     #seed prompt_assignments
     prompt_sections = sample(sections, 2)
     for section in prompt_sections:
-        pras = crud.create_prompt_assignment(section, 
-                                             prompt, 
-                                             'May 1, 2020')
+        pras = crud.create_prompt_assignment(section, prompt, 'May 1, 2020')
         prompt_assignments.append(pras)
 
         #seed responses
-        for seas in section.section_assignments:
-            if seas.role == 'student':
-                res = crud.create_response(seas.user, 
-                                           pras, 
-                                           fake.paragraph(), 
-                                           choice(weighted_sub_dates))
-                responses.append(res)
 
+        # for seas in section.section_assignments:
+        #     if seas.role == 'student' and seas.section_id == section.section_id:
+        #         res = crud.create_response(seas.user, 
+        #                                    pras, 
+        #                                    fake.paragraph(), 
+        #                                    choice(weighted_sub_dates))
+        #         responses.append(res)
 
-
-
+        #get students in assigned section
+        condition1 = (model.SectionAssignment.section_id==section.section_id)
+        condition2 = (model.SectionAssignment.role=='student')
+        section_student_assignments = (model.SectionAssignment
+                                            .query
+                                            .filter(condition1, condition2)
+                                            .all())
+        
+        for student_assignment in section_student_assignments:
+            res = crud.create_response(student_assignment.user, 
+                                       pras, 
+                                       fake.paragraph(), 
+                                       choice(weighted_sub_dates))
 
 
 

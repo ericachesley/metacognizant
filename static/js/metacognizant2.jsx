@@ -1,9 +1,9 @@
 "use strict";
 
 const Router = window.ReactRouterDOM.BrowserRouter;
-const Route =  window.ReactRouterDOM.Route;
-const Link =  window.ReactRouterDOM.Link;
-const Prompt =  window.ReactRouterDOM.Prompt;
+const Route = window.ReactRouterDOM.Route;
+const Link = window.ReactRouterDOM.Link;
+const Prompt = window.ReactRouterDOM.Prompt;
 const Switch = window.ReactRouterDOM.Switch;
 const Redirect = window.ReactRouterDOM.Redirect;
 const useLocation = window.ReactRouterDOM.useLocation;
@@ -24,9 +24,9 @@ class Login extends React.Component {
   handleFieldChange(evt) {
     let field_name = evt.target.id;
     if (field_name == 'email') {
-      this.setState({email: evt.target.value});
+      this.setState({ email: evt.target.value });
     } else {
-      this.setState({password: evt.target.value});
+      this.setState({ password: evt.target.value });
     }
   }
 
@@ -41,7 +41,7 @@ class Login extends React.Component {
         this.props.setLoggedIn(res);
       }
     })
-    this.setState({email: '', password: ''});
+    this.setState({ email: '', password: '' });
   }
 
   render() {
@@ -49,155 +49,155 @@ class Login extends React.Component {
       <div id='login'>
         <form onSubmit={this.handleSubmit}>Please log in.
           <p>
-            Email: <input 
-                    id='email' 
-                    type='text' 
-                    value={this.state.email}
-                    onChange={this.handleFieldChange} 
-                   />
+            Email: <input
+              id='email'
+              type='text'
+              value={this.state.email}
+              onChange={this.handleFieldChange}
+            />
           </p>
           <p>
-            Password: <input 
-                       id='password' 
-                       type='text' 
-                       value={this.state.password}
-                       onChange={this.handleFieldChange} 
-                      />
+            Password: <input
+              id='password'
+              type='text'
+              value={this.state.password}
+              onChange={this.handleFieldChange}
+            />
           </p>
           <p>
             <input type='submit' />
           </p>
-          </form>
+        </form>
       </div>
     )
   }
 }
 
 class Overview extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          sections: []
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      sections: []
+    };
+  }
+
+  componentDidMount() {
+    $.get('api/get_sections', { userId: this.props.userId }, (res) => {
+      this.setState({ sections: res })
+    })
+  }
+
+  render() {
+
+    const buttons = [];
+    for (const section of this.state.sections) {
+      buttons.push(
+        <SectionButton section={section}
+          setSection={this.props.setSection}
+          key={section['section_id']} />
+      )
     }
 
-    componentDidMount() {
-        $.get('api/get_sections', {userId: this.props.userId}, (res) => {
-            this.setState({sections: res})
-        })
-    }
+    return (
+      <div id='overview'>
+        <h3>Your classes {this.props.userId}</h3>
+        <div id='container'>{buttons}</div>
+      </div>
 
-    render() {
-        
-        const buttons = [];
-        for (const section of this.state.sections) {
-            buttons.push(
-              <SectionButton section={section} 
-                             setSection={this.props.setSection}
-                             key={section['section_id']}/>
-            )
-        }
-        
-        return (
-            <div id='overview'>
-                <h3>Your classes {this.props.userId}</h3>
-                <div id='container'>{buttons}</div>
-            </div>
-
-        )
-    }
+    )
+  }
 }
 
 
 class SectionButton extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          clicked: false
-        };
-        this.handleClick=this.handleClick.bind(this);
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      clicked: false
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-    handleClick(evt) {
-        evt.preventDefault();
-        console.log(evt.target);
-        if (evt.target.className === 'teacher') {
-            this.props.setSection(evt.target.id);
-            this.setState({clicked: true})
-        } else {
-            alert('Student view coming soon!')
-        }
+  handleClick(evt) {
+    evt.preventDefault();
+    console.log(evt.target);
+    if (evt.target.className === 'teacher') {
+      this.props.setSection(evt.target.id);
+      this.setState({ clicked: true })
+    } else {
+      alert('Student view coming soon!')
     }
+  }
 
-    render() {
-      console.log(this.props.section['section_id'])
-      if (this.state.clicked) {
-        return (<Redirect to={`/classes/${this.props.section['name']}`} />)
-      } else {
-        return(
-            <div className='section_button_holder'>
-                <button type='section_button' 
-                        id={this.props.section['section_id']} 
-                        className={this.props.section['role']}
-                        onClick={this.handleClick}>
-                {this.props.section['name']}
-                </button>
-            </div>
-        )
-      }
+  render() {
+    console.log(this.props.section['section_id'])
+    if (this.state.clicked) {
+      return (<Redirect to={`/classes/${this.props.section['name']}`} />)
+    } else {
+      return (
+        <div className='section_button_holder'>
+          <button type='section_button'
+            id={this.props.section['section_id']}
+            className={this.props.section['role']}
+            onClick={this.handleClick}>
+            {this.props.section['name']}
+          </button>
+        </div>
+      )
     }
+  }
 }
 
 
 class Section extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          assignments: []
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      assignments: []
+    };
+  }
 
-    componentDidMount() {
-        $.get('/api/get_pras', {sectionId: this.props.sectionId}, (res) => {
-            this.setState({assignments: res})
-        })
-    }
+  componentDidMount() {
+    $.get('/api/get_pras', { sectionId: this.props.sectionId }, (res) => {
+      this.setState({ assignments: res })
+    })
+  }
 
-    
-    render() {   
-        const buttons = [];
-        for (const assignment of this.state.assignments) {
-            buttons.push(
-                <AssignmentButton assignment={assignment} 
-                                  setAssignment={this.props.setAssignment}
-                                  key={assignment['pras_id']}/>
-            )
-        }
-        return (
-            <div id='section'>
-                <h2>{<Locator/>}</h2>
-                <h3>Class assignments {this.props.sectionId}</h3>
-                <div id='container'>{buttons}</div>
-            </div>
-        )
+
+  render() {
+    const buttons = [];
+    for (const assignment of this.state.assignments) {
+      buttons.push(
+        <AssignmentButton assignment={assignment}
+          setAssignment={this.props.setAssignment}
+          key={assignment['pras_id']} />
+      )
     }
+    return (
+      <div id='section'>
+        <h2>{<Locator />}</h2>
+        <h3>Class assignments {this.props.sectionId}</h3>
+        <div id='container'>{buttons}</div>
+      </div>
+    )
+  }
 }
 
 
 class AssignmentButton extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-        clicked: false
-      };
-      this.handleClick=this.handleClick.bind(this);
+    super(props);
+    this.state = {
+      clicked: false
+    };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(evt) {
-      evt.preventDefault();
-      console.log(evt.target);
-      this.props.setAssignment(evt.target.id);
-      this.setState({clicked: true})
+    evt.preventDefault();
+    console.log(evt.target);
+    this.props.setAssignment(evt.target.id);
+    this.setState({ clicked: true })
   }
 
   render() {
@@ -205,15 +205,15 @@ class AssignmentButton extends React.Component {
     if (this.state.clicked) {
       return (<Redirect to={`${<Locator />}/${this.props.assignment['date']}`} />)
     } else {
-      return(
-          <div className='assignment_button_holder'>
-              <button type='assignment_button' 
-                      id={this.props.assignment['pras_id']} 
-                      className={this.props.assignment['date']}
-                      onClick={this.handleClick}>
-              {this.props.assignment['date']}
-              </button>
-          </div>
+      return (
+        <div className='assignment_button_holder'>
+          <button type='assignment_button'
+            id={this.props.assignment['pras_id']}
+            className={this.props.assignment['date']}
+            onClick={this.handleClick}>
+            {this.props.assignment['date']}
+          </button>
+        </div>
       )
     }
   }
@@ -222,45 +222,47 @@ class AssignmentButton extends React.Component {
 
 class Assignment extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-        responses: []
-      };
+    super(props);
+    this.state = {
+      responses: []
+    };
   }
 
   componentDidMount() {
-      $.get('/api/get_responses', {assignmentId: this.props.assignmentId}, (res) => {
-          this.setState({responses: res})
+    $.get('/api/get_responses', { assignmentId: this.props.assignmentId },
+      (res) => {
+        console.log(res);
+        this.setState({ responses: res[1] })
       })
   }
 
-  
-  render() {   
-      const responses = [];
-      for (const response of this.state.responses) {
-          responses.push(
-              <p key={response}>I am a response!</p>
-          )
-      }
-      return (
-          <div id='assignment'>
-              <h2>{<Locator/>}</h2>
-              <h3>Responses {this.props.assignmentId}</h3>
-              <div id='container'>{responses}</div>
-          </div>
+
+  render() {
+    const responses = [];
+    for (const response of this.state.responses) {
+      responses.push(
+        <p key={response}>I am a response!</p>
       )
+    }
+    return (
+      <div id='assignment'>
+        <h2>{<Locator />}</h2>
+        <h3>Responses {this.props.assignmentId}</h3>
+        <div id='container'>{responses}</div>
+      </div>
+    )
   }
 }
 
 
 class Tester extends React.Component {
-    render() {
-        return(
-            <div id='tester'>
-                <p>Hello, world!</p>
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div id='tester'>
+        <p>Hello, world!</p>
+      </div>
+    )
+  }
 }
 
 
@@ -272,39 +274,39 @@ function Locator() {
 
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        //FOR TESTING PURPOSES ONLY!
-        this.state = {
-          loggedIn: true,
-          userId: 23,
-          sectionId: null,
-          assignmentId: null
-        };
+    //FOR TESTING PURPOSES ONLY!
+    this.state = {
+      loggedIn: true,
+      userId: 23,
+      sectionId: null,
+      assignmentId: null
+    };
 
-        //REAL VERSION - DON'T DELETE!
-        // this.state = {
-        //   loggedIn: false,
-        //   userId: null,
-        //   sectionId: null
-        // };
+    //REAL VERSION - DON'T DELETE!
+    // this.state = {
+    //   loggedIn: false,
+    //   userId: null,
+    //   sectionId: null
+    // };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.setSection = this.setSection.bind(this);
     this.setAssignment = this.setAssignment.bind(this);
-    }
+  }
 
   setLoggedIn(userId) {
-    this.setState({userId: userId, loggedIn:true});
+    this.setState({ userId: userId, loggedIn: true });
   }
 
   setSection(sectionId) {
-    this.setState({sectionId: sectionId})
+    this.setState({ sectionId: sectionId })
   }
 
   setAssignment(assignmentId) {
-    this.setState({assignmentId: assignmentId})
+    this.setState({ assignmentId: assignmentId })
   }
 
   render() {
@@ -313,30 +315,30 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route path='/test'>
-              <Tester />
+            <Tester />
           </Route>
           <Route path='/classes/:id/:id'>
-              {this.state.loggedIn ?
+            {this.state.loggedIn ?
               <Assignment assignmentId={this.state.assignmentId} /> :
               <Redirect to='/' />
-              }
+            }
           </Route>
           <Route path='/classes/:id'>
             {this.state.loggedIn ?
-            <Section sectionId={this.state.sectionId}
-                     setAssignment={this.setAssignment} /> :
-            <Redirect to='/' />
+              <Section sectionId={this.state.sectionId}
+                setAssignment={this.setAssignment} /> :
+              <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
             {this.state.loggedIn ?
-            <Overview userId={this.state.userId} 
-                      setSection={this.setSection} /> :
-            <Redirect to='/' />
+              <Overview userId={this.state.userId}
+                setSection={this.setSection} /> :
+              <Redirect to='/' />
             }
           </Route>
           <Route path='/'>
-            {this.state.loggedIn ? 
+            {this.state.loggedIn ?
               <Redirect to='/classes' /> :
               <Login setLoggedIn={this.setLoggedIn} />
             }

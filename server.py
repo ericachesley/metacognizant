@@ -61,14 +61,12 @@ def return_assignments():
 
 @app.route('/api/get_responses')
 def return_responses():
-    # section_id = request.args.get('sectionId')
-    # assignments = crud.get_assignments_by_section_id(section_id)
-    # assignments_info = []
-    # for assignment in assignments:
-    #     assignments_info.append({'pras_id': assignment.pras_id,
-    #                              'date': assignment.due_date})
-    # return jsonify(assignments_info)
-    return jsonify([1, 2, 3, 4])
+    assignment_id = request.args.get('assignmentId')
+    content, responses = crud.get_responses_by_assignment_id(assignment_id)
+    res_info = []
+    for res in responses:
+        res_info.append({'content': res.content, 'date': res.submission_date})
+    return jsonify([content, res_info])
 
 
 
