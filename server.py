@@ -59,6 +59,17 @@ def return_assignments():
     return jsonify(assignments_info)
 
 
+@app.route('/api/get_responses')
+def return_responses():
+    # section_id = request.args.get('sectionId')
+    # assignments = crud.get_assignments_by_section_id(section_id)
+    # assignments_info = []
+    # for assignment in assignments:
+    #     assignments_info.append({'pras_id': assignment.pras_id,
+    #                              'date': assignment.due_date})
+    # return jsonify(assignments_info)
+    return jsonify([1, 2, 3, 4])
+
 
 
 if __name__ == '__main__':
