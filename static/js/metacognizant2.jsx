@@ -224,6 +224,7 @@ class Assignment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      prompt: '',
       responses: []
     };
   }
@@ -232,21 +233,22 @@ class Assignment extends React.Component {
     $.get('/api/get_responses', { assignmentId: this.props.assignmentId },
       (res) => {
         console.log(res);
-        this.setState({ responses: res[1] })
+        this.setState({prompt:res[0], responses: res[1] })
       })
   }
 
 
   render() {
     const responses = [];
-    for (const response of this.state.responses) {
+    for (const count in this.state.responses) {
       responses.push(
-        <p key={response}>I am a response!</p>
+        <p key={count}>{this.state.responses[count].content}{this.state.responses[count].date}</p>
       )
     }
     return (
       <div id='assignment'>
         <h2>{<Locator />}</h2>
+        <h3>Prompt: {this.state.prompt}</h3>
         <h3>Responses {this.props.assignmentId}</h3>
         <div id='container'>{responses}</div>
       </div>
@@ -280,7 +282,7 @@ class App extends React.Component {
     //FOR TESTING PURPOSES ONLY!
     this.state = {
       loggedIn: true,
-      userId: 23,
+      userId: 3,
       sectionId: null,
       assignmentId: null
     };

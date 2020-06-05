@@ -83,7 +83,7 @@ def get_responses_by_assignment_id(assignment_id):
     responses = (Response.query
                          .options(db.joinedload('prompt_assignment'))
                          .filter(Response.pras_id==assignment_id)
-                         .count())
+                         .all())
     return [prompt_content, responses]
 
 

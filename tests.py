@@ -8,12 +8,12 @@ def get_test_user():
 
 def find_test_teacher():
     SectionAssignment = model.SectionAssignment
-    teacher = (SectionAssignment.query(SectionAssignment.user_id)
+    teacher = (model.db.session.query(SectionAssignment.user_id)
                                 .filter(SectionAssignment.role=='teacher')
                                 .group_by(SectionAssignment.user_id)
-                                .having(func.count()>1)
+                                .having(model.db.func.count()>1)
                                 .first())
-    return teacher
+    return teacher[0]
 
 
 
