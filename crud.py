@@ -69,6 +69,15 @@ def get_sections_by_user_id(user_id):
     return sections
 
 
+def get_assignments_by_section_id(section_id):
+    condition = (PromptAssignment.section_id==section_id)
+    assignments = (PromptAssignment.query
+                                   .filter(condition)
+                                   .all())
+    return assignments
+
+    
+
 
 if __name__ == '__main__':
     from server import app

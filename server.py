@@ -12,6 +12,11 @@ def show_app():
     return render_template('index.html')
 
 
+@app.route('/classes')
+def show_classes():
+    return render_template('index.html')
+
+
 @app.route('/api/login', methods=['POST'])
 def check_credentials():
 
@@ -33,15 +38,30 @@ def check_credentials():
 @app.route('/api/get_sections')
 def return_sections():
     user_id = request.args.get('userId')
-    print(user_id)
     sections = crud.get_sections_by_user_id(user_id)
-    section_info = []
+    sections_info = []
     for section in sections:
-        section_info.append({'section_id': section[0].section_id,
-                             'name': section[0].name, 
-                             'role': section[1]})
-    print(section_info)
-    return jsonify(section_info)
+        sections_info.append({'section_id': section[0].section_id,
+                              'name': section[0].name, 
+                              'role': section[1]})
+    return jsonify(sections_info)
+
+
+@app.route('/api/get_pras')
+def return_assignments():
+    section_id = request.args.get('sectionId')
+    print(section_id)
+    # section = crud.get_section_by_id(section_id)
+    assignments = crud.get_assignments_by_section_id(section_id)
+    assignments_info = []
+    for assignment in assignments:
+        assignments_info.append({'pras_id': assignment.pras_id,
+                                 'date': assignment.due_date})
+    print(assignments_info)
+    return jsonify(assignments_info)
+
+
+
 
 if __name__ == '__main__':
     connect_to_db(app)

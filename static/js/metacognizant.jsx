@@ -15,7 +15,7 @@ class Login extends React.Component {
       email: '',
       password: ''
     };
-    this.handleFieldChange = this.handleFieldChange.bind(this)
+    this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -44,7 +44,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id='login'>
         <form onSubmit={this.handleSubmit}>Please log in.
           <p>
             Email: <input 
@@ -90,12 +90,14 @@ class Overview extends React.Component {
         const buttons = [];
         for (const section of this.state.sections) {
             buttons.push(
-                <SectionButton section={section} key={section['section_id']}/>
+                <SectionButton section={section} 
+                               setSection={this.props.setSection}
+                               key={section['section_id']}/>
             )
         }
         
         return (
-            <div>
+            <div id='overview'>
                 <h3>Your classes {this.props.userId}</h3>
                 <div id='container'>{buttons}</div>
             </div>
@@ -106,13 +108,78 @@ class Overview extends React.Component {
 
 
 class SectionButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClick=this.handleClick.bind(this);
+    }
+
+    handleClick(evt) {
+        evt.preventDefault();
+
+        if (evt.target.className === 'teacher') {
+            this.props.setSection(evt.target.id);
+        } else {
+            alert('Student view coming soon!')
+        }
+    }
+
     render() {
         return(
-            <div>
-                <button type='button' 
+            <div className='section_button_holder'>
+                <button type='section_button' 
                         id={this.props.section['section_id']} 
-                        className={this.props.section['role']}>
+                        className={this.props.section['role']}
+                        onClick={this.handleClick}>
                 {this.props.section['name']}
+                </button>
+            </div>
+        )
+    }
+}
+
+
+class Section extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          assignments: []
+        };
+    }
+
+    componentDidMount() {
+        $.get('/api/get_pras', {sectionId: this.props.sectionId}, (res) => {
+            this.setState({assignments: res})
+        })
+    }
+
+    render() {
+        
+        const buttons = [];
+        for (const assignment of this.state.assignments) {
+            buttons.push(
+                <AssignmentButton assignment={assignment} 
+                                  key={assignment['pras_id']}/>
+            )
+        }
+        
+        return (
+            <div id='section'>
+                <h3>Class assignments {this.props.sectionId}</h3>
+                <div id='container'>{buttons}</div>
+            </div>
+        )
+    }
+}
+
+
+class AssignmentButton extends React.Component {
+    render() {
+        return(
+            <div className='assignment_button_holder'>
+                <button type='assignment_button' 
+                        id={this.props.assignment['pras_id']} 
+                        className={this.props.assignment['date']}>
+                {this.props.assignment['date']}
                 </button>
             </div>
         )
@@ -123,15 +190,29 @@ class SectionButton extends React.Component {
 class App extends React.Component {
     constructor(props) {
         super(props);
+
+        //FOR TESTING PURPOSES ONLY!
         this.state = {
-          loggedIn: false,
-          userId: null
+          loggedIn: true,
+          userId: 23,
+          sectionId: null
         };
+
+        // this.state = {
+        //   loggedIn: false,
+        //   userId: null
+        // };
+
     this.setLoggedIn = this.setLoggedIn.bind(this);
+    this.setSection = this.setSection.bind(this);
     }
 
   setLoggedIn(userId) {
     this.setState({userId: userId, loggedIn:true});
+  }
+
+  setSection(sectionId) {
+    this.setState({sectionId: sectionId})
   }
 
   render() {
@@ -139,9 +220,18 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route path={'/classes'}>
-            {this.state.loggedIn ?
-            <Overview userId={this.state.userId} /> :
+          <Route path='/classes/class'>
+            {(this.state.loggedIn && this.state.sectionId) ?
+            <Section sectionId={this.state.sectionId} /> :
+            <Redirect to='/' />
+            }
+          </Route>
+          <Route path='/classes'>
+          {console.log(this.state.sectionId)}
+            {(this.state.loggedIn && this.state.sectionId) ?
+            <Redirect to='/classes/class' /> :
+            this.state.loggedIn ?
+            <Overview userId={this.state.userId} setSection={this.setSection} /> :
             <Redirect to='/' />
             }
           </Route>
