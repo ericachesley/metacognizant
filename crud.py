@@ -54,7 +54,7 @@ def create_response(user, pras, content, sub_date):
     return response
 
 
-#'get' functions
+#'read' functions
 def get_user_by_email(email):
     return User.query.filter(User.email==email).first()
 
@@ -86,6 +86,10 @@ def get_responses_by_assignment_id(assignment_id):
                          .filter(Response.pras_id==assignment_id)
                          .all())
     return [prompt_content, responses]
+
+
+def get_all_prompts():
+    return Prompt.query.all()
 
 
 if __name__ == '__main__':

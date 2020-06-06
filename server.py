@@ -13,11 +13,6 @@ def show_app(path):
     return render_template('index.html')
 
 
-# @app.route('/classes')
-# def show_classes():
-#     return render_template('index.html')
-
-
 @app.route('/api/login', methods=['POST'])
 def check_credentials():
 
@@ -71,6 +66,15 @@ def return_responses():
                          'date': res.submission_date})
     return jsonify([content, res_info])
 
+
+@app.route('/api/get_prompts')
+def return_all_prompts():
+    prompts = crud.get_all_prompts()
+    prompt_info =[]
+    for prompt in prompts:
+        prompt_info.append({'prompt_id':prompt.prompt_id, 
+                            'content': prompt.content})
+    return jsonify(prompt_info)
 
 
 if __name__ == '__main__':

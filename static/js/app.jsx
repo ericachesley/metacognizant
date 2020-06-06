@@ -9,6 +9,8 @@ const Redirect = window.ReactRouterDOM.Redirect;
 const useLocation = window.ReactRouterDOM.useLocation;
 const useRouteMatch = window.ReactRouterDOM.useRouteMatch;
 
+//import {Overview, SectionButton} from "overview";
+
 
 class Login extends React.Component {
   constructor(props) {
@@ -155,12 +157,17 @@ class Section extends React.Component {
     this.state = {
       assignments: []
     };
+    this.createNewAssignment = this.createNewAssignment.bind(this);
   }
 
   componentDidMount() {
     $.get('/api/get_pras', { sectionId: this.props.sectionId }, (res) => {
       this.setState({ assignments: res })
     })
+  }
+
+  createNewAssignment() {
+    return <Tester />
   }
 
 
@@ -177,7 +184,13 @@ class Section extends React.Component {
       <div id='section'>
         <h2>{<Locator />}</h2>
         <h3>Class assignments {this.props.sectionId}</h3>
-        <div id='container'>{buttons}</div>
+        <p></p>
+        <div id='container'>{buttons}
+          <p></p>
+          <Link to='/assign'>
+            Create new assignment
+          </Link>
+        </div>
       </div>
     )
   }
@@ -203,7 +216,8 @@ class AssignmentButton extends React.Component {
   render() {
     console.log(this.props.assignment)
     if (this.state.clicked) {
-      return (<Redirect to={`${<Locator />}/${this.props.assignment['date']}`} />)
+      return (<Redirect
+        to={`${<Locator />}/${this.props.assignment['date']}`} />)
     } else {
       return (
         <div className='assignment_button_holder'>
@@ -233,7 +247,7 @@ class Assignment extends React.Component {
     $.get('/api/get_responses', { assignmentId: this.props.assignmentId },
       (res) => {
         console.log(res);
-        this.setState({prompt:res[0], responses: res[1] })
+        this.setState({ prompt: res[0], responses: res[1] })
       })
   }
 
@@ -269,6 +283,99 @@ class Assignment extends React.Component {
 }
 
 
+class CreateAssignment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sectionId: null,
+      date: null,
+      promptId: null,
+      sections: [],
+      prompts: []
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.getSections = this.getSections.bind(this);
+    // this.getPrompts = this.getPrompts.bind(this);
+  }
+
+  handleSubmit(evt) {
+    evt.preventDefault();
+    const formData = {
+      sectionId: this.state.sectionId,
+      date: this.state.date,
+      promptId: this.state.promptId
+    }
+    alert('Cool thanks')
+    // $.post('/api/assign_prompt', formData, (res) => {
+    //   console.log(res)
+    // })
+    //this.setState({ email: '', password: '' });
+  }
+
+  componentDidMount() {
+    $.get('api/get_sections', { userId: this.props.userId }, (res) => {
+      this.setState({ sections: res })
+    })
+    $.get('api/get_prompts', { userId: this.props.userId }, (res) => {
+      this.setState({ prompts: res })
+    })
+  }
+
+  render() {
+    const sectionOptions = [];
+    for (const section of this.state.sections) {
+      if (section.role === 'teacher') {
+        sectionOptions.push(
+          <div className='checkbox' key={section.section_id}>
+            <input type="checkbox" name='sections' value={section.section_id}>
+            </input>
+            <label>{section.name}</label>
+          </div>
+        )
+      }
+    }
+
+    const promptOptions = [];
+    for (const prmpt of this.state.prompts) {
+      promptOptions.push(
+        <div className='checkbox' key={prmpt.prompt_id}>
+          <input type="checkbox" name='prompts' value={prmpt.prompt_id}></input>
+          <label>{prmpt.content}</label>
+        </div>
+      )
+    }
+
+    return (
+      <div id='assign_prompt'>
+        <form onSubmit={this.handleSubmit}>Create new assignment.
+          <p></p>
+          <div>
+            Choose section(s) to assign prompt to:
+            {sectionOptions}
+          </div>
+          <p></p>
+          <div>
+            Choose prompt to assign:
+            {promptOptions}
+          </div>
+          <p></p>
+          <div>
+            Choose due date:
+            <input
+              id='due-date'
+              type='date'
+            />
+          </div>
+          <p>
+            <input type='submit' />
+          </p>
+        </form>
+      </div>
+    )
+  }
+}
+
+
 class Tester extends React.Component {
   render() {
     return (
@@ -284,7 +391,7 @@ function Locator() {
   let location = useLocation();
   console.log(location)
   const path_bits = location.pathname.split('/')
-  return (<p>{path_bits[path_bits.length-1]}</p>)
+  return (<p>{path_bits[path_bits.length - 1]}</p>)
 }
 
 
@@ -331,6 +438,12 @@ class App extends React.Component {
         <Switch>
           <Route path='/test'>
             <Tester />
+          </Route>
+          <Route path='/assign'>
+            {this.state.loggedIn ?
+              <CreateAssignment userId={this.state.userId} /> :
+              <Redirect to='/' />
+            }
           </Route>
           <Route path='/classes/:id/:id'>
             {this.state.loggedIn ?
