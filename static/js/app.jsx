@@ -24,12 +24,7 @@ class Login extends React.Component {
   }
 
   handleFieldChange(evt) {
-    let field_name = evt.target.id;
-    if (field_name == 'email') {
-      this.setState({ email: evt.target.value });
-    } else {
-      this.setState({ password: evt.target.value });
-    }
+    this.setState({ [evt.target.id]: evt.target.value });
   }
 
   handleSubmit(evt) {
@@ -157,7 +152,6 @@ class Section extends React.Component {
     this.state = {
       assignments: []
     };
-    this.createNewAssignment = this.createNewAssignment.bind(this);
   }
 
   componentDidMount() {
@@ -165,11 +159,6 @@ class Section extends React.Component {
       this.setState({ assignments: res })
     })
   }
-
-  createNewAssignment() {
-    return <Tester />
-  }
-
 
   render() {
     const buttons = [];
@@ -287,29 +276,46 @@ class CreateAssignment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sectionId: null,
+      selectedSections: new Set(),
+      selectedPrompt: null,
       date: null,
-      promptId: null,
       sections: [],
       prompts: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.getSections = this.getSections.bind(this);
-    // this.getPrompts = this.getPrompts.bind(this);
+    this.handleFieldChange = this.handleFieldChange.bind(this);
+  }
+
+  handleFieldChange(evt) {
+    let fieldName = evt.target.name;
+    console.log('Before:', fieldName, evt.target.value);
+    if (evt.target.type === "checkbox") {
+      if (evt.target.checked) {
+        this.state.selectedSections.add(evt.target.value);
+      } else {
+        this.state.selectedSections.delete(evt.target.value);
+      }
+    } else {
+      this.setState({ [fieldName]: evt.target.value });
+    }
+    console.log('After:', this.state);
   }
 
   handleSubmit(evt) {
     evt.preventDefault();
     const formData = {
-      sectionId: this.state.sectionId,
-      date: this.state.date,
-      promptId: this.state.promptId
+      selectedSections: this.state.selectedSections,
+      selectedPrompts: this.state.selectedPrompt,
+      date: this.state.date
     }
-    alert('Cool thanks')
-    // $.post('/api/assign_prompt', formData, (res) => {
-    //   console.log(res)
-    // })
-    //this.setState({ email: '', password: '' });
+    $.post('/api/assign_prompt', formData, (res) => {
+      console.log(res)
+    })
+    this.setState({
+      selectedSections: new Set(),
+      selectedPrompt: null,
+      date: null,
+    });
   }
 
   componentDidMount() {
@@ -327,7 +333,10 @@ class CreateAssignment extends React.Component {
       if (section.role === 'teacher') {
         sectionOptions.push(
           <div className='checkbox' key={section.section_id}>
-            <input type="checkbox" name='sections' value={section.section_id}>
+            <input onClick={this.handleFieldChange}
+              type='checkbox'
+              name='selectedSections'
+              value={section.section_id}>
             </input>
             <label>{section.name}</label>
           </div>
@@ -338,31 +347,36 @@ class CreateAssignment extends React.Component {
     const promptOptions = [];
     for (const prmpt of this.state.prompts) {
       promptOptions.push(
-        <div className='checkbox' key={prmpt.prompt_id}>
-          <input type="checkbox" name='prompts' value={prmpt.prompt_id}></input>
-          <label>{prmpt.content}</label>
-        </div>
+        <option key={prmpt.prompt_id} name='prompts' value={prmpt.prompt_id}>
+          {prmpt.content}
+        </option>
       )
     }
 
     return (
-      <div id='assign_prompt'>
+      <div id='assign-prompt'>
         <form onSubmit={this.handleSubmit}>Create new assignment.
           <p></p>
           <div>
-            Choose section(s) to assign prompt to:
+            <label>Choose section(s) to assign prompt to: </label>
             {sectionOptions}
           </div>
           <p></p>
           <div>
-            Choose prompt to assign:
-            {promptOptions}
+            <label>Choose prompt to assign: </label>
+            <select name="selectedPrompt" onChange={this.handleFieldChange}>
+              <option name='prompts' value='select-one'>
+                Select a prompt
+              </option>
+              {promptOptions}
+            </select>
           </div>
           <p></p>
           <div>
-            Choose due date:
-            <input
+            <label>Choose due date: </label>
+            <input onChange={this.handleFieldChange}
               id='due-date'
+              name='date'
               type='date'
             />
           </div>
@@ -400,19 +414,19 @@ class App extends React.Component {
     super(props);
 
     //FOR TESTING PURPOSES ONLY!
-    // this.state = {
-    //   loggedIn: true,
-    //   userId: 3,
-    //   sectionId: 5,
-    //   assignmentId: 8
-    // };
+    this.state = {
+      loggedIn: true,
+      userId: 3,
+      sectionId: 5,
+      assignmentId: 8
+    };
 
     //REAL VERSION - DON'T DELETE!
-    this.state = {
-      loggedIn: false,
-      userId: null,
-      sectionId: null
-    };
+    // this.state = {
+    //   loggedIn: false,
+    //   userId: null,
+    //   sectionId: null
+    // };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.setSection = this.setSection.bind(this);
