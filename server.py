@@ -77,6 +77,21 @@ def return_all_prompts():
     return jsonify(prompt_info)
 
 
+@app.route('/api/assign_prompt', methods=['POST'])
+def add_prompt_assignment():
+    section_ids = request.form.get('selectedSections')
+    prompt_id = request.form.get('selectedPrompt')
+    date = request.form.get('date')
+    print(section_ids, prompt_id, date)
+
+    new_pras = []
+    for section_id in section_ids:
+        pras = crud.create_prompt_assignment_by_ids(section_id, prompt_id, date)
+        new_pras.append(pras)
+
+    return jsonify(new_pras)
+
+
 if __name__ == '__main__':
     connect_to_db(app)
     tests.find_test_teacher()

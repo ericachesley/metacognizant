@@ -44,6 +44,15 @@ def create_prompt_assignment(section, prompt, due_date):
     return pras
 
 
+def create_prompt_assignment_by_ids(section_id, prompt_id, due_date):
+    pras = PromptAssignment(section_id=section_id, 
+                            prompt_id=prompt_id, 
+                            due_date=due_date)
+    db.session.add(pras)
+    db.session.commit()
+    return pras
+
+
 def create_response(user, pras, content, sub_date):
     response = Response(user=user, 
                         prompt_assignment=pras, 

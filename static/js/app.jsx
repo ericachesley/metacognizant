@@ -286,6 +286,17 @@ class CreateAssignment extends React.Component {
     this.handleFieldChange = this.handleFieldChange.bind(this);
   }
 
+
+  componentDidMount() {
+    $.get('api/get_sections', { userId: this.props.userId }, (res) => {
+      this.setState({ sections: res })
+    })
+    $.get('api/get_prompts', { userId: this.props.userId }, (res) => {
+      this.setState({ prompts: res })
+    })
+  }
+
+
   handleFieldChange(evt) {
     let fieldName = evt.target.name;
     console.log('Before:', fieldName, evt.target.value);
@@ -301,15 +312,18 @@ class CreateAssignment extends React.Component {
     console.log('After:', this.state);
   }
 
+
   handleSubmit(evt) {
     evt.preventDefault();
     const formData = {
-      selectedSections: this.state.selectedSections,
-      selectedPrompts: this.state.selectedPrompt,
+      selectedSections: Array.from(this.state.selectedSections),
+      selectedPrompt: this.state.selectedPrompt,
       date: this.state.date
     }
+    console.log(formData)
     $.post('/api/assign_prompt', formData, (res) => {
       console.log(res)
+      alert('Prompt assignment submitted')
     })
     this.setState({
       selectedSections: new Set(),
@@ -318,14 +332,6 @@ class CreateAssignment extends React.Component {
     });
   }
 
-  componentDidMount() {
-    $.get('api/get_sections', { userId: this.props.userId }, (res) => {
-      this.setState({ sections: res })
-    })
-    $.get('api/get_prompts', { userId: this.props.userId }, (res) => {
-      this.setState({ prompts: res })
-    })
-  }
 
   render() {
     const sectionOptions = [];
