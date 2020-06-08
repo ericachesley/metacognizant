@@ -1,4 +1,4 @@
-export class Overview extends React.Component {
+class Overview extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -7,9 +7,11 @@ export class Overview extends React.Component {
     }
   
     componentDidMount() {
-      $.get('api/get_sections', { userId: this.props.userId }, (res) => {
-        this.setState({ sections: res })
-      })
+      fetch(`/api/get_sections?userId=${this.props.userId}`)
+        .then(res => res.json())
+        .then(data => {
+          this.setState({ sections: data })
+        })
     }
   
     render() {
@@ -34,7 +36,7 @@ export class Overview extends React.Component {
   }
   
   
-export class SectionButton extends React.Component {
+  class SectionButton extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -72,4 +74,3 @@ export class SectionButton extends React.Component {
       }
     }
   }
-  
