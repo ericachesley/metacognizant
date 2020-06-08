@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
 import crud, tests
-
+import json
 
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
@@ -15,9 +15,9 @@ def show_app(path):
 
 @app.route('/api/login', methods=['POST'])
 def check_credentials():
-
-    email = request.form.get('email')
-    password = request.form.get('password')
+    data = request.get_json(force=True)
+    email = data['email']
+    password = data['password']
     user = crud.get_user_by_email(email)
 
     if not user:
@@ -79,18 +79,19 @@ def return_all_prompts():
 
 @app.route('/api/assign_prompt', methods=['POST'])
 def add_prompt_assignment():
-    section_ids = request.form.get('selectedSections')
-    prompt_id = request.form.get('selectedPrompt')
-    date = request.form.get('date')
+    data = request.get_json(force=True)
+    section_ids = data['selectedSections']
+    prompt_id = data['selectedPrompt']
+    date = data['date']
     print(section_ids, prompt_id, date)
 
     new_pras = []
     for section_id in section_ids:
-        pras = crud.create_prompt_assignment_by_ids(section_id, prompt_id, date)
-        new_pras.append(pras)
+        pras = crud.create_prompt_assignment_by_ids(int(section_id), prompt_id, date)
+        new_pras.append({'id': pras.pras_id, 'section':pras.section_id})
 
     return jsonify(new_pras)
-
+    
 
 if __name__ == '__main__':
     connect_to_db(app)

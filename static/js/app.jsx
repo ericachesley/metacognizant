@@ -33,11 +33,18 @@ class Login extends React.Component {
       email: this.state.email,
       password: this.state.password
     }
-    $.post('/api/login', formData, (res) => {
-      if (typeof res === 'number') {
-        this.props.setLoggedIn(res);
-      }
+    fetch('/api/login', {
+      method: 'post',
+      body: JSON.stringify(formData)
     })
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data === 'number') {
+          this.props.setLoggedIn(data);
+        } else {
+          alert(data);
+        }
+      })
     this.setState({ email: '', password: '' });
   }
 
@@ -79,9 +86,11 @@ class Overview extends React.Component {
   }
 
   componentDidMount() {
-    $.get('api/get_sections', { userId: this.props.userId }, (res) => {
-      this.setState({ sections: res })
-    })
+    fetch(`/api/get_sections?userId=${this.props.userId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ sections: data })
+      })
   }
 
   render() {
@@ -155,9 +164,11 @@ class Section extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/api/get_pras', { sectionId: this.props.sectionId }, (res) => {
-      this.setState({ assignments: res })
-    })
+    fetch(`/api/get_pras?sectionId=${this.props.sectionId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ assignments: data })
+      })
   }
 
   render() {
@@ -233,10 +244,10 @@ class Assignment extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/api/get_responses', { assignmentId: this.props.assignmentId },
-      (res) => {
-        console.log(res);
-        this.setState({ prompt: res[0], responses: res[1] })
+    fetch(`/api/get_responses?assignmentId=${this.props.assignmentId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ prompt: data[0], responses: data[1] })
       })
   }
 
@@ -288,12 +299,16 @@ class CreateAssignment extends React.Component {
 
 
   componentDidMount() {
-    $.get('api/get_sections', { userId: this.props.userId }, (res) => {
-      this.setState({ sections: res })
-    })
-    $.get('api/get_prompts', { userId: this.props.userId }, (res) => {
-      this.setState({ prompts: res })
-    })
+    fetch(`/api/get_sections?userId=${this.props.userId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ sections: data })
+      })
+    fetch(`/api/get_prompts?userId=${this.props.userId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ prompts: data })
+      })
   }
 
 
@@ -316,15 +331,24 @@ class CreateAssignment extends React.Component {
   handleSubmit(evt) {
     evt.preventDefault();
     const formData = {
-      selectedSections: Array.from(this.state.selectedSections),
-      selectedPrompt: this.state.selectedPrompt,
-      date: this.state.date
+      'selectedSections': Array.from(this.state.selectedSections),
+      'selectedPrompt': this.state.selectedPrompt,
+      'date': this.state.date
     }
     console.log(formData)
-    $.post('/api/assign_prompt', formData, (res) => {
-      console.log(res)
-      alert('Prompt assignment submitted')
+    fetch('/api/assign_prompt', {
+      method: 'post',
+      body: JSON.stringify(formData)
     })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        alert('Prompt assignment submitted')
+      })
+    // $.post('/api/assign_prompt', formData, (res) => {
+    //   console.log(res)
+    //   alert('Prompt assignment submitted')
+    // })
     this.setState({
       selectedSections: new Set(),
       selectedPrompt: null,
