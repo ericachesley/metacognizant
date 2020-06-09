@@ -42,7 +42,7 @@ class Section extends React.Component {
                 <p></p>
                 <div id='container'>{buttons}
                     <p></p>
-                    {this.props.role=='teacher' ? <Link to='/assign'>
+                    {this.props.role == 'teacher' ? <Link to='/assign'>
                         Create new assignment
                     </Link> : <p></p>}
                 </div>
