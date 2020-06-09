@@ -64,6 +64,16 @@ def create_response(user, pras, content, sub_date):
     return response
 
 
+def create_response_by_ids(user_id, pras_id, content, sub_date):
+    response = Response(user_id=user_id, 
+                        pras_id=pras_id, 
+                        content=content, 
+                        submission_date=sub_date)
+    db.session.add(response)
+    db.session.commit()
+    return response
+
+
 #'read' functions
 def get_user_by_email(email):
     return User.query.filter(User.email==email).first()

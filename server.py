@@ -105,6 +105,18 @@ def add_prompt_assignment():
     return jsonify(new_pras)
 
 
+@app.route('/api/submit_response', methods=['POST'])
+def create_response():
+    data = request.get_json(force=True)
+    response = data['response']
+    date = data['date']
+    user_id = data['userId']
+    pras_id = data['assignmentId']
+    res = crud.create_response_by_ids(user_id, pras_id, response, date)
+
+    return jsonify({'id':res.response_id})
+
+
 if __name__ == '__main__':
     connect_to_db(app)
     tests.find_test_teacher()

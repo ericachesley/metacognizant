@@ -23,7 +23,8 @@ class Assignment extends React.Component {
                 <h3>Prompt: {this.state.prompt}</h3>
                 {this.props.role === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
-                    <GetResponse prompt={this.state.prompt} />
+                    <GetResponse assignmentId={this.props.assignmentId} 
+                    userId={this.props.userId}/>
                 }
             </div>
         )
@@ -81,7 +82,24 @@ class GetResponse extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
-        alert(this.state.response)
+        const date = luxon.DateTime.utc().toISO();
+        const formData = {
+            response: this.state.response,
+            date: date,
+            assignmentId: this.props.assignmentId,
+            userId: this.props.userId
+        }
+        console.log(formData);
+        fetch('/api/submit_response', {
+            method: 'post',
+            body: JSON.stringify(formData)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                alert('Response submitted')
+            })
+        this.setState({response: ''});
     }
 
 
