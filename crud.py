@@ -119,6 +119,13 @@ def get_responses_by_assignment_id(assignment_id):
     return [prompt_content, responses]
 
 
+def get_response(pras_id, user_id):
+    condition1 = (Response.pras_id==pras_id)
+    condition2 = (Response.user_id==user_id)
+    response = Response.query.filter(condition1, condition2).first()
+    return response
+
+
 def get_all_prompts():
     return Prompt.query.all()
 

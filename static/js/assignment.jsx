@@ -23,8 +23,8 @@ class Assignment extends React.Component {
                 <h3>Prompt: {this.state.prompt}</h3>
                 {this.props.role === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
-                    <GetResponse assignmentId={this.props.assignmentId} 
-                    userId={this.props.userId}/>
+                    <GetResponse assignmentId={this.props.assignmentId}
+                        userId={this.props.userId} />
                 }
             </div>
         )
@@ -68,10 +68,27 @@ class GetResponse extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            response: ''
+            response: '',
+            date: null,
+            done: false
         };
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+
+    componentDidMount() {
+        fetch(`/api/check_response?assignmentId=${this.props.assignmentId}&userId=${this.props.userId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data) {
+                    console.log(data.date);
+                    const date = data.date;
+                    const dt = luxon.DateTime.fromHTTP(date);
+                    const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
+                    this.setState({ response: data.response, date: dtLocal, done: true });
+                }
+            })
     }
 
 
@@ -99,27 +116,37 @@ class GetResponse extends React.Component {
                 console.log(data)
                 alert('Response submitted')
             })
-        this.setState({response: ''});
+        this.setState({ response: '' });
     }
 
 
     render() {
-        return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <textarea
-                        id='response'
-                        name='response'
-                        rows="15" cols="50"
-                        placeholder="Your response"
-                        value={this.state.response}
-                        onChange={this.handleFieldChange}>
-                    </textarea>
-                    <p></p>
-                    <input type='submit'></input>
-                </form>
-            </div>
-        )
+        if (this.state.done) {
+            return (
+                <div>
+                    <p>You already submitted a response to this prompt.</p>
+                    <p>Response: {this.state.response}</p>
+                    <p>Submitted: {this.state.date}</p>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <form onSubmit={this.handleSubmit}>
+                        <textarea
+                            id='response'
+                            name='response'
+                            rows="15" cols="50"
+                            placeholder="Your response"
+                            value={this.state.response}
+                            onChange={this.handleFieldChange}>
+                        </textarea>
+                        <p></p>
+                        <input type='submit'></input>
+                    </form>
+                </div>
+            )
+        }
     }
 }
 

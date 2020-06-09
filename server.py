@@ -26,7 +26,7 @@ def check_credentials():
         session['logged_in_user_id'] = user.user_id
         status = user.user_id
     else:
-        status = 'Incorrect password.'
+        status = 'Incorrect password. Please try again.'
 
     return jsonify(status)
 
@@ -103,6 +103,17 @@ def add_prompt_assignment():
         new_pras.append({'id': pras.pras_id, 'section':pras.section_id})
 
     return jsonify(new_pras)
+
+
+@app.route('/api/check_response')
+def check_for_response():
+    pras_id = request.args.get('assignmentId')
+    user_id = request.args.get('userId')
+    res = crud.get_response(pras_id, user_id)
+    if res:
+        return jsonify({'response':res.content, 'date':res.submission_date})
+    else:
+        return jsonify(None)
 
 
 @app.route('/api/submit_response', methods=['POST'])

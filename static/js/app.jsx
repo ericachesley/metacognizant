@@ -16,21 +16,21 @@ class App extends React.Component {
     super(props);
 
     //FOR TESTING PURPOSES ONLY!
-    this.state = {
-      loggedIn: true,
-      userId: 3,
-      sectionId: 5,
-      assignmentId: 8,
-      role: 'student'
-    };
+    // this.state = {
+    //   loggedIn: true,
+    //   userId: 3,
+    //   sectionId: 5,
+    //   assignmentId: 8,
+    //   role: 'student'
+    // };
 
     //REAL VERSION - DON'T DELETE!
-    // this.state = {
-    //   loggedIn: false,
-    //   userId: null,
-    //   sectionId: null,
-    //   role: null
-    // };
+    this.state = {
+      loggedIn: false,
+      userId: null,
+      sectionId: null,
+      role: null
+    };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.setSection = this.setSection.bind(this);
