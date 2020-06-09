@@ -18,7 +18,8 @@ class Section extends React.Component {
             const dt = luxon.DateTime;
             const utcDt = dt.utc().toISO();
             console.log(utcDt);
-            fetch(`/api/get_pras_to_date?sectionId=${this.props.sectionId}&date=${utcDt}`)
+            fetch(`/api/get_pras_to_date
+                  ?sectionId=${this.props.sectionId}&date=${utcDt}`)
                 .then(res => res.json())
                 .then(data => {
                     this.setState({ assignments: data })
