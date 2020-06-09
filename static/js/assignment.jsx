@@ -35,11 +35,15 @@ class ShowResponses extends React.Component {
     render() {
         const responses = [];
         for (const count in this.props.responses) {
+            const date = this.props.responses[count].date;
+            const dt = luxon.DateTime.fromHTTP(date);
+            const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
+            console.log(date, dt, dtLocal)
             responses.push(
                 <tr key={count}>
                     <td>{this.props.responses[count].student}</td>
                     <td>{this.props.responses[count].content}</td>
-                    <td>{this.props.responses[count].date}</td>
+                    <td>{dtLocal}</td>
                 </tr>
             )
         }
@@ -60,14 +64,38 @@ class ShowResponses extends React.Component {
 
 
 class GetResponse extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            response: ''
+        };
+        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+
+    handleFieldChange(evt) {
+        this.setState({ [evt.target.id]: evt.target.value });
+    }
+
+
+    handleSubmit(evt) {
+        evt.preventDefault();
+        alert(this.state.response)
+    }
+
+
     render() {
         return (
             <div>
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <textarea
+                        id='response'
                         name='response'
                         rows="15" cols="50"
-                        placeholder="Your response">
+                        placeholder="Your response"
+                        value={this.state.response}
+                        onChange={this.handleFieldChange}>
                     </textarea>
                     <p></p>
                     <input type='submit'></input>
