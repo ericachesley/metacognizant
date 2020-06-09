@@ -74,13 +74,16 @@ class AssignmentButton extends React.Component {
             return (<Redirect
                 to={`${<Locator />}/${this.props.assignment['date']}`} />)
         } else {
+            const date = this.props.assignment['date'];
+            const dt = luxon.DateTime.fromHTTP(date);
+            const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATE_FULL);
             return (
                 <div className='assignment_button_holder'>
                     <button type='assignment_button'
                         id={this.props.assignment['pras_id']}
                         className={this.props.assignment['date']}
                         onClick={this.handleClick}>
-                        {this.props.assignment['date']}
+                        {dtLocal}
                     </button>
                 </div>
             )

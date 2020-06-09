@@ -51,6 +51,7 @@ def return_assignments():
     for assignment in assignments:
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date})
+    assignments_info.sort(key = lambda i: i['date'])
     return jsonify(assignments_info)
 
 
@@ -63,6 +64,7 @@ def return_assignments_to_date():
     for assignment in assignments:
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date})
+    assignments_info.sort(key = lambda i: i['date'])
     return jsonify(assignments_info)
 
 
@@ -71,6 +73,7 @@ def return_responses():
     assignment_id = request.args.get('assignmentId')
     content, responses = crud.get_responses_by_assignment_id(assignment_id)
     res_info = []
+    responses.sort(key = lambda i: i.user.last_name)
     for res in responses:
         name = f'{res.user.first_name} {res.user.last_name}'
         res_info.append({'student': name,
