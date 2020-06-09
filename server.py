@@ -54,6 +54,18 @@ def return_assignments():
     return jsonify(assignments_info)
 
 
+@app.route('/api/get_pras_to_date')
+def return_assignments_to_date():
+    section_id = request.args.get('sectionId')
+    date = request.args.get('date')
+    assignments = crud.get_assignments_to_date(section_id, date)
+    assignments_info = []
+    for assignment in assignments:
+        assignments_info.append({'pras_id': assignment.pras_id,
+                                 'date': assignment.due_date})
+    return jsonify(assignments_info)
+
+
 @app.route('/api/get_responses')
 def return_responses():
     assignment_id = request.args.get('assignmentId')
@@ -91,7 +103,7 @@ def add_prompt_assignment():
         new_pras.append({'id': pras.pras_id, 'section':pras.section_id})
 
     return jsonify(new_pras)
-    
+
 
 if __name__ == '__main__':
     connect_to_db(app)

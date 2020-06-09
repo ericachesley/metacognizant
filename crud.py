@@ -1,6 +1,7 @@
 from model import (db, connect_to_db, User, Section, SectionAssignment, 
                    Prompt, PromptAssignment, Response)
 import server
+from datetime import datetime
 
 
 #'create' functions
@@ -82,6 +83,17 @@ def get_assignments_by_section_id(section_id):
     condition = (PromptAssignment.section_id==section_id)
     assignments = (PromptAssignment.query
                                    .filter(condition)
+                                   .all())
+    return assignments
+
+
+def get_assignments_to_date(section_id, date):
+    print(date)
+    #date = datetime.fromisoformat(date)
+    condition1 = (PromptAssignment.section_id==section_id)
+    condition2 = (PromptAssignment.due_date<=date)
+    assignments = (PromptAssignment.query
+                                   .filter(condition1, condition2)
                                    .all())
     return assignments
 

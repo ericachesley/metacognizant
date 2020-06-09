@@ -8,6 +8,7 @@ const Switch = window.ReactRouterDOM.Switch;
 const Redirect = window.ReactRouterDOM.Redirect;
 const useLocation = window.ReactRouterDOM.useLocation;
 const useRouteMatch = window.ReactRouterDOM.useRouteMatch;
+//const DateTime = window.DateTime;
 
 
 class App extends React.Component {
@@ -15,23 +16,26 @@ class App extends React.Component {
     super(props);
 
     //FOR TESTING PURPOSES ONLY!
-    this.state = {
-      loggedIn: true,
-      userId: 3,
-      sectionId: 5,
-      assignmentId: 8
-    };
+    // this.state = {
+    //   loggedIn: true,
+    //   userId: 3,
+    //   sectionId: 5,
+    //   assignmentId: 8,
+    //   role: null
+    // };
 
     //REAL VERSION - DON'T DELETE!
-    // this.state = {
-    //   loggedIn: false,
-    //   userId: null,
-    //   sectionId: null
-    // };
+    this.state = {
+      loggedIn: false,
+      userId: null,
+      sectionId: null,
+      role: null
+    };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.setSection = this.setSection.bind(this);
     this.setAssignment = this.setAssignment.bind(this);
+    this.setRole = this.setRole.bind(this);
   }
 
   setLoggedIn(userId) {
@@ -44,6 +48,10 @@ class App extends React.Component {
 
   setAssignment(assignmentId) {
     this.setState({ assignmentId: assignmentId })
+  }
+
+  setRole(role) {
+    this.setState({ role: role })
   }
 
   render() {
@@ -62,21 +70,30 @@ class App extends React.Component {
           </Route>
           <Route path='/classes/:id/:id'>
             {this.state.loggedIn ?
-              <Assignment assignmentId={this.state.assignmentId} /> :
+              <Assignment
+                assignmentId={this.state.assignmentId}
+                role={this.state.role}
+              /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes/:id'>
             {this.state.loggedIn ?
-              <Section sectionId={this.state.sectionId}
-                setAssignment={this.setAssignment} /> :
+              <Section
+                sectionId={this.state.sectionId}
+                role={this.state.role}
+                setAssignment={this.setAssignment}
+              /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
             {this.state.loggedIn ?
-              <Overview userId={this.state.userId}
-                setSection={this.setSection} /> :
+              <Overview
+                userId={this.state.userId}
+                setSection={this.setSection}
+                setRole={this.setRole}
+              /> :
               <Redirect to='/' />
             }
           </Route>
