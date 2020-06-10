@@ -89,8 +89,8 @@ class AssignmentButton extends React.Component {
     render() {
         console.log(this.props.assignment)
         if (this.state.clicked) {
-            return (<Redirect
-                to={`${<Locator />}/${this.props.assignment['date']}`} />)
+            //return (<Redirect to={`${<Locator />}/${this.props.assignment['date']}`} />)
+            return (<Redirect to='/classes/section/assignment' />)
         } else {
             const date = this.props.assignment['date'];
             const dt = luxon.DateTime.fromHTTP(date);
@@ -127,10 +127,10 @@ class StudentButton extends React.Component {
     }
 
     render() {
-        console.log(this.props.assignment)
+        console.log(this.props.student)
         if (this.state.clicked) {
-            return (<Redirect
-                to={`${<Locator />}/${this.props.student['name']}`} />)
+            //return (<Redirect to={`${<Locator />}/${this.props.student['name']}`} />)
+            return (<Redirect to='/classes/section/student' />)
         } else {
             return (
                 <div className='student_button_holder'>

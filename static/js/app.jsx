@@ -76,7 +76,7 @@ class App extends React.Component {
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/:id/:str'>
+          <Route path='/classes/section/student'>
             {this.state.loggedIn ?
               <Student
                 studentId={this.state.studentId}
@@ -85,7 +85,7 @@ class App extends React.Component {
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/:id/:int'>
+          <Route path='/classes/section/assignment'>
             {this.state.loggedIn ?
               <Assignment
                 assignmentId={this.state.assignmentId}
@@ -95,7 +95,7 @@ class App extends React.Component {
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/:id'>
+          <Route path='/classes/section'>
             {this.state.loggedIn ?
               <Section
                 sectionId={this.state.sectionId}

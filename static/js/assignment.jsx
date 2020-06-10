@@ -50,17 +50,18 @@ class Student extends React.Component {
 
 
     render() {
+        console.log(this.state.responses);
         const responses = [];
-        for (const count in this.props.responses) {
-            const date = this.props.responses[count].date;
+        for (const count in this.state.responses) {
+            const date = this.state.responses[count].date;
             const dt = luxon.DateTime.fromHTTP(date);
             const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
             console.log(date, dt, dtLocal)
             responses.push(
                 <tr key={count}>
                     <td>{dtLocal}</td>
-                    <td>{this.props.responses[count].prompt}</td>
-                    <td>{this.props.responses[count].content}</td>
+                    <td>{this.state.responses[count].prompt}</td>
+                    <td>{this.state.responses[count].response}</td>
                 </tr>
             )
         }
@@ -68,7 +69,6 @@ class Student extends React.Component {
         return (
             <div id='assignment'>
                 <h2>{<Locator />}</h2>
-                <h3>Student: {this.props.studentId}</h3>
                 <table id='response-table'>
                     <thead>
                         <tr>

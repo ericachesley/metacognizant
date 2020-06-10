@@ -7,6 +7,7 @@ class Overview extends React.Component {
     }
 
     componentDidMount() {
+        console.log(window.location);
         //this.props.setSection(null);
         fetch(`/api/get_sections?userId=${this.props.userId}`)
             .then(res => res.json())
@@ -29,7 +30,8 @@ class Overview extends React.Component {
 
         return (
             <div id='overview'>
-                <h3>Your classes {this.props.userId}</h3>
+                <h3>Welcome, {this.props.userId}</h3>
+                <h3>Your classes</h3>
                 <div id='container'>{buttons}</div>
             </div>
 
@@ -58,7 +60,8 @@ class SectionButton extends React.Component {
     render() {
         console.log(this.props.section['section_id'])
         if (this.state.clicked) {
-            return (<Redirect to={`/classes/${this.props.section['name']}`} />)
+            //return (<Redirect to={`/classes/${this.props.section['name']}`} />)
+            return (<Redirect to={`/classes/section`} />)
         } else {
             return (
                 <div className='section_button_holder'>
