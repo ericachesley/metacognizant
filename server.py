@@ -55,6 +55,22 @@ def return_assignments():
     return jsonify(assignments_info)
 
 
+@app.route('/api/get_students')
+def return_students():
+    section_id = request.args.get('sectionId')
+    students = crud.get_students_by_section_id(section_id)
+    print(students)
+    students.sort(key = lambda i: i['last_name'])
+    students_info = []
+    for student in students:
+        first = student['first_name']
+        last = student['last_name']
+        name = f'{first} {last}'
+        students_info.append({'user_id': student['user_id'],
+                                 'name': name})
+    return jsonify(students_info)
+
+
 @app.route('/api/get_pras_to_date')
 def return_assignments_to_date():
     section_id = request.args.get('sectionId')
@@ -80,6 +96,15 @@ def return_responses():
                          'content': res.content, 
                          'date': res.submission_date})
     return jsonify([content, res_info])
+
+
+@app.route('/api/get__student_responses')
+def return_student_responses():
+    student_id = request.args.get('studentId')
+    responses = crud.get_responses_by_student(student_id)
+    responses.sort(key = lambda i: i['date'])
+    print(responses)
+    return jsonify(responses)
 
 
 @app.route('/api/get_prompts')

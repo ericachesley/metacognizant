@@ -21,6 +21,7 @@ class App extends React.Component {
     //   userId: 3,
     //   sectionId: 5,
     //   assignmentId: 8,
+    //   studentId: null,
     //   role: 'student'
     // };
 
@@ -29,12 +30,15 @@ class App extends React.Component {
       loggedIn: false,
       userId: null,
       sectionId: null,
+      assignmentId: null,
+      studentId: null,
       role: null
     };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.setSection = this.setSection.bind(this);
     this.setAssignment = this.setAssignment.bind(this);
+    this.setStudent = this.setStudent.bind(this);
     this.setRole = this.setRole.bind(this);
   }
 
@@ -48,6 +52,10 @@ class App extends React.Component {
 
   setAssignment(assignmentId) {
     this.setState({ assignmentId: assignmentId })
+  }
+
+  setStudent(studentId) {
+    this.setState({ studentId: studentId })
   }
 
   setRole(role) {
@@ -68,7 +76,16 @@ class App extends React.Component {
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/:id/:id'>
+          <Route path='/classes/:id/:str'>
+            {this.state.loggedIn ?
+              <Student
+                studentId={this.state.studentId}
+                userId={this.state.userId}
+              /> :
+              <Redirect to='/' />
+            }
+          </Route>
+          <Route path='/classes/:id/:int'>
             {this.state.loggedIn ?
               <Assignment
                 assignmentId={this.state.assignmentId}
@@ -84,6 +101,7 @@ class App extends React.Component {
                 sectionId={this.state.sectionId}
                 role={this.state.role}
                 setAssignment={this.setAssignment}
+                setStudent={this.setStudent}
               /> :
               <Redirect to='/' />
             }

@@ -97,6 +97,21 @@ def get_assignments_by_section_id(section_id):
     return assignments
 
 
+def get_students_by_section_id(section_id):
+    condition1 = (SectionAssignment.section_id==section_id)
+    condition2 = (SectionAssignment.role=='student')
+    students = (SectionAssignment.query
+                                 .options(db.joinedload('user'))
+                                 .filter(condition1, condition2)
+                                 .all())
+    students_info = []
+    for student in students:
+        students_info.append({'user_id':student.user_id, 
+                              'first_name':student.user.first_name, 
+                              'last_name':student.user.last_name})
+    return students_info
+
+
 def get_assignments_to_date(section_id, date):
     print(date)
     #date = datetime.fromisoformat(date)
@@ -117,6 +132,19 @@ def get_responses_by_assignment_id(assignment_id):
                          .filter(Response.pras_id==assignment_id)
                          .all())
     return [prompt_content, responses]
+
+
+def get_responses_by_student(student_id):
+    responses = (Response.query
+                         .options(db.joinedload('prompt_assignment'))
+                         .filter(Response.user_id==student_id)
+                         .all())
+    responses_info = []
+    for res in responses:
+        responses_info.append({'date':res.submission_date,
+                               'prompt':res.prompt_assignment.prompt.content,
+                               'response':res.content})
+    return responses_info
 
 
 def get_response(pras_id, user_id):

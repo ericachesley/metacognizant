@@ -7,6 +7,7 @@ class Overview extends React.Component {
     }
 
     componentDidMount() {
+        //this.props.setSection(null);
         fetch(`/api/get_sections?userId=${this.props.userId}`)
             .then(res => res.json())
             .then(data => {

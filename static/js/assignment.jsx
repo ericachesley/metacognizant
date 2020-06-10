@@ -32,6 +32,60 @@ class Assignment extends React.Component {
 }
 
 
+class Student extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            responses: []
+        };
+    }
+
+    componentDidMount() {
+        fetch(`/api/get__student_responses?studentId=${this.props.studentId}`)
+            .then(res => res.json())
+            .then(data => {
+                this.setState({ responses:data })
+            })
+    }
+
+
+    render() {
+        const responses = [];
+        for (const count in this.props.responses) {
+            const date = this.props.responses[count].date;
+            const dt = luxon.DateTime.fromHTTP(date);
+            const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
+            console.log(date, dt, dtLocal)
+            responses.push(
+                <tr key={count}>
+                    <td>{dtLocal}</td>
+                    <td>{this.props.responses[count].prompt}</td>
+                    <td>{this.props.responses[count].content}</td>
+                </tr>
+            )
+        }
+
+        return (
+            <div id='assignment'>
+                <h2>{<Locator />}</h2>
+                <h3>Student: {this.props.studentId}</h3>
+                <table id='response-table'>
+                    <thead>
+                        <tr>
+                            <td><b>Date</b></td>
+                            <td><b>Prompt</b></td>
+                            <td><b>Response</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>{responses}</tbody>
+                </table>
+            </div>
+        )
+    }
+}
+
+
+
 class ShowResponses extends React.Component {
     render() {
         console.log(this.props.responses.length)
