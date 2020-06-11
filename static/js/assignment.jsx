@@ -2,13 +2,14 @@ class Assignment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            assignmentId: getSlug(),
             prompt: '',
             responses: []
         };
     }
 
     componentDidMount() {
-        fetch(`/api/get_responses?assignmentId=${this.props.assignmentId}`)
+        fetch(`/api/get_responses?assignmentId=${this.state.assignmentId}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ prompt: data[0], responses: data[1] })
@@ -19,11 +20,11 @@ class Assignment extends React.Component {
     render() {
         return (
             <div id='assignment'>
-                <h2>{<Locator />}</h2>
+                <h2>{getSlug()}</h2>
                 <h3>Prompt: {this.state.prompt}</h3>
                 {this.props.role === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
-                    <GetResponse assignmentId={this.props.assignmentId}
+                    <GetResponse assignmentId={this.state.assignmentId}
                         userId={this.props.userId} />
                 }
             </div>
@@ -36,12 +37,13 @@ class Student extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            studentId: getSlug(),
             responses: []
         };
     }
 
     componentDidMount() {
-        fetch(`/api/get__student_responses?studentId=${this.props.studentId}`)
+        fetch(`/api/get__student_responses?studentId=${this.state.studentId}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ responses:data })
@@ -68,7 +70,7 @@ class Student extends React.Component {
 
         return (
             <div id='assignment'>
-                <h2>{<Locator />}</h2>
+                <h2>{getSlug()}</h2>
                 <table id='response-table'>
                     <thead>
                         <tr>

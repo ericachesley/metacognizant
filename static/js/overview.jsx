@@ -8,8 +8,12 @@ class Overview extends React.Component {
 
     componentDidMount() {
         console.log(window.location);
-        //this.props.setSection(null);
-        fetch(`/api/get_sections?userId=${this.props.userId}`)
+        // sessionStorage.removeItem('sectionId');
+        // sessionStorage.removeItem('assignmentId');
+        // sessionStorage.removeItem('studentId');
+        // sessionStorage.removeItem('role');
+        // this.props.updateState();
+        fetch(`/api/get_sections?userId=${sessionStorage.getItem('userId')}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ sections: data })
@@ -22,7 +26,7 @@ class Overview extends React.Component {
         for (const section of this.state.sections) {
             buttons.push(
                 <SectionButton section={section}
-                    setSection={this.props.setSection}
+                    // setSection={this.props.setSection}
                     setRole={this.props.setRole}
                     key={section['section_id']} />
             )
@@ -52,7 +56,8 @@ class SectionButton extends React.Component {
     handleClick(evt) {
         evt.preventDefault();
         console.log(evt.target);
-        this.props.setSection(evt.target.id);
+        //this.props.setSection(evt.target.id);
+        sessionStorage.setItem('sectionId', evt.target.id);
         this.props.setRole(this.props.section['role'])
         this.setState({ clicked: true })
     }
@@ -60,8 +65,8 @@ class SectionButton extends React.Component {
     render() {
         console.log(this.props.section['section_id'])
         if (this.state.clicked) {
-            //return (<Redirect to={`/classes/${this.props.section['name']}`} />)
-            return (<Redirect to={`/classes/section`} />)
+            return (<Redirect to={`/classes/${this.props.section['section_id']}`} />)
+            // return (<Redirect to={`/classes/section`} />)
         } else {
             return (
                 <div className='section_button_holder'>

@@ -15,6 +15,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    sessionStorage.clear();
+
     //FOR TESTING PURPOSES ONLY!
     // this.state = {
     //   loggedIn: true,
@@ -27,43 +29,66 @@ class App extends React.Component {
 
     //REAL VERSION - DON'T DELETE!
     this.state = {
-      loggedIn: false,
-      userId: null,
-      sectionId: null,
-      assignmentId: null,
-      studentId: null,
-      role: null
+      userId: sessionStorage.getItem('userId'),
+      // sectionId: sessionStorage.getItem('sectionId'),
+      // assignmentId: sessionStorage.getItem('assignmentId'),
+      // studentId: sessionStorage.getItem('studentId'),
+      role: sessionStorage.getItem('role')
     };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
-    this.setSection = this.setSection.bind(this);
-    this.setAssignment = this.setAssignment.bind(this);
-    this.setStudent = this.setStudent.bind(this);
+    // this.setSection = this.setSection.bind(this);
+    // this.setAssignment = this.setAssignment.bind(this);
+    // this.setStudent = this.setStudent.bind(this);
     this.setRole = this.setRole.bind(this);
+    // this.updateState = this.updateState.bind(this);
+    this.getSlug = this.getSlug.bind(this);
   }
+
+  // updateState() {
+  //   this.setState({
+  //     userId: sessionStorage.getItem('userId'),
+  //     sectionId: sessionStorage.getItem('sectionId'),
+  //     assignmentId: sessionStorage.getItem('assignmentId'),
+  //     studentId: sessionStorage.getItem('studentId'),
+  //     role: sessionStorage.getItem('role')
+  //   })
+  // }
 
   setLoggedIn(userId) {
-    this.setState({ userId: userId, loggedIn: true });
+    sessionStorage.setItem('userId', userId);
+    this.setState({ userId: userId });
   }
 
-  setSection(sectionId) {
-    this.setState({ sectionId: sectionId })
-  }
+  // setSection(sectionId) {
+  //   sessionStorage.setItem('sectionId', sectionId);
+  //   this.setState({ sectionId: sectionId })
+  // }
 
-  setAssignment(assignmentId) {
-    this.setState({ assignmentId: assignmentId })
-  }
+  // setAssignment(assignmentId) {
+  //   sessionStorage.setItem('assignmentId', assignmentId);
+  //   this.setState({ assignmentId: assignmentId })
+  // }
 
-  setStudent(studentId) {
-    this.setState({ studentId: studentId })
-  }
+  // setStudent(studentId) {
+  //   sessionStorage.setItem('studentId', studentId);
+  //   this.setState({ studentId: studentId })
+  // }
 
   setRole(role) {
+    sessionStorage.setItem('role', role);
     this.setState({ role: role })
   }
 
-  render() {
 
+  getSlug() {
+    const pathname = window.location.pathname;
+    const pathbits = pathname.split('/');
+    return pathbits[pathbits.length - 1]
+  }
+
+  render() {
+    const userId = sessionStorage.getItem('userId');
     return (
       <Router>
         <Switch>
@@ -71,53 +96,54 @@ class App extends React.Component {
             <Tester />
           </Route>
           <Route path='/assign'>
-            {this.state.loggedIn ?
+            {userId ?
               <CreateAssignment userId={this.state.userId} /> :
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/section/student'>
-            {this.state.loggedIn ?
+          <Route path='/classes/:id/student/:id'>
+            {userId ?
               <Student
-                studentId={this.state.studentId}
+                // studentId={window.location.pathname}
                 userId={this.state.userId}
               /> :
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/section/assignment'>
-            {this.state.loggedIn ?
+          <Route path='/classes/:id/assignment/:id'>
+            {userId ?
               <Assignment
-                assignmentId={this.state.assignmentId}
+                // assignmentId={window.location.pathname}
                 role={this.state.role}
                 userId={this.state.userId}
               /> :
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/classes/section'>
-            {this.state.loggedIn ?
+          <Route path='/classes/:id'>
+            {userId ?
               <Section
-                sectionId={this.state.sectionId}
+                // sectionId={getSlug()}
                 role={this.state.role}
-                setAssignment={this.setAssignment}
-                setStudent={this.setStudent}
+              // setAssignment={this.setAssignment}
+              // setStudent={this.setStudent}
               /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
-            {this.state.loggedIn ?
+            {userId ?
               <Overview
                 userId={this.state.userId}
-                setSection={this.setSection}
+                // setSection={this.setSection}
                 setRole={this.setRole}
+              // updateState={this.updateState}
               /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/'>
-            {this.state.loggedIn ?
+            {this.state.userId ?
               <Redirect to='/classes' /> :
               <Login setLoggedIn={this.setLoggedIn} />
             }
@@ -206,11 +232,10 @@ class Tester extends React.Component {
 }
 
 
-function Locator() {
-  let location = useLocation();
-  console.log(location)
-  const path_bits = location.pathname.split('/')
-  return (<p>{path_bits[path_bits.length - 1]}</p>)
+function getSlug() {
+  const pathname = window.location.pathname;
+    const pathbits = pathname.split('/');
+    return pathbits[pathbits.length - 1]
 }
 
 
