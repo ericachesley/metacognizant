@@ -2,7 +2,7 @@ class Section extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sectionId: getSlug(),
+            sectionId: this.props.getSlug(),
             assignments: [],
             students: []
         };
@@ -37,6 +37,7 @@ class Section extends React.Component {
             assignmentButtons.push(
                 <AssignmentButton
                     assignment={assignment}
+                    sectionId={this.state.sectionId}
                     key={assignment['pras_id']}
                 />
             )
@@ -46,13 +47,14 @@ class Section extends React.Component {
             studentButtons.push(
                 <StudentButton
                     student={student}
+                    sectionId={this.state.sectionId}
                     key={student['user_id']}
                 />
             )
         }
         return (
             <div id='section'>
-                <h2>{getSlug()}</h2>
+                <h2>{this.state.sectionId}</h2>
                 <h3>Class assignments {this.props.sectionId}</h3>
                 <p></p>
                 <h3>View by assignment:</h3>
@@ -89,7 +91,7 @@ class AssignmentButton extends React.Component {
         if (this.state.clicked) {
             return (
                 <Redirect to=
-                    {`/classes/${getSlug()}/assignment/${this.props.assignment['pras_id']}`}
+                    {`/classes/${this.props.sectionId}/assignment/${this.props.assignment['pras_id']}`}
                 />)
         } else {
             const date = this.props.assignment['date'];
@@ -129,7 +131,7 @@ class StudentButton extends React.Component {
         if (this.state.clicked) {
             return (
                 <Redirect to=
-                    {`/classes/${getSlug()}/student/${this.props.student['user_id']}`}
+                    {`/classes/${this.props.sectionId}/student/${this.props.student['user_id']}`}
                 />
             )
         } else {

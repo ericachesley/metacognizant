@@ -8,7 +8,9 @@ class Overview extends React.Component {
 
     componentDidMount() {
         sessionStorage.removeItem('role');
-        fetch(`/api/get_sections?userId=${sessionStorage.getItem('userId')}`)
+        fetch('/api/get_sections', {
+            credentials: 'same-origin'
+        })
             .then(res => res.json())
             .then(data => {
                 this.setState({ sections: data })
@@ -27,7 +29,7 @@ class Overview extends React.Component {
 
         return (
             <div id='overview'>
-                <h3>Welcome, {this.props.userId}</h3>
+                <h3>Welcome, {sessionStorage.getItem('userId')}</h3>
                 <h3>Your classes</h3>
                 <div id='container'>{buttons}</div>
             </div>

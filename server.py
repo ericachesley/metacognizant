@@ -15,7 +15,7 @@ def show_app(path):
 
 @app.route('/api/login', methods=['POST'])
 def check_credentials():
-    data = request.get_json(force=True)
+    data = request.get_json()
     email = data['email']
     password = data['password']
     user = crud.get_user_by_email(email)
@@ -33,7 +33,7 @@ def check_credentials():
 
 @app.route('/api/get_sections')
 def return_sections():
-    user_id = request.args.get('userId')
+    user_id = session['logged_in_user_id']
     sections = crud.get_sections_by_user_id(user_id)
     sections_info = []
     for section in sections:
@@ -59,7 +59,6 @@ def return_assignments():
 def return_students():
     section_id = request.args.get('sectionId')
     students = crud.get_students_by_section_id(section_id)
-    print(students)
     students.sort(key = lambda i: i['last_name'])
     students_info = []
     for student in students:
@@ -81,7 +80,6 @@ def return_assignments_to_date():
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date})
     assignments_info.sort(key = lambda i: i['date'])
-    print(assignments_info)
     return jsonify(assignments_info)
 
 
@@ -120,7 +118,7 @@ def return_all_prompts():
 
 @app.route('/api/assign_prompt', methods=['POST'])
 def add_prompt_assignment():
-    data = request.get_json(force=True)
+    data = request.get_json()
     section_ids = data['selectedSections']
     prompt_id = data['selectedPrompt']
     date = data['date']
@@ -137,7 +135,7 @@ def add_prompt_assignment():
 @app.route('/api/check_response')
 def check_for_response():
     pras_id = request.args.get('assignmentId')
-    user_id = request.args.get('userId')
+    user_id = session['logged_in_user_id']
     res = crud.get_response(pras_id, user_id)
     if res:
         return jsonify({'response':res.content, 'date':res.submission_date})
@@ -147,10 +145,10 @@ def check_for_response():
 
 @app.route('/api/submit_response', methods=['POST'])
 def create_response():
-    data = request.get_json(force=True)
+    data = request.get_json()
     response = data['response']
     date = data['date']
-    user_id = data['userId']
+    user_id = session['logged_in_user_id']
     pras_id = data['assignmentId']
     res = crud.create_response_by_ids(user_id, pras_id, response, date)
 

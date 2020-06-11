@@ -36,7 +36,11 @@ class App extends React.Component {
   getSlug() {
     const pathname = window.location.pathname;
     const pathbits = pathname.split('/');
-    return pathbits[pathbits.length - 1]
+    if (pathbits[pathbits.length - 1]) {
+      return pathbits[pathbits.length - 1]
+    } else {
+      return pathbits[pathbits.length - 2]
+    }
   }
 
   render() {
@@ -49,42 +53,36 @@ class App extends React.Component {
           </Route>
           <Route path='/assign'>
             {userId ?
-              <CreateAssignment userId={this.state.userId} /> :
+              <CreateAssignment /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes/:id/student/:id'>
             {userId ?
-              <Student userId={this.state.userId} /> :
+              <Student getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes/:id/assignment/:id'>
             {userId ?
-              <Assignment
-                role={this.state.role}
-                userId={this.state.userId}
-              /> :
+              <Assignment getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes/:id'>
             {userId ?
-              <Section role={this.state.role} /> :
+              <Section getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
             {userId ?
-              <Overview
-                userId={this.state.userId}
-                setRole={this.setRole}
-              /> :
+              <Overview /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/'>
-            {this.state.userId ?
+            {userId ?
               <Redirect to='/classes' /> :
               <Login setLoggedIn={this.setLoggedIn} />
             }
@@ -118,6 +116,9 @@ class Login extends React.Component {
       password: this.state.password
     }
     fetch('/api/login', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       method: 'post',
       body: JSON.stringify(formData)
     })
@@ -170,13 +171,6 @@ class Tester extends React.Component {
       </div>
     )
   }
-}
-
-
-function getSlug() {
-  const pathname = window.location.pathname;
-    const pathbits = pathname.split('/');
-    return pathbits[pathbits.length - 1]
 }
 
 

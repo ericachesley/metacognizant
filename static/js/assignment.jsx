@@ -2,7 +2,7 @@ class Assignment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            assignmentId: getSlug(),
+            assignmentId: this.props.getSlug(),
             prompt: '',
             responses: []
         };
@@ -20,12 +20,11 @@ class Assignment extends React.Component {
     render() {
         return (
             <div id='assignment'>
-                <h2>{getSlug()}</h2>
+                <h2>{this.state.assignmentId}</h2>
                 <h3>Prompt: {this.state.prompt}</h3>
                 {sessionStorage.getItem('role') === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
-                    <GetResponse assignmentId={this.state.assignmentId}
-                        userId={this.props.userId} />
+                    <GetResponse assignmentId={this.state.assignmentId} />
                 }
             </div>
         )
@@ -37,7 +36,7 @@ class Student extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            studentId: getSlug(),
+            studentId: this.props.getSlug(),
             responses: []
         };
     }
@@ -69,7 +68,7 @@ class Student extends React.Component {
 
         return (
             <div id='assignment'>
-                <h2>{getSlug()}</h2>
+                <h2>{this.state.studentId}</h2>
                 <table id='response-table'>
                     <thead>
                         <tr>
@@ -139,7 +138,9 @@ class GetResponse extends React.Component {
 
 
     componentDidMount() {
-        fetch(`/api/check_response?assignmentId=${this.props.assignmentId}&userId=${this.props.userId}`)
+        fetch(`/api/check_response?assignmentId=${this.props.assignmentId}`, {
+            credentials: 'same-origin'
+        })
             .then(res => res.json())
             .then(data => {
                 if (data) {
@@ -163,12 +164,15 @@ class GetResponse extends React.Component {
         const formData = {
             response: this.state.response,
             date: date,
-            assignmentId: this.props.assignmentId,
-            userId: this.props.userId
+            assignmentId: this.props.assignmentId
         }
         fetch('/api/submit_response', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
             method: 'post',
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
+            credentials: "same-origin"
         })
             .then(res => res.json())
             .then(data => {
@@ -225,12 +229,16 @@ class CreateAssignment extends React.Component {
 
 
     componentDidMount() {
-        fetch(`/api/get_sections?userId=${this.props.userId}`)
+        fetch('/api/get_sections', {
+            credentials: 'same-origin'
+        })
             .then(res => res.json())
             .then(data => {
                 this.setState({ sections: data })
             })
-        fetch(`/api/get_prompts?userId=${this.props.userId}`)
+        fetch('/api/get_prompts', {
+            credentials: 'same-origin'
+        })
             .then(res => res.json())
             .then(data => {
                 this.setState({ prompts: data })
@@ -260,6 +268,9 @@ class CreateAssignment extends React.Component {
             'date': this.state.date
         }
         fetch('/api/assign_prompt', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
             method: 'post',
             body: JSON.stringify(formData)
         })
