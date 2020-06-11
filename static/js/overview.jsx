@@ -7,12 +7,7 @@ class Overview extends React.Component {
     }
 
     componentDidMount() {
-        console.log(window.location);
-        // sessionStorage.removeItem('sectionId');
-        // sessionStorage.removeItem('assignmentId');
-        // sessionStorage.removeItem('studentId');
         sessionStorage.removeItem('role');
-        // this.props.updateState();
         fetch(`/api/get_sections?userId=${sessionStorage.getItem('userId')}`)
             .then(res => res.json())
             .then(data => {
@@ -21,12 +16,10 @@ class Overview extends React.Component {
     }
 
     render() {
-
         const buttons = [];
         for (const section of this.state.sections) {
             buttons.push(
                 <SectionButton section={section}
-                    // setSection={this.props.setSection}
                     setRole={this.props.setRole}
                     key={section['section_id']} />
             )
@@ -38,7 +31,6 @@ class Overview extends React.Component {
                 <h3>Your classes</h3>
                 <div id='container'>{buttons}</div>
             </div>
-
         )
     }
 }
@@ -55,19 +47,17 @@ class SectionButton extends React.Component {
 
     handleClick(evt) {
         evt.preventDefault();
-        console.log(evt.target);
-        //this.props.setSection(evt.target.id);
-        //sessionStorage.setItem('sectionId', evt.target.id);
-        //this.props.setRole(this.props.section['role'])
         sessionStorage.setItem('role', this.props.section['role'])
         this.setState({ clicked: true })
     }
 
     render() {
-        console.log(this.props.section['section_id'])
         if (this.state.clicked) {
-            return (<Redirect to={`/classes/${this.props.section['section_id']}`} />)
-            // return (<Redirect to={`/classes/section`} />)
+            return (
+                <Redirect
+                    to={`/classes/${this.props.section['section_id']}`}
+                />
+            )
         } else {
             return (
                 <div className='section_button_holder'>

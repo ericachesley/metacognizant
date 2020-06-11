@@ -9,7 +9,6 @@ class Section extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
         if (sessionStorage.getItem('role') === "teacher") {
             fetch(`/api/get_pras?sectionId=${this.state.sectionId}`)
                 .then(res => res.json())
@@ -24,9 +23,7 @@ class Section extends React.Component {
         } else {
             const dt = luxon.DateTime;
             const utcDt = dt.utc().toISO();
-            console.log(utcDt);
-            fetch(`/api/get_pras_to_date
-                  ?sectionId=${this.props.sectionId}&date=${utcDt}`)
+            fetch(`/api/get_pras_to_date?sectionId=${this.state.sectionId}&date=${utcDt}`)
                 .then(res => res.json())
                 .then(data => {
                     this.setState({ assignments: data })
@@ -38,17 +35,19 @@ class Section extends React.Component {
         const assignmentButtons = [];
         for (const assignment of this.state.assignments) {
             assignmentButtons.push(
-                <AssignmentButton assignment={assignment}
-                    // setAssignment={this.props.setAssignment}
-                    key={assignment['pras_id']} />
+                <AssignmentButton
+                    assignment={assignment}
+                    key={assignment['pras_id']}
+                />
             )
         }
         const studentButtons = [];
         for (const student of this.state.students) {
             studentButtons.push(
-                <StudentButton student={student}
-                    // setStudent={this.props.setStudent}
-                    key={student['user_id']} />
+                <StudentButton
+                    student={student}
+                    key={student['user_id']}
+                />
             )
         }
         return (
@@ -57,15 +56,15 @@ class Section extends React.Component {
                 <h3>Class assignments {this.props.sectionId}</h3>
                 <p></p>
                 <h3>View by assignment:</h3>
-                <div>{assignmentButtons}
-                    <p></p>
-                    {sessionStorage.getItem('role') == 'teacher' ? 
-                    <Link to='/assign'>
-                        Create new assignment
-                    </Link> : <p></p>}
-                </div>
-                <h3>View by student:</h3>
-                <div>{studentButtons}</div>
+                <div>{assignmentButtons}</div>
+                <p></p>
+                {sessionStorage.getItem('role') == 'teacher' ?
+                    <div>
+                        <Link to='/assign'> Create new assignment </Link>
+                        <h3>View by student:</h3>
+                        <div>{studentButtons}</div>
+                    </div> :
+                    <p></p>}
             </div>
         )
     }
@@ -83,21 +82,20 @@ class AssignmentButton extends React.Component {
 
     handleClick(evt) {
         evt.preventDefault();
-        console.log(evt.target);
-        // this.props.setAssignment(evt.target.id);
-        //sessionStorage.setItem('assignmentId', evt.target.id);
         this.setState({ clicked: true })
     }
 
     render() {
-        console.log(this.props.assignment)
         if (this.state.clicked) {
-            //return (<Redirect to={`${<Locator />}/${this.props.assignment['date']}`} />)
-            return (<Redirect to={`/classes/${getSlug()}/assignment/${this.props.assignment['pras_id']}`} />)
+            return (
+                <Redirect to=
+                    {`/classes/${getSlug()}/assignment/${this.props.assignment['pras_id']}`}
+                />)
         } else {
             const date = this.props.assignment['date'];
             const dt = luxon.DateTime.fromHTTP(date);
-            const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATE_FULL);
+            const dtLocal = dt.toLocal()
+                .toLocaleString(luxon.DateTime.DATE_FULL);
             return (
                 <div className='assignment_button_holder'>
                     <button type='assignment_button'
@@ -124,18 +122,16 @@ class StudentButton extends React.Component {
 
     handleClick(evt) {
         evt.preventDefault();
-        console.log(evt.target);
-        //this.props.setStudent(evt.target.id);
-        //sessionStorage.setItem('studentId', evt.target.id);
         this.setState({ clicked: true })
     }
 
     render() {
-        console.log(this.props.student)
         if (this.state.clicked) {
-            //return (<Redirect to={`${<Locator />}/${this.props.student['name']}`} />)
-            return (<Redirect to={`/classes/${getSlug()}/student/${this.props.student['user_id']}`} />)
-            // return (<Redirect to='/classes/section/student' />)
+            return (
+                <Redirect to=
+                    {`/classes/${getSlug()}/student/${this.props.student['user_id']}`}
+                />
+            )
         } else {
             return (
                 <div className='student_button_holder'>

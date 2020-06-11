@@ -46,19 +46,18 @@ class Student extends React.Component {
         fetch(`/api/get__student_responses?studentId=${this.state.studentId}`)
             .then(res => res.json())
             .then(data => {
-                this.setState({ responses:data })
+                this.setState({ responses: data })
             })
     }
 
 
     render() {
-        console.log(this.state.responses);
         const responses = [];
         for (const count in this.state.responses) {
             const date = this.state.responses[count].date;
             const dt = luxon.DateTime.fromHTTP(date);
-            const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
-            console.log(date, dt, dtLocal)
+            const dtLocal = dt.toLocal()
+                .toLocaleString(luxon.DateTime.DATETIME_SHORT);
             responses.push(
                 <tr key={count}>
                     <td>{dtLocal}</td>
@@ -90,7 +89,6 @@ class Student extends React.Component {
 
 class ShowResponses extends React.Component {
     render() {
-        console.log(this.props.responses.length)
         if (this.props.responses.length == 0) {
             return (
                 <p>No responses yet.</p>
@@ -100,8 +98,8 @@ class ShowResponses extends React.Component {
             for (const count in this.props.responses) {
                 const date = this.props.responses[count].date;
                 const dt = luxon.DateTime.fromHTTP(date);
-                const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
-                console.log(date, dt, dtLocal)
+                const dtLocal = dt.toLocal()
+                    .toLocaleString(luxon.DateTime.DATETIME_SHORT);
                 responses.push(
                     <tr key={count}>
                         <td>{this.props.responses[count].student}</td>
@@ -145,7 +143,6 @@ class GetResponse extends React.Component {
             .then(res => res.json())
             .then(data => {
                 if (data) {
-                    console.log(data.date);
                     const date = data.date;
                     const dt = luxon.DateTime.fromHTTP(date);
                     const dtLocal = dt.toLocal().toLocaleString(luxon.DateTime.DATETIME_SHORT);
@@ -169,14 +166,12 @@ class GetResponse extends React.Component {
             assignmentId: this.props.assignmentId,
             userId: this.props.userId
         }
-        console.log(formData);
         fetch('/api/submit_response', {
             method: 'post',
             body: JSON.stringify(formData)
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 alert('Response submitted')
             })
         this.setState({ response: '' });
@@ -245,7 +240,6 @@ class CreateAssignment extends React.Component {
 
     handleFieldChange(evt) {
         let fieldName = evt.target.name;
-        console.log('Before:', fieldName, evt.target.value);
         if (evt.target.type === "checkbox") {
             if (evt.target.checked) {
                 this.state.selectedSections.add(evt.target.value);
@@ -255,7 +249,6 @@ class CreateAssignment extends React.Component {
         } else {
             this.setState({ [fieldName]: evt.target.value });
         }
-        console.log('After:', this.state);
     }
 
 
@@ -266,14 +259,12 @@ class CreateAssignment extends React.Component {
             'selectedPrompt': this.state.selectedPrompt,
             'date': this.state.date
         }
-        console.log(formData)
         fetch('/api/assign_prompt', {
             method: 'post',
             body: JSON.stringify(formData)
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 alert('Prompt assignment submitted')
             })
         this.setState({
@@ -305,7 +296,10 @@ class CreateAssignment extends React.Component {
         const promptOptions = [];
         for (const prmpt of this.state.prompts) {
             promptOptions.push(
-                <option key={prmpt.prompt_id} name='prompts' value={prmpt.prompt_id}>
+                <option
+                    key={prmpt.prompt_id}
+                    name='prompts'
+                    value={prmpt.prompt_id}>
                     {prmpt.content}
                 </option>
             )

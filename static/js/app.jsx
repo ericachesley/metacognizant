@@ -8,78 +8,30 @@ const Switch = window.ReactRouterDOM.Switch;
 const Redirect = window.ReactRouterDOM.Redirect;
 const useLocation = window.ReactRouterDOM.useLocation;
 const useRouteMatch = window.ReactRouterDOM.useRouteMatch;
-//const DateTime = window.DateTime;
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    //sessionStorage.clear();
-
     //FOR TESTING PURPOSES ONLY!
     // this.state = {
-    //   loggedIn: true,
     //   userId: 3,
-    //   sectionId: 5,
-    //   assignmentId: 8,
-    //   studentId: null,
-    //   role: 'student'
     // };
 
     //REAL VERSION - DON'T DELETE!
     this.state = {
       userId: sessionStorage.getItem('userId'),
-      // sectionId: sessionStorage.getItem('sectionId'),
-      // assignmentId: sessionStorage.getItem('assignmentId'),
-      // studentId: sessionStorage.getItem('studentId'),
-      role: sessionStorage.getItem('role')
     };
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
-    // this.setSection = this.setSection.bind(this);
-    // this.setAssignment = this.setAssignment.bind(this);
-    // this.setStudent = this.setStudent.bind(this);
-    //this.setRole = this.setRole.bind(this);
-    // this.updateState = this.updateState.bind(this);
     this.getSlug = this.getSlug.bind(this);
   }
-
-  // updateState() {
-  //   this.setState({
-  //     userId: sessionStorage.getItem('userId'),
-  //     sectionId: sessionStorage.getItem('sectionId'),
-  //     assignmentId: sessionStorage.getItem('assignmentId'),
-  //     studentId: sessionStorage.getItem('studentId'),
-  //     role: sessionStorage.getItem('role')
-  //   })
-  // }
 
   setLoggedIn(userId) {
     sessionStorage.setItem('userId', userId);
     this.setState({ userId: userId });
   }
-
-  // setSection(sectionId) {
-  //   sessionStorage.setItem('sectionId', sectionId);
-  //   this.setState({ sectionId: sectionId })
-  // }
-
-  // setAssignment(assignmentId) {
-  //   sessionStorage.setItem('assignmentId', assignmentId);
-  //   this.setState({ assignmentId: assignmentId })
-  // }
-
-  // setStudent(studentId) {
-  //   sessionStorage.setItem('studentId', studentId);
-  //   this.setState({ studentId: studentId })
-  // }
-
-  // setRole(role) {
-  //   sessionStorage.setItem('role', role);
-  //   this.setState({ role: role })
-  // }
-
 
   getSlug() {
     const pathname = window.location.pathname;
@@ -103,17 +55,13 @@ class App extends React.Component {
           </Route>
           <Route path='/classes/:id/student/:id'>
             {userId ?
-              <Student
-                // studentId={window.location.pathname}
-                userId={this.state.userId}
-              /> :
+              <Student userId={this.state.userId} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes/:id/assignment/:id'>
             {userId ?
               <Assignment
-                // assignmentId={window.location.pathname}
                 role={this.state.role}
                 userId={this.state.userId}
               /> :
@@ -122,12 +70,7 @@ class App extends React.Component {
           </Route>
           <Route path='/classes/:id'>
             {userId ?
-              <Section
-                // sectionId={getSlug()}
-                role={this.state.role}
-              // setAssignment={this.setAssignment}
-              // setStudent={this.setStudent}
-              /> :
+              <Section role={this.state.role} /> :
               <Redirect to='/' />
             }
           </Route>
@@ -135,9 +78,7 @@ class App extends React.Component {
             {userId ?
               <Overview
                 userId={this.state.userId}
-                // setSection={this.setSection}
                 setRole={this.setRole}
-              // updateState={this.updateState}
               /> :
               <Redirect to='/' />
             }

@@ -81,6 +81,7 @@ def return_assignments_to_date():
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date})
     assignments_info.sort(key = lambda i: i['date'])
+    print(assignments_info)
     return jsonify(assignments_info)
 
 
