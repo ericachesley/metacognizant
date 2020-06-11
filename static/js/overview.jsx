@@ -11,7 +11,7 @@ class Overview extends React.Component {
         // sessionStorage.removeItem('sectionId');
         // sessionStorage.removeItem('assignmentId');
         // sessionStorage.removeItem('studentId');
-        // sessionStorage.removeItem('role');
+        sessionStorage.removeItem('role');
         // this.props.updateState();
         fetch(`/api/get_sections?userId=${sessionStorage.getItem('userId')}`)
             .then(res => res.json())
@@ -57,8 +57,9 @@ class SectionButton extends React.Component {
         evt.preventDefault();
         console.log(evt.target);
         //this.props.setSection(evt.target.id);
-        sessionStorage.setItem('sectionId', evt.target.id);
-        this.props.setRole(this.props.section['role'])
+        //sessionStorage.setItem('sectionId', evt.target.id);
+        //this.props.setRole(this.props.section['role'])
+        sessionStorage.setItem('role', this.props.section['role'])
         this.setState({ clicked: true })
     }
 

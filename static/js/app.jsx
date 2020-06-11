@@ -15,7 +15,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    sessionStorage.clear();
+    //sessionStorage.clear();
 
     //FOR TESTING PURPOSES ONLY!
     // this.state = {
@@ -40,7 +40,7 @@ class App extends React.Component {
     // this.setSection = this.setSection.bind(this);
     // this.setAssignment = this.setAssignment.bind(this);
     // this.setStudent = this.setStudent.bind(this);
-    this.setRole = this.setRole.bind(this);
+    //this.setRole = this.setRole.bind(this);
     // this.updateState = this.updateState.bind(this);
     this.getSlug = this.getSlug.bind(this);
   }
@@ -75,10 +75,10 @@ class App extends React.Component {
   //   this.setState({ studentId: studentId })
   // }
 
-  setRole(role) {
-    sessionStorage.setItem('role', role);
-    this.setState({ role: role })
-  }
+  // setRole(role) {
+  //   sessionStorage.setItem('role', role);
+  //   this.setState({ role: role })
+  // }
 
 
   getSlug() {

@@ -22,7 +22,7 @@ class Assignment extends React.Component {
             <div id='assignment'>
                 <h2>{getSlug()}</h2>
                 <h3>Prompt: {this.state.prompt}</h3>
-                {this.props.role === 'teacher' ?
+                {sessionStorage.getItem('role') === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
                     <GetResponse assignmentId={this.state.assignmentId}
                         userId={this.props.userId} />

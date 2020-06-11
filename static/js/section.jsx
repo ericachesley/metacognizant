@@ -10,7 +10,7 @@ class Section extends React.Component {
 
     componentDidMount() {
         console.log(this.props)
-        if (this.props.role === "teacher") {
+        if (sessionStorage.getItem('role') === "teacher") {
             fetch(`/api/get_pras?sectionId=${this.state.sectionId}`)
                 .then(res => res.json())
                 .then(data => {
@@ -59,7 +59,8 @@ class Section extends React.Component {
                 <h3>View by assignment:</h3>
                 <div>{assignmentButtons}
                     <p></p>
-                    {this.props.role == 'teacher' ? <Link to='/assign'>
+                    {sessionStorage.getItem('role') == 'teacher' ? 
+                    <Link to='/assign'>
                         Create new assignment
                     </Link> : <p></p>}
                 </div>
@@ -84,7 +85,7 @@ class AssignmentButton extends React.Component {
         evt.preventDefault();
         console.log(evt.target);
         // this.props.setAssignment(evt.target.id);
-        sessionStorage.setItem('assignmentId', evt.target.id);
+        //sessionStorage.setItem('assignmentId', evt.target.id);
         this.setState({ clicked: true })
     }
 
@@ -125,7 +126,7 @@ class StudentButton extends React.Component {
         evt.preventDefault();
         console.log(evt.target);
         //this.props.setStudent(evt.target.id);
-        sessionStorage.setItem('studentId', evt.target.id);
+        //sessionStorage.setItem('studentId', evt.target.id);
         this.setState({ clicked: true })
     }
 
