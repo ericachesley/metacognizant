@@ -1,73 +1,75 @@
 class Login extends React.Component {
     constructor(props) {
-      super(props);
-      this.state = {
-        email: '',
-        password: ''
-      };
-      this.handleFieldChange = this.handleFieldChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+        super(props);
+        this.state = {
+            email: '',
+            password: ''
+        };
+        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-  
+
     handleFieldChange(evt) {
-      this.setState({ [evt.target.id]: evt.target.value });
+        this.setState({ [evt.target.id]: evt.target.value });
     }
-  
+
     handleSubmit(evt) {
-      evt.preventDefault();
-      const formData = {
-        email: this.state.email,
-        password: this.state.password
-      }
-      fetch('/api/login', {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'post',
-        body: JSON.stringify(formData)
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (typeof data === 'number') {
-            this.props.setLoggedIn(data);
-          } else {
-            alert(data);
-          }
+        evt.preventDefault();
+        const formData = {
+            email: this.state.email,
+            password: this.state.password
+        }
+        fetch('/api/login', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'post',
+            body: JSON.stringify(formData)
         })
-      this.setState({ email: '', password: '' });
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (typeof data[0] == 'number') {
+                    this.props.setLoggedIn(data);
+                } else {
+                    alert(data);
+                }
+            })
+        this.setState({ email: '', password: '' });
     }
-  
+
     render() {
-      return (
-        <div id='login'>
-          <form onSubmit={this.handleSubmit}>Please log in.
+        return (
+            <div id='login'>
+                <p></p>
+                <form onSubmit={this.handleSubmit}>Please log in.
             <p>
-              Email: <input
-                id='email'
-                type='text'
-                value={this.state.email}
-                onChange={this.handleFieldChange}
-              />
-            </p>
-            <p>
-              Password: <input
-                id='password'
-                type='text'
-                value={this.state.password}
-                onChange={this.handleFieldChange}
-              />
-            </p>
-            <p>
-              <input type='submit' />
-            </p>
-          </form>
-        </div>
-      )
+                        Email: <input
+                            id='email'
+                            type='text'
+                            value={this.state.email}
+                            onChange={this.handleFieldChange}
+                        />
+                    </p>
+                    <p>
+                        Password: <input
+                            id='password'
+                            type='text'
+                            value={this.state.password}
+                            onChange={this.handleFieldChange}
+                        />
+                    </p>
+                    <p>
+                        <input type='submit' />
+                    </p>
+                </form>
+            </div>
+        )
     }
-  }
-  
-  
-  class Overview extends React.Component {
+}
+
+
+class Overview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -98,7 +100,7 @@ class Login extends React.Component {
 
         return (
             <div id='overview'>
-                <h3>Welcome, {sessionStorage.getItem('userId')}</h3>
+                <h3>Welcome, {sessionStorage.getItem('name')}.</h3>
                 <h3>Your classes</h3>
                 <div id='container'>{buttons}</div>
             </div>

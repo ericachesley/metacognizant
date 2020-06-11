@@ -21,14 +21,21 @@ def check_credentials():
     user = crud.get_user_by_email(email)
 
     if not user:
-        status = 'That email address is not associated with a user in our system.'
-    elif user.password == password:
-        session['logged_in_user_id'] = user.user_id
-        status = user.user_id
+        res = 'That email address is not associated with a user in our system.'
+    elif user.password != password:
+        res = 'Incorrect password. Please try again.'
     else:
-        status = 'Incorrect password. Please try again.'
+        session['logged_in_user_id'] = user.user_id
+        name = f'{user.first_name} {user.last_name}'
+        # sections = crud.get_sections_by_user_id(user.user_id)
+        # sections_info = []
+        # for section in sections:
+        #     sections_info.append({'section_id': section[0].section_id,
+        #                         'name': section[0].name, 
+        #                         'role': section[1]})
+        res = [user.user_id, name]
 
-    return jsonify(status)
+    return jsonify(res)
 
 
 @app.route('/api/get_sections')

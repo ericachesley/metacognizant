@@ -28,8 +28,12 @@ class App extends React.Component {
     this.getSlug = this.getSlug.bind(this);
   }
 
-  setLoggedIn(userId) {
+  setLoggedIn(data) {
+    let userId, name;
+    [userId, name] = data;
     sessionStorage.setItem('userId', userId);
+    sessionStorage.setItem('name', name);
+    // sessionStorage.setItem('sections', JSON.stringify(sections))
     this.setState({ userId: userId });
   }
 
