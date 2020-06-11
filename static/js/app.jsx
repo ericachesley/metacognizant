@@ -47,6 +47,7 @@ class App extends React.Component {
     const userId = sessionStorage.getItem('userId');
     return (
       <Router>
+        <NavBar />
         <Switch>
           <Route path='/test'>
             <Tester />
@@ -89,6 +90,21 @@ class App extends React.Component {
           </Route>
         </Switch>
       </Router>
+    )
+  }
+}
+
+
+class NavBar extends React.Component {
+  render() {
+    return (
+      <div>
+        <Link to='/classes'>Home</Link>
+        <span> ~ </span>
+        <Link to='/assign'>Create Assignment</Link>
+        <span> ~ </span>
+        {/* <Link to={this.props.history[-1]}>Back</Link> */}
+      </div>
     )
   }
 }
