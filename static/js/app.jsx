@@ -155,6 +155,7 @@ class Admin extends React.Component {
     this.state = {
       users: []
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -167,13 +168,29 @@ class Admin extends React.Component {
       })
   }
 
+  handleClick(evt) {
+    //evt.preventDefault();
+    sessionStorage.setItem('name', evt.target.name);
+    sessionStorage.setItem('role', evt.target.getAttribute('role'));
+    sessionStorage.setItem('userId', evt.target.getAttribute('userid'));
+  }
+
   render() {
     const users = []
     for (const user of this.state.users) {
       const list = [<h3 key={user.name}>{user.name}</h3>]
       for (const section of user.sections) {
         list.push(
-          <p key={user.name,section.id}>{section.name} <a href={`/classes/${section.id}`}>{section.id}</a> {section.role}</p>
+          <p key={user.name, section.id}>
+            <a href={`/classes/${section.id}`}
+              onClick={this.handleClick}
+              id={section.id}
+              userid={user.id}
+              name={user.name}
+              role={section.role}>
+              {section.name}
+            </a>: {section.role}
+          </p>
         );
       }
       users.push(list);

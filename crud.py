@@ -154,9 +154,9 @@ def get_response(pras_id, user_id):
 
 
 def get_all_prompts(user_id):
-    condition1 = (Prompt.user_id==user_id)
-    condition2 = (Prompt.user_id==None)
-    return Prompt.query.filter(condition1|condition2).all()
+    condition1 = (Prompt.user_id == user_id)
+    condition2 = (Prompt.user_id == None)
+    return Prompt.query.filter(condition1 | condition2).all()
 
 
 def get_teacher_assignments():
@@ -177,17 +177,18 @@ def get_users_with_section_info():
         name = f'{user.first_name} {user.last_name}'
         user_sections = []
         sections = (SectionAssignment.query
-        .filter(SectionAssignment.user_id==user.user_id)
-        .all())
+                    .filter(SectionAssignment.user_id == user.user_id)
+                    .all())
         for seas in sections:
-            user_sections.append({'name': seas.section.name, 
-                                  'id': seas.section.section_id, 
+            user_sections.append({'name': seas.section.name,
+                                  'id': seas.section.section_id,
                                   'role': seas.role})
-        users_info.append({'name': name, 'sections': user_sections})
+        users_info.append({'name': name,
+                           'id': user.user_id,
+                           'sections': user_sections})
     return users_info
 
 
 if __name__ == '__main__':
     from server import app
     connect_to_db(app)
-
