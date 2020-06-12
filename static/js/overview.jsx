@@ -44,7 +44,7 @@ class Login extends React.Component {
                 <h1>Metacognizant</h1>
                 <p></p>
                 <form onSubmit={this.handleSubmit}>Please log in.
-            <p>
+                    <p>
                         Email: <input
                             id='email'
                             type='text'

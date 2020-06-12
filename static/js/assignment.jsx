@@ -231,7 +231,7 @@ class CreateAssignment extends React.Component {
         super(props);
         this.state = {
             selectedSections: new Set(),
-            selectedPrompt: null,
+            selectedPrompt: 'select-one',
             date: null,
             sections: [],
             prompts: [],
@@ -303,8 +303,9 @@ class CreateAssignment extends React.Component {
             })
         this.setState({
             selectedSections: new Set(),
-            selectedPrompt: null,
+            selectedPrompt: 'select-one',
             date: null,
+            newPrompt: false
         });
         evt.target.reset();
     }
@@ -354,8 +355,9 @@ class CreateAssignment extends React.Component {
                     <p></p>
                     <div>
                         <label>Choose prompt to assign: </label>
-                        <select defaultValue='select-one'
+                        <select
                             name="selectedPrompt"
+                            value={this.state.selectedPrompt}
                             onChange={this.handleFieldChange}>
                             <option name='prompts' value='select-one'>
                                 --Select a prompt--
