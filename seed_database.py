@@ -91,4 +91,4 @@ for _ in range(10):
 teachers = crud.get_teacher_assignments()
 for teacher in teachers:
     for i in range(2):
-        crud.create_prompt(fake.paragraph(), teacher)
+        crud.create_prompt(fake.sentence(), teacher)

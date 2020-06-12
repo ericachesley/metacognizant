@@ -115,7 +115,8 @@ def return_student_responses():
 
 @app.route('/api/get_prompts')
 def return_all_prompts():
-    prompts = crud.get_all_prompts()
+    user_id = session['logged_in_user_id']
+    prompts = crud.get_all_prompts(user_id)
     prompt_info =[]
     for prompt in prompts:
         prompt_info.append({'prompt_id':prompt.prompt_id, 

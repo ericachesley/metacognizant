@@ -155,8 +155,10 @@ def get_response(pras_id, user_id):
     return response
 
 
-def get_all_prompts():
-    return Prompt.query.all()
+def get_all_prompts(user_id):
+    condition1 = (Prompt.user_id==user_id)
+    condition2 = (Prompt.user_id==None)
+    return Prompt.query.filter(condition1|condition2).all()
 
 
 def get_teacher_assignments():
