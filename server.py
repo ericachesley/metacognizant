@@ -10,8 +10,13 @@ app.secret_key = 'mygreatsecretkey'
 @app.route('/', defaults={'path':''})
 @app.route('/<path:path>')
 def show_app(path):
+    session['requested_path'] = path
     return render_template('index.html')
 
+@app.route('/api/get_path')
+def return_path():
+    path = session['requested_path']
+    return jsonify(path)
 
 @app.route('/api/login', methods=['POST'])
 def check_credentials():
@@ -27,12 +32,6 @@ def check_credentials():
     else:
         session['logged_in_user_id'] = user.user_id
         name = f'{user.first_name} {user.last_name}'
-        # sections = crud.get_sections_by_user_id(user.user_id)
-        # sections_info = []
-        # for section in sections:
-        #     sections_info.append({'section_id': section[0].section_id,
-        #                         'name': section[0].name, 
-        #                         'role': section[1]})
         res = [user.user_id, name]
 
     return jsonify(res)
@@ -109,7 +108,6 @@ def return_student_responses():
     student_id = request.args.get('studentId')
     responses = crud.get_responses_by_student(student_id)
     responses.sort(key = lambda i: i['date'])
-    print(responses)
     return jsonify(responses)
 
 
@@ -130,7 +128,6 @@ def add_prompt_assignment():
     section_ids = data['selectedSections']
     prompt_id = data['selectedPrompt']
     date = data['date']
-    print(section_ids, prompt_id, date)
 
     new_pras = []
     for section_id in section_ids:
@@ -162,6 +159,12 @@ def create_response():
 
     return jsonify({'id':res.response_id})
 
+
+@app.route('/api/get_all_users')
+def return_users():
+    users = crud.get_users_with_section_info()
+    return jsonify(users)
+    
 
 if __name__ == '__main__':
     connect_to_db(app)

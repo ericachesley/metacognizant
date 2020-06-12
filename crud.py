@@ -114,8 +114,6 @@ def get_students_by_section_id(section_id):
 
 
 def get_assignments_to_date(section_id, date):
-    print(date)
-    #date = datetime.fromisoformat(date)
     condition1 = (PromptAssignment.section_id == section_id)
     condition2 = (PromptAssignment.due_date <= date)
     assignments = (PromptAssignment.query
@@ -170,6 +168,23 @@ def get_teacher_assignments():
     for teas in teacherAssignments:
         teachers.append(teas.user)
     return teachers
+
+
+def get_users_with_section_info():
+    users = User.query.all()
+    users_info = []
+    for user in users:
+        name = f'{user.first_name} {user.last_name}'
+        user_sections = []
+        sections = (SectionAssignment.query
+        .filter(SectionAssignment.user_id==user.user_id)
+        .all())
+        for seas in sections:
+            user_sections.append({'name': seas.section.name, 
+                                  'id': seas.section.section_id, 
+                                  'role': seas.role})
+        users_info.append({'name': name, 'sections': user_sections})
+    return users_info
 
 
 if __name__ == '__main__':

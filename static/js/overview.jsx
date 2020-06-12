@@ -126,6 +126,7 @@ class SectionButton extends React.Component {
 
     render() {
         if (this.state.clicked) {
+            console.log("sectionbutton");
             return (
                 <Redirect
                     to={`/classes/${this.props.section['section_id']}`}

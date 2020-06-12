@@ -89,6 +89,7 @@ class AssignmentButton extends React.Component {
 
     render() {
         if (this.state.clicked) {
+            console.log("assignmentbutton");
             return (
                 <Redirect to=
                     {`/classes/${this.props.sectionId}/assignment/${this.props.assignment['pras_id']}`}
@@ -129,6 +130,7 @@ class StudentButton extends React.Component {
 
     render() {
         if (this.state.clicked) {
+            console.log("studentbutton");
             return (
                 <Redirect to=
                     {`/classes/${this.props.sectionId}/student/${this.props.student['user_id']}`}

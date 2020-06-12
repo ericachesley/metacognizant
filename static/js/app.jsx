@@ -22,11 +22,11 @@ class App extends React.Component {
     //REAL VERSION - DON'T DELETE!
     this.state = {
       userId: sessionStorage.getItem('userId'),
+      path: '/'
     };
-
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.getSlug = this.getSlug.bind(this);
-    this.updateHistory = this.updateHistory.bind(this);
+    //this.updateHistory = this.updateHistory.bind(this);
   }
 
   setLoggedIn(data) {
@@ -34,7 +34,6 @@ class App extends React.Component {
     [userId, name] = data;
     sessionStorage.setItem('userId', userId);
     sessionStorage.setItem('name', name);
-    // sessionStorage.setItem('sections', JSON.stringify(sections))
     this.setState({ userId: userId });
   }
 
@@ -48,29 +47,37 @@ class App extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    fetch('/api/store_history', {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'post',
-      body: sessionStorage.getItem('history')
-    })
+  componentDidMount() {
+    fetch('/api/get_path')
       .then(res => res.json())
       .then(data => {
-        console.log(data);
+        this.setState({ path: data })
       })
   }
 
-  updateHistory() {
-    if (sessionStorage.getItem('history')) {
-      const history = sessionStorage.getItem('history')
-      history.concat(' ', window.location.pathname);
-      sessionStorage.setItem('history', history)
-    } else {
-      sessionStorage.setItem('history', window.location.pathname)
-    }
-  }
+  // componentWillUnmount() {
+  //   fetch('/api/store_history', {
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     method: 'post',
+  //     body: sessionStorage.getItem('history')
+  //   })
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       console.log(data);
+  //     })
+  // }
+
+  // updateHistory() {
+  //   if (sessionStorage.getItem('history')) {
+  //     const history = sessionStorage.getItem('history')
+  //     history.concat(' ', window.location.pathname);
+  //     sessionStorage.setItem('history', history)
+  //   } else {
+  //     sessionStorage.setItem('history', window.location.pathname)
+  //   }
+  // }
 
   render() {
     const userId = sessionStorage.getItem('userId');
@@ -78,6 +85,9 @@ class App extends React.Component {
       <Router>
         <NavBar />
         <Switch>
+          <Route path='/admin'>
+            <Admin />
+          </Route>
           <Route path='/test'>
             <Tester />
           </Route>
@@ -133,6 +143,46 @@ class NavBar extends React.Component {
         <Link to='/assign'>Create Assignment</Link>
         <span> ~ </span>
         {/* <Link to={this.props.history[-1]}>Back</Link> */}
+      </div>
+    )
+  }
+}
+
+
+class Admin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: []
+    };
+  }
+
+  componentDidMount() {
+    fetch('/api/get_all_users', {
+      credentials: 'same-origin'
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ users: data })
+      })
+  }
+
+  render() {
+    const users = []
+    for (const user of this.state.users) {
+      const list = [<h3>{user.name}</h3>]
+      for (const section of user.sections) {
+        list.push(
+          <p>{section.name} <a href={`/classes/${section.id}`}>{section.id}</a> {section.role}</p>
+        );
+        list.push(<p></p>)
+      }
+      users.push(list);
+    }
+
+    return (
+      <div>
+        {users}
       </div>
     )
   }
