@@ -100,8 +100,7 @@ class Overview extends React.Component {
 
         return (
             <div id='overview'>
-                <h3>Welcome, {sessionStorage.getItem('name')}.</h3>
-                <h3>Your classes</h3>
+                <h2>Your classes</h2>
                 <div id='container'>{buttons}</div>
             </div>
         )

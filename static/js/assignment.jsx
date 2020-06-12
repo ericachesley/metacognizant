@@ -18,8 +18,10 @@ class Assignment extends React.Component {
 
 
     render() {
+        const sectionId = window.location.pathname.split('/')[2]
         return (
             <div id='assignment'>
+                <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
                 <h2>{this.state.assignmentId}</h2>
                 <h3>Prompt: {this.state.prompt}</h3>
                 {sessionStorage.getItem('role') === 'teacher' ?
@@ -51,6 +53,7 @@ class Student extends React.Component {
 
 
     render() {
+        const sectionId = window.location.pathname.split('/')[2]
         const responses = [];
         for (const count in this.state.responses) {
             const date = this.state.responses[count].date;
@@ -68,6 +71,7 @@ class Student extends React.Component {
 
         return (
             <div id='assignment'>
+                <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
                 <h2>{this.state.studentId}</h2>
                 <table id='response-table'>
                     <thead>
@@ -325,11 +329,15 @@ class CreateAssignment extends React.Component {
                 </option>
             )
         }
+        const sectionId = window.location.pathname.split('/')[2]
 
         return (
             <div id='assign-prompt'>
-                <form onSubmit={this.handleSubmit}>Create new assignment.
-              <p></p>
+                <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
+                <p></p>
+                <form onSubmit={this.handleSubmit}>
+                    <h2>Create new assignment.</h2>
+                    <p></p>
                     <div>
                         <label>Choose section(s) to assign prompt to: </label>
                         {sectionOptions}

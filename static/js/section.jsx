@@ -54,15 +54,17 @@ class Section extends React.Component {
         }
         return (
             <div id='section'>
-                <h2>{this.state.sectionId}</h2>
-                <h3>Class assignments {this.props.sectionId}</h3>
+                <Link to='/classes'>Back to all classes</Link>
+                <h2>Class assignments {this.props.sectionId}</h2>
                 <p></p>
                 <h3>View by assignment:</h3>
                 <div>{assignmentButtons}</div>
                 <p></p>
                 {sessionStorage.getItem('role') == 'teacher' ?
                     <div>
-                        <Link to='/assign'> Create new assignment </Link>
+                        <Link to={`/classes/${this.state.sectionId}/assign`}>
+                            Create new assignment
+                        </Link>
                         <h3>View by student:</h3>
                         <div>{studentButtons}</div>
                     </div> :

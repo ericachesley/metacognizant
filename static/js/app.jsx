@@ -91,7 +91,7 @@ class App extends React.Component {
           <Route path='/test'>
             <Tester />
           </Route>
-          <Route path='/assign'>
+          <Route path='/classes/:id/assign'>
             {userId ?
               <CreateAssignment /> :
               <Redirect to='/' />
@@ -138,11 +138,14 @@ class NavBar extends React.Component {
   render() {
     return (
       <div>
-        <Link to='/classes'>Home</Link>
-        <span> ~ </span>
-        <Link to='/assign'>Create Assignment</Link>
-        <span> ~ </span>
-        {/* <Link to={this.props.history[-1]}>Back</Link> */}
+        <h3>Welcome, {sessionStorage.getItem('name')}.</h3>
+        <h3>Navigation</h3>
+        <p> <Link to='/classes'>Home</Link></p>
+        <p>
+          {sessionStorage.getItem('userId') ?
+            <Link to="/">Log out</Link> :
+            <Link to="/">Log in</Link>}
+        </p>
       </div>
     )
   }
