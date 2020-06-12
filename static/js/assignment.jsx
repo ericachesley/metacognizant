@@ -221,7 +221,8 @@ class CreateAssignment extends React.Component {
             selectedPrompt: null,
             date: null,
             sections: [],
-            prompts: []
+            prompts: [],
+            newPrompt: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -256,6 +257,14 @@ class CreateAssignment extends React.Component {
             }
         } else {
             this.setState({ [fieldName]: evt.target.value });
+            if (evt.target.value === 'add-new') {
+                this.setState({ newPrompt: true, selectedPrompt: '' })
+            } else if (this.state.newPrompt) {
+                if (evt.target.type === "select-one"
+                    && evt.target.value != 'add-new') {
+                    this.setState({ newPrompt: false });
+                }
+            }
         }
     }
 
@@ -265,7 +274,8 @@ class CreateAssignment extends React.Component {
         const formData = {
             'selectedSections': Array.from(this.state.selectedSections),
             'selectedPrompt': this.state.selectedPrompt,
-            'date': this.state.date
+            'date': this.state.date,
+            'newPrompt': this.state.newPrompt
         }
         fetch('/api/assign_prompt', {
             headers: {
@@ -332,9 +342,24 @@ class CreateAssignment extends React.Component {
                             onChange={this.handleFieldChange}>
                             <option name='prompts' value='select-one'>
                                 --Select a prompt--
-                  </option>
+                            </option>
                             {promptOptions}
+                            <option name='prompts' value='add-new'>
+                                --Add a new prompt--
+                            </option>
                         </select>
+                    </div>
+                    <div>
+                        <p></p>
+                        {this.state.newPrompt ?
+                            <textarea
+                                onChange={this.handleFieldChange}
+                                name='selectedPrompt'
+                                rows="10" cols="50"
+                                placeholder='Your prompt'
+                                value={this.state.selectedPrompt}>
+                            </textarea> :
+                            <span></span>}
                     </div>
                     <p></p>
                     <div>

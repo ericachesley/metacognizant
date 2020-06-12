@@ -128,6 +128,12 @@ def add_prompt_assignment():
     section_ids = data['selectedSections']
     prompt_id = data['selectedPrompt']
     date = data['date']
+    newPrompt = data['newPrompt']
+
+    if newPrompt:
+        user_id = session['logged_in_user_id']
+        prompt = crud.create_custom_prompt(prompt_id, user_id)
+        prompt_id = prompt.prompt_id
 
     new_pras = []
     for section_id in section_ids:

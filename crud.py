@@ -39,6 +39,16 @@ def create_prompt(content, user=None, prompt_type='text', response_type='text'):
     return prompt
 
 
+def create_custom_prompt(content, user_id, prompt_type='text', response_type='text'):
+    prompt = Prompt(user_id=user_id,
+                    prompt_type=prompt_type,
+                    response_type=response_type,
+                    content=content)
+    db.session.add(prompt)
+    db.session.commit()
+    return prompt
+
+
 def create_prompt_assignment(section, prompt, due_date):
     pras = PromptAssignment(section=section, prompt=prompt, due_date=due_date)
     db.session.add(pras)
