@@ -149,7 +149,7 @@ class NavBar extends React.Component {
   render() {
     return (
       <div>
-        <h1>Metacognizant</h1>
+        <img src="/static/images/MetacognizantLogo.png" />
         <h3>Welcome, {sessionStorage.getItem('name')}.</h3>
         <h3>Navigation</h3>
         <p> <Link to='/classes'>Home</Link></p>

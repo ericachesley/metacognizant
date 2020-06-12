@@ -41,7 +41,7 @@ class Login extends React.Component {
     render() {
         return (
             <div id='login'>
-                <h1>Metacognizant</h1>
+                <img src="/static/images/MetacognizantLogo.png" />
                 <p></p>
                 <form onSubmit={this.handleSubmit}>Please log in.
                     <p>
@@ -90,19 +90,33 @@ class Overview extends React.Component {
     }
 
     render() {
-        const buttons = [];
+        const teacherSections = [];
+        const studentSections = [];
         for (const section of this.state.sections) {
-            buttons.push(
-                <SectionButton section={section}
-                    setRole={this.props.setRole}
-                    key={section['section_id']} />
-            )
+            if (section.role === 'teacher') {
+                teacherSections.push(
+                    <SectionButton
+                        section={section}
+                        key={section['section_id']}
+                    />
+                );
+            } else {
+                studentSections.push(
+                    <SectionButton
+                        section={section}
+                        key={section['section_id']}
+                    />
+                );
+            }
         }
 
         return (
             <div id='overview'>
                 <h2>Your classes</h2>
-                <div id='container'>{buttons}</div>
+                <h3>Teacher</h3>
+                <div id='container'>{teacherSections}</div>
+                <h3>Student</h3>
+                <div id='container'>{studentSections}</div>
             </div>
         )
     }

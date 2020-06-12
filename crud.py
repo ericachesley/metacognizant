@@ -100,6 +100,13 @@ def get_sections_by_user_id(user_id):
     return sections
 
 
+def get_section_name(section_id):
+    #return Section.query.with_entities(Section.name).get(section_id)
+    #return db.session.execute(f'SELECT name FROM sections WHERE section_id = {section_id}')
+    section = Section.query.get(section_id)
+    return section.name
+
+
 def get_assignments_by_section_id(section_id):
     condition = (PromptAssignment.section_id == section_id)
     assignments = (PromptAssignment.query
@@ -162,6 +169,16 @@ def get_response(pras_id, user_id):
     condition2 = (Response.user_id == user_id)
     response = Response.query.filter(condition1, condition2).first()
     return response
+
+
+def check_response(pras_id, user_id):
+    condition1 = (Response.pras_id == pras_id)
+    condition2 = (Response.user_id == user_id)
+    response = Response.query.filter(condition1, condition2).first()
+    if response:
+        return True
+    else:
+        return False
 
 
 def get_all_prompts(user_id):

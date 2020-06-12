@@ -46,7 +46,15 @@ def return_sections():
         sections_info.append({'section_id': section[0].section_id,
                               'name': section[0].name, 
                               'role': section[1]})
+    sections_info.sort(key = lambda i: i['name'])
     return jsonify(sections_info)
+
+
+@app.route('/api/get_section_name')
+def return_section_name():
+    section_id = request.args.get('sectionId')
+    section_name = crud.get_section_name(section_id)
+    return jsonify(section_name)
 
 
 @app.route('/api/get_pras')
@@ -81,10 +89,13 @@ def return_assignments_to_date():
     section_id = request.args.get('sectionId')
     date = request.args.get('date')
     assignments = crud.get_assignments_to_date(section_id, date)
+    user_id = session['logged_in_user_id']
     assignments_info = []
     for assignment in assignments:
+        res = crud.check_response(assignment.pras_id, user_id)
         assignments_info.append({'pras_id': assignment.pras_id,
-                                 'date': assignment.due_date})
+                                 'date': assignment.due_date,
+                                 'res': res})
     assignments_info.sort(key = lambda i: i['date'])
     return jsonify(assignments_info)
 
