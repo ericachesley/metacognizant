@@ -26,6 +26,7 @@ class App extends React.Component {
 
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.getSlug = this.getSlug.bind(this);
+    this.updateHistory = this.updateHistory.bind(this);
   }
 
   setLoggedIn(data) {
@@ -44,6 +45,30 @@ class App extends React.Component {
       return pathbits[pathbits.length - 1]
     } else {
       return pathbits[pathbits.length - 2]
+    }
+  }
+
+  componentWillUnmount() {
+    fetch('/api/store_history', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'post',
+      body: sessionStorage.getItem('history')
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      })
+  }
+
+  updateHistory() {
+    if (sessionStorage.getItem('history')) {
+      const history = sessionStorage.getItem('history')
+      history.concat(' ', window.location.pathname);
+      sessionStorage.setItem('history', history)
+    } else {
+      sessionStorage.setItem('history', window.location.pathname)
     }
   }
 
@@ -75,12 +100,16 @@ class App extends React.Component {
             }
           </Route>
           <Route path='/classes/:id'>
+            {console.log('hello2')}
+          {this.updateHistory()}
             {userId ?
               <Section getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
+          {console.log('hello')}
+          {this.updateHistory()}
             {userId ?
               <Overview /> :
               <Redirect to='/' />
