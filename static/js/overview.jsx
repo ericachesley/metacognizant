@@ -41,6 +41,7 @@ class Login extends React.Component {
     render() {
         return (
             <div id='login'>
+                <h1>Metacognizant</h1>
                 <p></p>
                 <form onSubmit={this.handleSubmit}>Please log in.
             <p>

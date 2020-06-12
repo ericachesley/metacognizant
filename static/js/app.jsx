@@ -83,7 +83,9 @@ class App extends React.Component {
     const userId = sessionStorage.getItem('userId');
     return (
       <Router>
-        <NavBar />
+        {sessionStorage.getItem('userId') ?
+          <NavBar /> :
+          <span></span>}
         <Switch>
           <Route path='/admin'>
             <Admin />
@@ -135,17 +137,23 @@ class App extends React.Component {
 
 
 class NavBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  handleLogout(evt) {
+    sessionStorage.clear();
+  }
+
   render() {
     return (
       <div>
+        <h1>Metacognizant</h1>
         <h3>Welcome, {sessionStorage.getItem('name')}.</h3>
         <h3>Navigation</h3>
         <p> <Link to='/classes'>Home</Link></p>
-        <p>
-          {sessionStorage.getItem('userId') ?
-            <Link to="/">Log out</Link> :
-            <Link to="/">Log in</Link>}
-        </p>
+        <p><a href='/' onClick={this.handleLogout}>Log out</a></p>
       </div>
     )
   }
