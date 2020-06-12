@@ -164,7 +164,14 @@ def create_response():
 def return_users():
     users = crud.get_users_with_section_info()
     return jsonify(users)
-    
+
+
+@app.route('/api/update_logged_in')
+def update_logged_in():
+    user_id = request.args.get('userId')
+    session['logged_in_user_id'] = user_id
+    return jsonify('')
+
 
 if __name__ == '__main__':
     connect_to_db(app)

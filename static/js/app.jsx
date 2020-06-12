@@ -169,16 +169,36 @@ class Admin extends React.Component {
   }
 
   handleClick(evt) {
-    //evt.preventDefault();
     sessionStorage.setItem('name', evt.target.name);
-    sessionStorage.setItem('role', evt.target.getAttribute('role'));
     sessionStorage.setItem('userId', evt.target.getAttribute('userid'));
+    const role = evt.target.getAttribute('role');
+    if (role) {
+      sessionStorage.setItem('role', role);
+    } else {
+      sessionStorage.removeItem('role');
+    }
+    fetch(`/api/update_logged_in?userId=${sessionStorage.getItem('userId')}`, {
+      credentials: 'same-origin'
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("User updated")
+      })
   }
 
   render() {
     const users = []
     for (const user of this.state.users) {
-      const list = [<h3 key={user.name}>{user.name}</h3>]
+      const list = [
+        <h3 key={user.name}>
+          <a href={'/classes'}
+            name={user.name}
+            userid={user.id}
+            onClick={this.handleClick}>
+            {user.name}
+          </a>
+        </h3>
+      ]
       for (const section of user.sections) {
         list.push(
           <p key={user.name, section.id}>
