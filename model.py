@@ -16,6 +16,7 @@ class User(db.Model):
 
     #section_assignments
     #responses
+    #prompts
 
     def __repr__(self):
         return f'<User id={self.user_id} name={self.first_name} {self.last_name}>'
@@ -61,6 +62,9 @@ class Prompt(db.Model):
     prompt_type = db.Column(db.String)
     response_type = db.Column(db.String)
     content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+
+    user = db.relationship('User', backref='prompts')
 
     #prompt_assignments
 
