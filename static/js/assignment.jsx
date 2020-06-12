@@ -4,6 +4,7 @@ class Assignment extends React.Component {
         this.state = {
             assignmentId: this.props.getSlug(),
             prompt: '',
+            due_date: null,
             responses: []
         };
     }
@@ -12,18 +13,26 @@ class Assignment extends React.Component {
         fetch(`/api/get_responses?assignmentId=${this.state.assignmentId}`)
             .then(res => res.json())
             .then(data => {
-                this.setState({ prompt: data[0], responses: data[1] })
+                this.setState({
+                    prompt: data[0],
+                    due_date: data[1],
+                    responses: data[2]
+                })
             })
     }
 
 
     render() {
         const sectionId = window.location.pathname.split('/')[2]
+        const date = this.state.due_date;
+        const dt = luxon.DateTime.fromHTTP(date);
+        const dtLocal = dt.toLocal()
+            .toLocaleString(luxon.DateTime.DATETIME_SHORT);
         return (
             <div id='assignment'>
                 <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
-                <h2>{this.state.assignmentId}</h2>
-                <h3>Prompt: {this.state.prompt}</h3>
+                <h2>Prompt: {this.state.prompt}</h2>
+                <h3>Due: {dtLocal}</h3>
                 {sessionStorage.getItem('role') === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
                     <GetResponse assignmentId={this.state.assignmentId} />
