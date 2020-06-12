@@ -170,12 +170,11 @@ class Admin extends React.Component {
   render() {
     const users = []
     for (const user of this.state.users) {
-      const list = [<h3>{user.name}</h3>]
+      const list = [<h3 key={user.name}>{user.name}</h3>]
       for (const section of user.sections) {
         list.push(
-          <p>{section.name} <a href={`/classes/${section.id}`}>{section.id}</a> {section.role}</p>
+          <p key={user.name,section.id}>{section.name} <a href={`/classes/${section.id}`}>{section.id}</a> {section.role}</p>
         );
-        list.push(<p></p>)
       }
       users.push(list);
     }
