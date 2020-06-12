@@ -100,16 +100,12 @@ class App extends React.Component {
             }
           </Route>
           <Route path='/classes/:id'>
-            {console.log('hello2')}
-          {this.updateHistory()}
             {userId ?
               <Section getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes'>
-          {console.log('hello')}
-          {this.updateHistory()}
             {userId ?
               <Overview /> :
               <Redirect to='/' />
