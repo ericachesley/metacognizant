@@ -35,7 +35,10 @@ class Assignment extends React.Component {
                 <h3>Due: {dtLocal}</h3>
                 {sessionStorage.getItem('role') === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
-                    <GetResponse assignmentId={this.state.assignmentId} />
+                    <GetResponse
+                        assignmentId={this.state.assignmentId}
+                        sectionId={sectionId}
+                    />
                 }
             </div>
         )
@@ -143,7 +146,8 @@ class GetResponse extends React.Component {
         this.state = {
             response: '',
             date: null,
-            done: false
+            done: false,
+            submitted: false
         };
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -172,7 +176,7 @@ class GetResponse extends React.Component {
 
 
     handleSubmit(evt) {
-        evt.preventDefault();
+        //evt.preventDefault();
         const date = luxon.DateTime.utc().toISO();
         const formData = {
             response: this.state.response,
@@ -191,12 +195,16 @@ class GetResponse extends React.Component {
             .then(data => {
                 alert('Response submitted')
             })
-        this.setState({ response: '' });
+        this.setState({ submitted: true });
     }
 
 
     render() {
-        if (this.state.done) {
+        if (this.state.submitted) {
+            return (
+                <Redirect to={`/classes/${this.props.sectionId}`} />
+            )
+        } else if (this.state.done) {
             return (
                 <div>
                     <p>You already submitted a response to this prompt.</p>
@@ -207,7 +215,7 @@ class GetResponse extends React.Component {
         } else {
             return (
                 <div>
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit} action={`/classes/${this.props.sectionId}`}>
                         <textarea
                             id='response'
                             name='response'
