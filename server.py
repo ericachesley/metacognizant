@@ -13,10 +13,12 @@ def show_app(path):
     session['requested_path'] = path
     return render_template('index.html')
 
+
 @app.route('/api/get_path')
 def return_path():
     path = session['requested_path']
     return jsonify(path)
+
 
 @app.route('/api/login', methods=['POST'])
 def check_credentials():
@@ -35,6 +37,19 @@ def check_credentials():
         res = [user.user_id, name]
 
     return jsonify(res)
+
+
+@app.route('/api/update_logged_in')
+def update_logged_in():
+    user_id = request.args.get('userId')
+    session['logged_in_user_id'] = user_id
+    return jsonify('')
+
+
+@app.route('/api/logout')
+def logout():
+    session.pop('logged_in_user_id')
+    return jsonify('')
 
 
 @app.route('/api/get_sections')
@@ -181,13 +196,6 @@ def create_response():
 def return_users():
     users = crud.get_users_with_section_info()
     return jsonify(users)
-
-
-@app.route('/api/update_logged_in')
-def update_logged_in():
-    user_id = request.args.get('userId')
-    session['logged_in_user_id'] = user_id
-    return jsonify('')
 
 
 if __name__ == '__main__':

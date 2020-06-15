@@ -28,7 +28,6 @@ class Login extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if (typeof data[0] == 'number') {
                     this.props.setLoggedIn(data);
                 } else {
@@ -109,14 +108,19 @@ class Overview extends React.Component {
                 );
             }
         }
-
         return (
             <div id='overview'>
                 <h2>Your classes</h2>
                 <h3>Teacher</h3>
-                <div id='container'>{teacherSections}</div>
+                {teacherSections.length > 0 ?
+                    <div id='container'>{teacherSections}</div> :
+                    <p>You are not assigned as a teacher for any sections.</p>
+                }
                 <h3>Student</h3>
-                <div id='container'>{studentSections}</div>
+                {studentSections.length > 0 ?
+                    <div id='container'>{studentSections}</div> :
+                    <p>You are not assigned as a student for any sections.</p>
+                }
             </div>
         )
     }
@@ -140,7 +144,6 @@ class SectionButton extends React.Component {
 
     render() {
         if (this.state.clicked) {
-            console.log("sectionbutton");
             return (
                 <Redirect
                     to={`/classes/${this.props.section['section_id']}`}

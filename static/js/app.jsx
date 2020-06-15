@@ -55,30 +55,6 @@ class App extends React.Component {
       })
   }
 
-  // componentWillUnmount() {
-  //   fetch('/api/store_history', {
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     method: 'post',
-  //     body: sessionStorage.getItem('history')
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log(data);
-  //     })
-  // }
-
-  // updateHistory() {
-  //   if (sessionStorage.getItem('history')) {
-  //     const history = sessionStorage.getItem('history')
-  //     history.concat(' ', window.location.pathname);
-  //     sessionStorage.setItem('history', history)
-  //   } else {
-  //     sessionStorage.setItem('history', window.location.pathname)
-  //   }
-  // }
-
   render() {
     const userId = sessionStorage.getItem('userId');
     return (
@@ -143,7 +119,15 @@ class NavBar extends React.Component {
   }
 
   handleLogout(evt) {
-    sessionStorage.clear();
+    fetch('/api/logout', {
+      credentials: 'same-origin'
+    })
+      .then(function (response) {
+        console.log(response.status);
+        if (response.ok) {
+          sessionStorage.clear();
+        }
+      });
   }
 
   render() {
@@ -154,7 +138,7 @@ class NavBar extends React.Component {
         <h3>Navigation</h3>
         <p> <Link to='/classes'>Home</Link></p>
         <p><a href='/' onClick={this.handleLogout}>Log out</a></p>
-      </div>
+      </div >
     )
   }
 }
