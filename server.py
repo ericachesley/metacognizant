@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
 import crud, tests
 import json
+import jwt
 
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
@@ -196,6 +197,27 @@ def create_response():
 def return_users():
     users = crud.get_users_with_section_info()
     return jsonify(users)
+
+
+@app.route("/example_endpoint")
+def example_endpoint():
+    access_token = request.headers.get("Authorization")
+    print(access_token)
+    try:
+        user_data = jwt.decode(access_token,
+                               issuer="https://securetoken.google.com",
+                               audience="exemplary-example-123456")
+    except jwt.InvalidTokenError:
+        return 401  # Invalid token
+    except jwt.ExpiredSignatureError:
+        return 401  # Token has expired
+    except jwt.InvalidIssuerError:
+        return 401  # Token is not issued by Google
+    except jwt.InvalidAudienceError:
+        return 401  # Token is not valid for this endpoint
+    user_id = user_data["sub"]
+    #data = get_some_data_by_user_id(user_id)
+    return jsonify('woohoo')
 
 
 if __name__ == '__main__':
