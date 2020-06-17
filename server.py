@@ -220,6 +220,13 @@ def example_endpoint():
     return jsonify('woohoo')
 
 
+@app.route('/api/update_from_google', methods=['POST'])
+def update_from_google():
+    data = request.get_json()
+    print(data)
+    return jsonify('thanks')
+
+
 if __name__ == '__main__':
     connect_to_db(app)
     tests.find_test_teacher()
