@@ -1,5 +1,8 @@
 <! doctype html>
   <html lang="en">
+  <html itemscope itemtype="http://schema.org/Article">
+
+  </html>
 
   <head>
     <meta charset="utf-8">
@@ -20,54 +23,33 @@
     </script>
     <script src="https://moment.github.io/luxon/global/luxon.min.js"></script>
 
-
-    <!-- <script>
-      function init() {
-        gapi.load('auth2', function () {
-          /* Ready. Make a call to gapi.auth2.init or some other API */
-        });
-      }
-      function onSignIn(googleUser) {
-        // Useful data for your client-side scripts:
-        var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log("Image URL: " + profile.getImageUrl());
-        console.log("Email: " + profile.getEmail());
-
-        // The ID token you need to pass to your backend:
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
-        // fetch("/example_endpoint")
-        //   .then(res => res.json())
-        //   .then(data => {
-        //     console.log(data);
-        //   })
-      }
-
-
-    </script> -->
-    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
-    
-    
-    <script>
-      function init() {
-        gapi.load('auth2', function () {
-          /* Ready. Make a call to gapi.auth2.init or some other API */
-          gapi.auth2.init({ client_id: "43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com" });
-        });
-      }
-    </script>
+    <script src="https://apis.google.com/js/platform.js"></script>
     <!-- <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script> -->
-    <script src="https://apis.google.com/js/api.js?onload=init" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>
 
     <!-- <script src='/static/js/classroom.js' type="text/javascript"></script> -->
+    <script src='/static/js/login.jsx' type="text/jsx"></script>
     <script src='/static/js/overview.jsx' type="text/jsx"></script>
     <script src='/static/js/section.jsx' type="text/jsx"></script>
     <script src='/static/js/assignment.jsx' type="text/jsx"></script>
     <script src='/static/js/app.jsx' type="text/jsx"></script>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+    <!-- <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+    </script> -->
+    <!-- <script>
+      function start() {
+        gapi.load('auth2', function () {
+          auth2 = gapi.auth2.init({
+            client_id: '43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com',
+            // Scopes to request in addition to 'profile' and 'email'
+            scope: "https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students"
+          });
+        });
+      }
+    </script> -->
 
     <title>Metacognizant</title>
   </head>
@@ -75,8 +57,45 @@
   <body>
     <div id="app"></div>
     <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
-    <!-- <button onclick="authenticate().then(loadClient)">authorize and load</button>
-    <button onclick="getClasses()">execute</button> -->
+
+    <!-- Add where you want your sign-in button to render -->
+    <!-- Use an image that follows the branding guidelines in a real app -->
+    <!-- <button id="signinButton">Sign in with Google</button> -->
+    <!-- <script>
+      $('#signinButton').click(function () {
+        // signInCallback defined in step 6.
+        auth2.grantOfflineAccess().then(signInCallback);
+      });
+    </script> -->
+
+    <!-- <script>
+      function signInCallback(authResult) {
+        if (authResult['code']) {
+
+          // Hide the sign-in button now that the user is authorized, for example:
+          $('#signinButton').attr('style', 'display: none');
+
+          // Send the code to the server
+          $.ajax({
+            type: 'POST',
+            url: '/google',
+            // Always include an `X-Requested-With` header in every AJAX request,
+            // to protect against CSRF attacks.
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            contentType: 'application/octet-stream; charset=utf-8',
+            success: function (result) {
+              // Handle or verify the server response.
+            },
+            processData: false,
+            data: authResult['code']
+          });
+        } else {
+          // There was an error.
+        }
+      }
+    </script> -->
   </body>
 
   </html>

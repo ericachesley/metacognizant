@@ -1,14 +1,19 @@
 from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
-import crud, tests
+import crud
+import tests
 import json
 import jwt
+
+from apiclient import discovery
+import httplib2
+from oauth2client import client
 
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
 
 
-@app.route('/', defaults={'path':''})
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def show_app(path):
     session['requested_path'] = path
@@ -60,9 +65,9 @@ def return_sections():
     sections_info = []
     for section in sections:
         sections_info.append({'section_id': section[0].section_id,
-                              'name': section[0].name, 
+                              'name': section[0].name,
                               'role': section[1]})
-    sections_info.sort(key = lambda i: i['name'])
+    sections_info.sort(key=lambda i: i['name'])
     return jsonify(sections_info)
 
 
@@ -81,7 +86,7 @@ def return_assignments():
     for assignment in assignments:
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date})
-    assignments_info.sort(key = lambda i: i['date'])
+    assignments_info.sort(key=lambda i: i['date'])
     return jsonify(assignments_info)
 
 
@@ -89,14 +94,14 @@ def return_assignments():
 def return_students():
     section_id = request.args.get('sectionId')
     students = crud.get_students_by_section_id(section_id)
-    students.sort(key = lambda i: i['last_name'])
+    students.sort(key=lambda i: i['last_name'])
     students_info = []
     for student in students:
         first = student['first_name']
         last = student['last_name']
         name = f'{first} {last}'
         students_info.append({'user_id': student['user_id'],
-                                 'name': name})
+                              'name': name})
     return jsonify(students_info)
 
 
@@ -112,20 +117,21 @@ def return_assignments_to_date():
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date,
                                  'res': res})
-    assignments_info.sort(key = lambda i: i['date'])
+    assignments_info.sort(key=lambda i: i['date'])
     return jsonify(assignments_info)
 
 
 @app.route('/api/get_responses')
 def return_responses():
     assignment_id = request.args.get('assignmentId')
-    prompt, due_date, responses = crud.get_responses_by_assignment_id(assignment_id)
+    prompt, due_date, responses = crud.get_responses_by_assignment_id(
+        assignment_id)
     res_info = []
-    responses.sort(key = lambda i: i.user.last_name)
+    responses.sort(key=lambda i: i.user.last_name)
     for res in responses:
         name = f'{res.user.first_name} {res.user.last_name}'
         res_info.append({'student': name,
-                         'content': res.content, 
+                         'content': res.content,
                          'date': res.submission_date})
     return jsonify([prompt, due_date, res_info])
 
@@ -134,7 +140,7 @@ def return_responses():
 def return_student_responses():
     student_id = request.args.get('studentId')
     responses = crud.get_responses_by_student(student_id)
-    responses.sort(key = lambda i: i['date'])
+    responses.sort(key=lambda i: i['date'])
     return jsonify(responses)
 
 
@@ -142,9 +148,9 @@ def return_student_responses():
 def return_all_prompts():
     user_id = session['logged_in_user_id']
     prompts = crud.get_all_prompts(user_id)
-    prompt_info =[]
+    prompt_info = []
     for prompt in prompts:
-        prompt_info.append({'prompt_id':prompt.prompt_id, 
+        prompt_info.append({'prompt_id': prompt.prompt_id,
                             'content': prompt.content})
     return jsonify(prompt_info)
 
@@ -164,8 +170,9 @@ def add_prompt_assignment():
 
     new_pras = []
     for section_id in section_ids:
-        pras = crud.create_prompt_assignment_by_ids(int(section_id), prompt_id, date)
-        new_pras.append({'id': pras.pras_id, 'section':pras.section_id})
+        pras = crud.create_prompt_assignment_by_ids(
+            int(section_id), prompt_id, date)
+        new_pras.append({'id': pras.pras_id, 'section': pras.section_id})
 
     return jsonify(new_pras)
 
@@ -176,7 +183,7 @@ def check_for_response():
     user_id = session['logged_in_user_id']
     res = crud.get_response(pras_id, user_id)
     if res:
-        return jsonify({'response':res.content, 'date':res.submission_date})
+        return jsonify({'response': res.content, 'date': res.submission_date})
     else:
         return jsonify(None)
 
@@ -190,7 +197,7 @@ def create_response():
     pras_id = data['assignmentId']
     res = crud.create_response_by_ids(user_id, pras_id, response, date)
 
-    return jsonify({'id':res.response_id})
+    return jsonify({'id': res.response_id})
 
 
 @app.route('/api/get_all_users')
@@ -199,32 +206,64 @@ def return_users():
     return jsonify(users)
 
 
-@app.route("/example_endpoint")
-def example_endpoint():
-    access_token = request.headers.get("Authorization")
-    print(access_token)
-    try:
-        user_data = jwt.decode(access_token,
-                               issuer="https://securetoken.google.com",
-                               audience="exemplary-example-123456")
-    except jwt.InvalidTokenError:
-        return 401  # Invalid token
-    except jwt.ExpiredSignatureError:
-        return 401  # Token has expired
-    except jwt.InvalidIssuerError:
-        return 401  # Token is not issued by Google
-    except jwt.InvalidAudienceError:
-        return 401  # Token is not valid for this endpoint
-    user_id = user_data["sub"]
-    #data = get_some_data_by_user_id(user_id)
-    return jsonify('woohoo')
+# @app.route("/example_endpoint")
+# def example_endpoint():
+#     access_token = request.headers.get("Authorization")
+#     print(access_token)
+#     try:
+#         user_data = jwt.decode(access_token,
+#                                issuer="https://securetoken.google.com",
+#                                audience="exemplary-example-123456")
+#     except jwt.InvalidTokenError:
+#         return 401  # Invalid token
+#     except jwt.ExpiredSignatureError:
+#         return 401  # Token has expired
+#     except jwt.InvalidIssuerError:
+#         return 401  # Token is not issued by Google
+#     except jwt.InvalidAudienceError:
+#         return 401  # Token is not valid for this endpoint
+#     user_id = user_data["sub"]
+#     #data = get_some_data_by_user_id(user_id)
+#     return jsonify('woohoo')
 
 
-@app.route('/api/update_from_google', methods=['POST'])
-def update_from_google():
-    data = request.get_json()
-    print(data)
-    return jsonify('thanks')
+# @app.route('/api/update_from_google', methods=['POST'])
+# def update_from_google():
+#     data = request.get_json()
+#     print(data)
+#     return jsonify('thanks')
+
+
+@app.route('/google', methods=['POST'])
+def google():
+    # If this request does not have `X-Requested-With` header, this could be a CSRF
+    if not request.headers.get('X-Requested-With'):
+        abort(403)
+
+    auth_code = request.get_data()
+    print(auth_code)
+
+    # Set path to the Web application client_secret_*.json file you downloaded from the
+    # Google API Console: https://console.developers.google.com/apis/credentials
+    CLIENT_SECRET_FILE = 'credentials.json'
+
+    # Exchange auth code for access token, refresh token, and ID token
+    credentials = client.credentials_from_clientsecrets_and_code(
+        CLIENT_SECRET_FILE,
+        ["https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students", 'profile', 'email'],
+        auth_code)
+
+    # Call Google API
+    http_auth = credentials.authorize(httplib2.Http())
+    classroom = discovery.build('classroom', 'v1', http=http_auth)
+    courses = classroom.courses().list().execute
+
+    # Get profile info from ID token
+    userid = credentials.id_token['sub']
+    email = credentials.id_token['email']
+    print(userid, email)
+
+    return jsonify(userid, email)
 
 
 if __name__ == '__main__':
