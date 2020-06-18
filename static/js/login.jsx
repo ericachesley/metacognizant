@@ -63,6 +63,7 @@ class Login extends React.Component {
                         <input type='submit' />
                     </p>
                 </form>
+                <p>Or:</p>
                 <GoogleLogin />
             </div>
         )

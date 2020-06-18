@@ -256,6 +256,9 @@ def google():
     return jsonify('thanks')
 
 
+def check_google_user(g_id):
+    user = crud.get_user_by_gid(g_id)
+
 if __name__ == '__main__':
     connect_to_db(app)
     tests.find_test_teacher()
