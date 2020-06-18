@@ -3,7 +3,7 @@ import crud
 import model
 import server
 from faker import Faker
-from random import choice, sample
+from random import choice, sample, randint
 from datetime import datetime, timezone, timedelta, date
 
 os.system('dropdb metacognizant')
@@ -83,6 +83,9 @@ for _ in range(10):
                                             .all())
         # make responses
         for student_assignment in section_student_assignments:
+            #choose 10% of assignments to be overdue
+            if randint(1, 10) == 1:
+                continue
             day_later = date + timedelta(days=1)
             sub_date = fake.date_time_between_dates(date,
                                                     day_later,

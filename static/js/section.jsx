@@ -57,6 +57,7 @@ class TeacherSection extends React.Component {
 
     sortAssignments() {
         var now = luxon.DateTime.local();
+        const assignmentButtonsToday = [];
         const assignmentButtonsPast = [];
         const assignmentButtonsFuture = [];
 
@@ -64,7 +65,15 @@ class TeacherSection extends React.Component {
             const date = assignment.date
             const dt = luxon.DateTime.fromHTTP(date);
             const dtLocal = dt.toLocal()
-            if (dtLocal < now) {
+            if (dtLocal.year == now.year && dtLocal.ordinal == now.ordinal) {
+                assignmentButtonsToday.push(
+                    <AssignmentButton
+                        assignment={assignment}
+                        sectionId={this.props.sectionId}
+                        key={assignment['pras_id']}
+                    />
+                )
+            } else if (dtLocal < now) {
                 assignmentButtonsPast.push(
                     <AssignmentButton
                         assignment={assignment}
@@ -82,12 +91,16 @@ class TeacherSection extends React.Component {
                 )
             }
         }
-        return [assignmentButtonsPast, assignmentButtonsFuture]
+        return [assignmentButtonsToday,
+            assignmentButtonsPast,
+            assignmentButtonsFuture]
     }
 
     render() {
-        let assignmentButtonsPast, assignmentButtonsFuture
-        [assignmentButtonsPast, assignmentButtonsFuture] = this.sortAssignments();
+        let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
+        [assignmentButtonsToday,
+            assignmentButtonsPast,
+            assignmentButtonsFuture] = this.sortAssignments();
 
         const studentButtons = [];
         for (const student of this.state.students) {
@@ -104,6 +117,12 @@ class TeacherSection extends React.Component {
                 <h3>View responses by assignment:</h3>
                 <p>Past assignments</p>
                 <div>{assignmentButtonsPast}</div>
+                <p>Today's assignment</p>
+                {
+                    assignmentButtonsToday[0] == undefined ?
+                        <div><p><i>Nothing assigned for today</i></p></div> :
+                        <div>{assignmentButtonsToday}</div>
+                }
                 <p>Current and upcoming assignments</p>
                 <div>{assignmentButtonsFuture}</div>
                 <p></p>

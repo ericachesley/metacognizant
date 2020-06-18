@@ -71,13 +71,6 @@ def return_sections():
     return jsonify(sections_info)
 
 
-# @app.route('/api/get_section_name')
-# def return_section_name():
-#     section_id = request.args.get('sectionId')
-#     section_name = crud.get_section_name(section_id)
-#     return jsonify(section_name)
-
-
 @app.route('/api/get_pras')
 def return_assignments():
     section_id = request.args.get('sectionId')
@@ -126,14 +119,8 @@ def return_responses():
     assignment_id = request.args.get('assignmentId')
     prompt, due_date, responses = crud.get_responses_by_assignment_id(
         assignment_id)
-    res_info = []
-    responses.sort(key=lambda i: i.user.last_name)
-    for res in responses:
-        name = f'{res.user.first_name} {res.user.last_name}'
-        res_info.append({'student': name,
-                         'content': res.content,
-                         'date': res.submission_date})
-    return jsonify([prompt, due_date, res_info])
+    responses.sort(key=lambda i: i['last_name'])
+    return jsonify([prompt, due_date, responses])
 
 
 @app.route('/api/get__student_responses')

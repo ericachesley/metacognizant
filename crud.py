@@ -150,12 +150,47 @@ def get_responses_by_assignment_id(assignment_id):
     pras = PromptAssignment.query.get(assignment_id)
     prompt_content = pras.prompt.content
     due_date = pras.due_date
+    #get existing responses
     responses = (Response.query
                          .options(db.joinedload('prompt_assignment'),
                                   db.joinedload('user'))
                          .filter(Response.pras_id == assignment_id)
                          .all())
-    return [prompt_content, due_date, responses]
+    
+    #if no responses yet, return
+    if responses == []:
+        return [prompt_content, due_date, []]
+
+    #get students
+    condition1 = (SectionAssignment.section_id == pras.section_id)
+    condition2 = (SectionAssignment.role == 'student')
+    seaction_assignments = (SectionAssignment.query
+                                 .options(db.joinedload('user'))
+                                 .filter(condition1, condition2)
+                                 .all())
+    students = []
+    for seas in seaction_assignments:
+        students.append(seas.user)
+
+    #re-format responses
+    res_info = []
+    for res in responses:
+        name = f'{res.user.first_name} {res.user.last_name}'
+        res_info.append({'student': name,
+                         'last_name': res.user.last_name,
+                         'content': res.content,
+                         'date': res.submission_date})
+        if res.user in students:
+            students.remove(res.user)
+
+    #add in students who have not responded yet
+    for student in students:
+        name = f'{student.first_name} {student.last_name}'
+        res_info.append({'student': name,
+                         'last_name': student.last_name,
+                         'content': 'No response yet.',
+                         'date': None})
+    return [prompt_content, due_date, res_info]
 
 
 def get_pras_by_section_id(section_id):
