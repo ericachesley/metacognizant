@@ -122,7 +122,7 @@ class ShowResponses extends React.Component {
                     <tr key={count}>
                         <td>{this.props.responses[count].student}</td>
                         <td>{this.props.responses[count].content}</td>
-                        <td>{dtLocal}</td>
+                        <td>{date ? dtLocal : ''}</td>
                     </tr>
                 )
             }
