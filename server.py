@@ -191,17 +191,17 @@ def create_response():
 @app.route('/api/get_all_users')
 def return_users():
     users = crud.get_users_with_section_info()
+    users.sort(key=lambda i: i['name'])
     return jsonify(users)
 
 
-@app.route('/google', methods=['POST'])
+@app.route('/api/login_with_google', methods=['POST'])
 def google():
     # If this request does not have `X-Requested-With` header, this could be a CSRF
     if not request.headers.get('X-Requested-With'):
         abort(403)
 
     auth_code = request.get_data()
-    print(auth_code)
 
     # Set path to the Web application client_secret_*.json file you downloaded from the
     # Google API Console: https://console.developers.google.com/apis/credentials
@@ -212,7 +212,36 @@ def google():
         CLIENT_SECRET_FILE,
         ["https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly", 'profile', 'email'],
         auth_code)
+    print(credentials, credentials.id_token)
 
+    # Get profile info from ID token
+    google_userid = credentials.id_token['sub']
+    google_email = credentials.id_token['email']
+    session['google_userid'] = google_userid
+
+    #get or create user in database
+    if crud.get_user_by_gid(google_userid):
+        user = crud.get_user_by_gid(google_userid)
+    elif crud.get_user_by_email(google_email):
+        user = crud.get_user_by_email(google_email)
+        crud.update_user_with_gid(user, google_userid)
+    else:
+        user = add_google_user(credentials)
+        
+    return jsonify(user.user_id)
+
+
+def add_google_user(credentials):
+    first = credentials.id_token['given_name']
+    last = credentials.id_token['family_name']
+    email = credentials.id_token['email']
+    password = None
+    g_id = credentials.id_token['sub']
+
+    return crud.create_user(first, last, email, password, g_id)
+
+
+def get_google_courses(credentials):
     # Call Google API
     http_auth = credentials.authorize(httplib2.Http())
     classroom = discovery.build('classroom', 'v1', http=http_auth)
@@ -235,17 +264,6 @@ def google():
             print (u'{0} ({1})'.format(course.get('name'), course.get('id')))
 
 
-    # Get profile info from ID token
-    userid = credentials.id_token['sub']
-    email = credentials.id_token['email']
-    session['google_userid'] = userid
-    session['google_email'] = email
-    print('userid', userid)
-    return jsonify('thanks')
-
-
-def check_google_user(g_id):
-    user = crud.get_user_by_gid(g_id)
 
 if __name__ == '__main__':
     connect_to_db(app)

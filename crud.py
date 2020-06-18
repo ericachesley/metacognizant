@@ -279,6 +279,16 @@ def check_pras_date(section, date):
         return False
 
 
+def get_user_by_gid(g_id):
+    return User.query.filter(User.g_id == g_id).first()
+
+
+#update functions
+def update_user_with_gid(user, gid):
+    user.g_id = gid
+    db.session.commit()
+
+
 if __name__ == '__main__':
     from server import app
     connect_to_db(app)

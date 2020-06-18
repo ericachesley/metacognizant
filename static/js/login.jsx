@@ -93,7 +93,7 @@ class GoogleLogin extends React.Component {
     signInCallback = (authResult) => {
         if (authResult['code']) {
 
-            fetch('/google', {
+            fetch('/api/login_with_google', {
                 method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',

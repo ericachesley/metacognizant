@@ -123,7 +123,7 @@ class TeacherSection extends React.Component {
                         <div><p><i>Nothing assigned for today</i></p></div> :
                         <div>{assignmentButtonsToday}</div>
                 }
-                <p>Current and upcoming assignments</p>
+                <p>Upcoming assignments</p>
                 <div>{assignmentButtonsFuture}</div>
                 <p></p>
                 <Link to={`/classes/${this.props.sectionId}/assign`}>
