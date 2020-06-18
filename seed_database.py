@@ -64,8 +64,10 @@ for _ in range(10):
     # seed prompt_assignments
     prompt_sections = sample(sections, 2)
     for section in prompt_sections:
-        date_time = fake.date_this_year(True, True)
-        pras = crud.create_prompt_assignment(section, prompt, date_time)
+        date = fake.date_this_year(True, True)
+        while crud.check_pras_date(section, date):
+            date = fake.date_this_year(True, True)
+        pras = crud.create_prompt_assignment(section, prompt, date)
         prompt_assignments.append(pras)
 
         # seed responses
@@ -78,8 +80,8 @@ for _ in range(10):
                                             .all())
         # make responses
         for student_assignment in section_student_assignments:
-            day_later = date_time + timedelta(days=1)
-            sub_date = fake.date_time_between_dates(date_time,
+            day_later = date + timedelta(days=1)
+            sub_date = fake.date_time_between_dates(date,
                                                     day_later,
                                                     tzinfo=timezone.utc)
             res = crud.create_response(student_assignment.user,

@@ -252,7 +252,7 @@ def google():
     email = credentials.id_token['email']
     session['google_userid'] = userid
     session['google_email'] = email
-
+    print('userid', userid)
     return jsonify('thanks')
 
 

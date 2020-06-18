@@ -13,6 +13,7 @@ class User(db.Model):
     last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
+    g_id = db.Column(db.String)
 
     #section_assignments
     #responses
@@ -30,6 +31,7 @@ class Section(db.Model):
     name = db.Column(db.String, nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime)
+    g_id = db.Column(db.String)
 
     #section_assignments
     #prompt_assignments
@@ -83,6 +85,7 @@ class PromptAssignment(db.Model):
 
     section = db.relationship('Section', backref='prompt_assignments')
     prompt = db.relationship('Prompt', backref='prompt_assignments')
+    g_id = db.Column(db.String)
 
     #responses
 
@@ -100,6 +103,7 @@ class Response(db.Model):
                         db.ForeignKey('prompt_assignments.pras_id'))
     content = db.Column(db.Text, nullable=False)
     submission_date = db.Column(db.DateTime)
+    g_id = db.Column(db.String)
 
     user = db.relationship('User', backref='responses')
     prompt_assignment = db.relationship('PromptAssignment', backref='responses')

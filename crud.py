@@ -5,18 +5,19 @@ from datetime import datetime
 
 
 # 'create' functions
-def create_user(first, last, email, password):
+def create_user(first, last, email, password, g_id=None):
     user = User(first_name=first,
                 last_name=last,
                 email=email,
-                password=password)
+                password=password,
+                g_id=g_id)
     db.session.add(user)
     db.session.commit()
     return user
 
 
-def create_section(name, start, end):
-    section = Section(name=name, start_date=start, end_date=end)
+def create_section(name, start, end, g_id=None):
+    section = Section(name=name, start_date=start, end_date=end, g_id=g_id)
     db.session.add(section)
     db.session.commit()
     return section
@@ -49,37 +50,43 @@ def create_custom_prompt(content, user_id, prompt_type='text', response_type='te
     return prompt
 
 
-def create_prompt_assignment(section, prompt, due_date):
-    pras = PromptAssignment(section=section, prompt=prompt, due_date=due_date)
+def create_prompt_assignment(section, prompt, due_date, g_id=None):
+    pras = PromptAssignment(section=section, 
+                            prompt=prompt, 
+                            due_date=due_date, 
+                            g_id=g_id)
     db.session.add(pras)
     db.session.commit()
     return pras
 
 
-def create_prompt_assignment_by_ids(section_id, prompt_id, due_date):
+def create_prompt_assignment_by_ids(section_id, prompt_id, due_date, g_id=None):
     pras = PromptAssignment(section_id=section_id,
                             prompt_id=prompt_id,
-                            due_date=due_date)
+                            due_date=due_date,
+                            g_id=g_id)
     db.session.add(pras)
     db.session.commit()
     return pras
 
 
-def create_response(user, pras, content, sub_date):
+def create_response(user, pras, content, sub_date, g_id=None):
     response = Response(user=user,
                         prompt_assignment=pras,
                         content=content,
-                        submission_date=sub_date)
+                        submission_date=sub_date,
+                        g_id=g_id)
     db.session.add(response)
     db.session.commit()
     return response
 
 
-def create_response_by_ids(user_id, pras_id, content, sub_date):
+def create_response_by_ids(user_id, pras_id, content, sub_date, g_id=None):
     response = Response(user_id=user_id,
                         pras_id=pras_id,
                         content=content,
-                        submission_date=sub_date)
+                        submission_date=sub_date,
+                        g_id=g_id)
     db.session.add(response)
     db.session.commit()
     return response
@@ -215,6 +222,17 @@ def get_users_with_section_info():
                            'id': user.user_id,
                            'sections': user_sections})
     return users_info
+
+
+def check_pras_date(section, date):
+    pras = (PromptAssignment.query
+                            .filter(PromptAssignment.section==section, 
+                                    PromptAssignment.due_date==date)
+                            .first())
+    if pras:
+        return True
+    else:
+        return False
 
 
 if __name__ == '__main__':
