@@ -72,10 +72,6 @@ class Login extends React.Component {
 class GoogleLogin extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            gapi: false
-        };
-        //this.signInCallback = this.signInCallback.bind(this);
     }
 
     componentDidMount() {
@@ -87,9 +83,8 @@ class GoogleLogin extends React.Component {
             gapi.load('auth2', () => {
                 this.auth2 = gapi.auth2.init({
                     client_id: '43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com',
-                    scope: "https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students"
+                    scope: "https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly"
                 });
-                //this.setState({gapi: true})
             });
         })
     }
@@ -97,27 +92,18 @@ class GoogleLogin extends React.Component {
     signInCallback = (authResult) => {
         if (authResult['code']) {
 
-            // Hide the sign-in button now that the user is authorized, for example:
-            $('#signinButton').attr('style', 'display: none');
-
-            // Send the code to the server
-            $.ajax({
-                type: 'POST',
-                url: '/google',
-                // Always include an `X-Requested-With` header in every AJAX request,
-                // to protect against CSRF attacks.
+            fetch('/google', {
+                method: 'POST',
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/octet-stream; charset=utf-8',
                 },
-                contentType: 'application/octet-stream; charset=utf-8',
-                success: function (result) {
-                    // Handle or verify the server response.
-                },
-                processData: false,
-                data: authResult['code']
-            });
-        } else {
-            // There was an error.
+                body: authResult['code']
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                })
         }
     }
 
@@ -127,106 +113,17 @@ class GoogleLogin extends React.Component {
     }
 
     render() {
-        //if (window.auth2) {
-            return (
-                <div id='google-login'>
-                    <button id="signinButton" onClick={this.handleClick}>
-                        Sign in with Google
-                    </button>
-                    {/* <button onClick={this.authenticate().then(this.loadClient)}>authorize and load</button> */}
-                    {/* <button onClick={this.getClasses()}>execute</button> */}
-                    <div id="my-signIn" />
-                </div>
-            )
-        //} else {
-            return (
-                <p>GAPI loading</p>
-            )
-        //}
+        return (
+            <div id='google-login'>
+                <button id="signinButton" onClick={this.handleClick}>
+                    Sign in with Google
+                </button>
+            </div>
+        )
     }
 }
 
 
-// start() {
-    //     // 2. Initialize the JavaScript client library.
-    //     gapi.client.init({
-    //         'apiKey': 'AIzaSyDjKoEMsGqlRdm57SiupTJjD41HDHP7DgM',
-    //         // clientId and scope are optional if auth is not required.
-    //         'clientId': '43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com',
-    //         'scope': 'https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students',
-    //     }).then(function () {
-    //         // 3. Initialize and make the API request.
-    //         return gapi.client.request({
-    //             'path': 'https://content.googleapis.com/discovery/v1/apis/classroom/v1/rest',
-    //         })
-    //     }).then(function (response) {
-    //         console.log(response.result);
-    //     }, function (reason) {
-    //         console.log('Error: ' + reason.result.error.message);
-    //     }).then(
-    //         this.getClasses()
-    //     );
-    // }
-
-    //componentDidMount() {
-    // window.gapi.load("client:auth2", function () {
-    //     gapi.auth2.init({ client_id: "43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com" });
-    // });
-
-    // window.gapi.load("client:auth2", () => {
-    //     window.gapi.client.init({
-    //         clientId:
-    //             "43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com",
-    //     })
-    //         .then(() => {
-    //             this.auth = window.gapi.auth2.getAuthInstance()
-
-    //                 .signIn({ scope: "https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students" })
-    //                 .then(function () { console.log("Sign-in successful"); },
-    //                     function (err) { console.error("Error signing in", err); });
-    //         });
-    // });
-
-
-    //window.gapi.load('client', this.start);
-
-    // window.gapi.load('client:auth2', () => {
-    //     window.gapi.auth2.init({
-    //         client_id: "43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com",
-    //         scope: "https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students"
-    //     }).then(() => {
-    //         window.gapi.signin2.render('my-signIn', {
-    //             'scope': 'profile email',
-    //             'width': 250,
-    //             'height': 50,
-    //             'longtitle': false,
-    //             'theme': 'dark',
-    //             'onsuccess': this.onSuccess,
-    //             'onfailure': this.onFailure
-    //         })
-    //     }).then(() => {
-    //         this.authenticate()
-    //     }).then(() => {
-    //         this.loadClient()
-    //     }).then(() => {
-    //         this.getClasses()
-    //     })
-    // })
-    //}
-
-    // authenticate() {
-    //     return gapi.auth2.getAuthInstance()
-    //         .signIn({ scope: "https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students" })
-    //         .then(function () { console.log("Sign-in successful"); },
-    //             function (err) { console.error("Error signing in", err); });
-    // }
-
-    // loadClient() {
-    //     gapi.client.setApiKey("AIzaSyDjKoEMsGqlRdm57SiupTJjD41HDHP7DgM");
-    //     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/classroom/v1/rest")
-    //         .then(function () { console.log("GAPI client loaded for API"); },
-    //             function (err) { console.error("Error loading GAPI client for API", err); });
-    // }
 
     // getTeachers(courseId, teachers) {
     //     return gapi.client.request({

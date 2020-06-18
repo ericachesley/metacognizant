@@ -5,7 +5,7 @@ import tests
 import json
 import jwt
 
-from apiclient import discovery
+from apiclient import discovery, errors
 import httplib2
 from oauth2client import client
 
@@ -206,34 +206,6 @@ def return_users():
     return jsonify(users)
 
 
-# @app.route("/example_endpoint")
-# def example_endpoint():
-#     access_token = request.headers.get("Authorization")
-#     print(access_token)
-#     try:
-#         user_data = jwt.decode(access_token,
-#                                issuer="https://securetoken.google.com",
-#                                audience="exemplary-example-123456")
-#     except jwt.InvalidTokenError:
-#         return 401  # Invalid token
-#     except jwt.ExpiredSignatureError:
-#         return 401  # Token has expired
-#     except jwt.InvalidIssuerError:
-#         return 401  # Token is not issued by Google
-#     except jwt.InvalidAudienceError:
-#         return 401  # Token is not valid for this endpoint
-#     user_id = user_data["sub"]
-#     #data = get_some_data_by_user_id(user_id)
-#     return jsonify('woohoo')
-
-
-# @app.route('/api/update_from_google', methods=['POST'])
-# def update_from_google():
-#     data = request.get_json()
-#     print(data)
-#     return jsonify('thanks')
-
-
 @app.route('/google', methods=['POST'])
 def google():
     # If this request does not have `X-Requested-With` header, this could be a CSRF
@@ -250,20 +222,38 @@ def google():
     # Exchange auth code for access token, refresh token, and ID token
     credentials = client.credentials_from_clientsecrets_and_code(
         CLIENT_SECRET_FILE,
-        ["https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.coursework.students", 'profile', 'email'],
+        ["https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly", 'profile', 'email'],
         auth_code)
 
     # Call Google API
     http_auth = credentials.authorize(httplib2.Http())
     classroom = discovery.build('classroom', 'v1', http=http_auth)
-    courses = classroom.courses().list().execute
+    
+    courses = []
+    page_token = None
+    while True:
+        response = classroom.courses().list(pageToken=page_token,
+                                        pageSize=100).execute()
+        courses.extend(response.get('courses', []))
+        page_token = response.get('nextPageToken', None)
+        if not page_token:
+            break
+
+    if not courses:
+        print ('No courses found.')
+    else:
+        print ('Courses:')
+        for course in courses:
+            print (u'{0} ({1})'.format(course.get('name'), course.get('id')))
+
 
     # Get profile info from ID token
     userid = credentials.id_token['sub']
     email = credentials.id_token['email']
-    print(userid, email)
+    session['google_userid'] = userid
+    session['google_email'] = email
 
-    return jsonify(userid, email)
+    return jsonify('thanks')
 
 
 if __name__ == '__main__':
