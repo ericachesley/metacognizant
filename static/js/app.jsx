@@ -154,6 +154,7 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
+    sessionStorage.clear();
     fetch('/api/get_all_users', {
       credentials: 'same-origin'
     })
@@ -164,19 +165,14 @@ class Admin extends React.Component {
   }
 
   handleClick(evt) {
+    sessionStorage.clear();
     sessionStorage.setItem('name', evt.target.name);
     sessionStorage.setItem('userId', evt.target.getAttribute('userid'));
     const sectionid = evt.target.getAttribute('sectionid');
     if (sectionid) {
       sessionStorage.setItem('sectionId', sectionid);
-    } else {
-      sessionStorage.removeItem('sectionId');
-    }
-    const role = evt.target.getAttribute('role');
-    if (role) {
-      sessionStorage.setItem('role', role);
-    } else {
-      sessionStorage.removeItem('role');
+      sessionStorage.setItem('sectionName', evt.target.getAttribute('sectionname'))
+      sessionStorage.setItem('role', evt.target.getAttribute('role'))
     }
     fetch(`/api/update_logged_in?userId=${sessionStorage.getItem('userId')}`, {
       credentials: 'same-origin'
@@ -206,6 +202,7 @@ class Admin extends React.Component {
             <a href={`/classes/${section.id}`}
               onClick={this.handleClick}
               sectionid={section.id}
+              sectionname={section.name}
               userid={user.id}
               name={user.name}
               role={section.role}>

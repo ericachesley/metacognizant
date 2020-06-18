@@ -71,11 +71,11 @@ def return_sections():
     return jsonify(sections_info)
 
 
-@app.route('/api/get_section_name')
-def return_section_name():
-    section_id = request.args.get('sectionId')
-    section_name = crud.get_section_name(section_id)
-    return jsonify(section_name)
+# @app.route('/api/get_section_name')
+# def return_section_name():
+#     section_id = request.args.get('sectionId')
+#     section_name = crud.get_section_name(section_id)
+#     return jsonify(section_name)
 
 
 @app.route('/api/get_pras')

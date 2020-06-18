@@ -3,27 +3,28 @@ class Section extends React.Component {
         super(props);
         this.state = {
             sectionId: this.props.getSlug(),
-            sectionName: '',
-            assignments: [],
-            students: []
+            sectionName: sessionStorage.getItem('sectionName'),
+            role: sessionStorage.getItem('role')
         };
     }
 
     componentDidMount() {
-        fetch(`/api/get_section_name?sectionId=${this.state.sectionId}`)
-            .then(res => res.json())
-            .then(data => {
-                this.setState({ sectionName: data })
-            })
+        sessionStorage.removeItem('studentName');
+        // fetch(`/api/get_section_name?sectionId=${this.state.sectionId}`)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         this.setState({ sectionName: data })
+        //     })
     }
 
     render() {
         return (
             <div id='section'>
                 <Link to='/classes'>Back to all classes</Link>
-                <h2>{this.state.sectionName}</h2>
+                <h1>{this.state.sectionName}</h1>
+                <h2>Role: {this.state.role}</h2>
                 <p></p>
-                {sessionStorage.getItem('role') === 'teacher' ?
+                {this.state.role === 'teacher' ?
                     <TeacherSection sectionId={this.state.sectionId} /> :
                     <StudentSection sectionId={this.state.sectionId} />}
             </div>
@@ -214,6 +215,7 @@ class StudentButton extends React.Component {
 
     handleClick(evt) {
         evt.preventDefault();
+        sessionStorage.setItem('studentName', this.props.student['name'])
         this.setState({ clicked: true })
     }
 

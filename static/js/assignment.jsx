@@ -31,6 +31,7 @@ class AssignmentResponses extends React.Component {
         return (
             <div id='assignment'>
                 <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
+                <h1>{sessionStorage.getItem('sectionName')}</h1>
                 <h2>Prompt: {this.state.prompt}</h2>
                 <h3>Due: {dtLocal}</h3>
                 {sessionStorage.getItem('role') === 'teacher' ?
@@ -85,7 +86,8 @@ class StudentResponses extends React.Component {
         return (
             <div id='assignment'>
                 <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
-                <h2>{this.state.studentId}</h2>
+                <h1>{sessionStorage.getItem('sectionName')}</h1>
+                <h2>Student: {sessionStorage.getItem('studentName')}</h2>
                 <table id='response-table'>
                     <thead>
                         <tr>
