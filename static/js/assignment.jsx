@@ -1,4 +1,4 @@
-class Assignment extends React.Component {
+class AssignmentResponses extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,7 +27,7 @@ class Assignment extends React.Component {
         const date = this.state.due_date;
         const dt = luxon.DateTime.fromHTTP(date);
         const dtLocal = dt.toLocal()
-            .toLocaleString(luxon.DateTime.DATETIME_SHORT);
+            .toLocaleString(luxon.DateTime.DATE_HUGE);
         return (
             <div id='assignment'>
                 <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
@@ -46,17 +46,18 @@ class Assignment extends React.Component {
 }
 
 
-class Student extends React.Component {
+class StudentResponses extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             studentId: this.props.getSlug(),
+            sectionId: sessionStorage.getItem('sectionId'),
             responses: []
         };
     }
 
     componentDidMount() {
-        fetch(`/api/get__student_responses?studentId=${this.state.studentId}`)
+        fetch(`/api/get__student_responses?studentId=${this.state.studentId}&sectionId=${this.state.sectionId}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ responses: data })
@@ -176,7 +177,6 @@ class GetResponse extends React.Component {
 
 
     handleSubmit(evt) {
-        //evt.preventDefault();
         const date = luxon.DateTime.utc().toISO();
         const formData = {
             response: this.state.response,

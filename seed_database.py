@@ -4,7 +4,7 @@ import model
 import server
 from faker import Faker
 from random import choice, sample
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 
 os.system('dropdb metacognizant')
 os.system('createdb metacognizant')
@@ -70,7 +70,10 @@ for _ in range(10):
         pras = crud.create_prompt_assignment(section, prompt, date)
         prompt_assignments.append(pras)
 
-        # seed responses
+        # seed responses if due date has passed
+        if date > date.today():
+            continue
+        
         # get students in assigned section
         condition1 = (model.SectionAssignment.section_id == section.section_id)
         condition2 = (model.SectionAssignment.role == 'student')

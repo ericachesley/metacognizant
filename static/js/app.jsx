@@ -77,13 +77,13 @@ class App extends React.Component {
           </Route>
           <Route path='/classes/:id/student/:id'>
             {userId ?
-              <Student getSlug={this.getSlug} /> :
+              <StudentResponses getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
           <Route path='/classes/:id/assignment/:id'>
             {userId ?
-              <Assignment getSlug={this.getSlug} /> :
+              <AssignmentResponses getSlug={this.getSlug} /> :
               <Redirect to='/' />
             }
           </Route>
@@ -166,6 +166,12 @@ class Admin extends React.Component {
   handleClick(evt) {
     sessionStorage.setItem('name', evt.target.name);
     sessionStorage.setItem('userId', evt.target.getAttribute('userid'));
+    const sectionid = evt.target.getAttribute('sectionid');
+    if (sectionid) {
+      sessionStorage.setItem('sectionId', sectionid);
+    } else {
+      sessionStorage.removeItem('sectionId');
+    }
     const role = evt.target.getAttribute('role');
     if (role) {
       sessionStorage.setItem('role', role);
@@ -199,7 +205,7 @@ class Admin extends React.Component {
           <p key={user.name, section.id}>
             <a href={`/classes/${section.id}`}
               onClick={this.handleClick}
-              id={section.id}
+              sectionid={section.id}
               userid={user.id}
               name={user.name}
               role={section.role}>

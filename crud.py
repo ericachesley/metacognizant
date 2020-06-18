@@ -158,17 +158,26 @@ def get_responses_by_assignment_id(assignment_id):
     return [prompt_content, due_date, responses]
 
 
-def get_responses_by_student(student_id):
-    responses = (Response.query
-                         .options(db.joinedload('prompt_assignment'))
-                         .filter(Response.user_id == student_id)
-                         .all())
-    responses_info = []
-    for res in responses:
-        responses_info.append({'date': res.submission_date,
-                               'prompt': res.prompt_assignment.prompt.content,
-                               'response': res.content})
-    return responses_info
+def get_pras_by_section_id(section_id):
+    return (PromptAssignment.query
+                            .filter(PromptAssignment.section_id == section_id)
+                            .all())
+
+
+def get_responses_by_student_and_section(student_id, section_id):
+    prompt_assignments = get_pras_by_section_id(section_id)
+    responses = []
+    condition1 = (Response.user_id == student_id)
+    for pras in prompt_assignments:  
+        condition2 = (Response.prompt_assignment == pras)
+        res = (Response.query
+                       .filter(condition1, condition2)
+                       .first())
+        if res:
+            responses.append({'date': res.submission_date,
+                            'prompt': pras.prompt.content,
+                            'response': res.content})
+    return responses
 
 
 def get_response(pras_id, user_id):

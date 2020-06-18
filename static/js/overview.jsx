@@ -7,6 +7,7 @@ class Overview extends React.Component {
     }
 
     componentDidMount() {
+        sessionStorage.removeItem('sectionId');
         sessionStorage.removeItem('role');
         fetch('/api/get_sections', {
             credentials: 'same-origin'
@@ -67,6 +68,7 @@ class SectionButton extends React.Component {
 
     handleClick(evt) {
         evt.preventDefault();
+        sessionStorage.setItem('sectionId', this.props.section['section_id'])
         sessionStorage.setItem('role', this.props.section['role'])
         this.setState({ clicked: true })
     }

@@ -139,7 +139,8 @@ def return_responses():
 @app.route('/api/get__student_responses')
 def return_student_responses():
     student_id = request.args.get('studentId')
-    responses = crud.get_responses_by_student(student_id)
+    section_id = request.args.get('sectionId')
+    responses = crud.get_responses_by_student_and_section(student_id, section_id)
     responses.sort(key=lambda i: i['date'])
     return jsonify(responses)
 
