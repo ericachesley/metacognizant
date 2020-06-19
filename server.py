@@ -230,7 +230,8 @@ def google():
     #make sure google courses are up to date in db
     check_google_courses(user, credentials)
         
-    return jsonify(user.user_id)
+    name = f'{user.first_name} {user.last_name}'
+    return jsonify([user.user_id, name])
 
 
 def add_google_user(credentials):

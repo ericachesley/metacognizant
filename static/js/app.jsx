@@ -13,20 +13,12 @@ const useRouteMatch = window.ReactRouterDOM.useRouteMatch;
 class App extends React.Component {
   constructor(props) {
     super(props);
-
-    //FOR TESTING PURPOSES ONLY!
-    // this.state = {
-    //   userId: 3,
-    // };
-
-    //REAL VERSION - DON'T DELETE!
     this.state = {
       userId: sessionStorage.getItem('userId'),
       path: '/'
     };
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.getSlug = this.getSlug.bind(this);
-    //this.updateHistory = this.updateHistory.bind(this);
   }
 
   setLoggedIn(data) {
