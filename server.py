@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
 import crud
+import gapi
 import tests
 import json
-import jwt
+#import jwt
 
 from apiclient import discovery, errors
 import httplib2
@@ -54,7 +55,7 @@ def update_logged_in():
 
 @app.route('/api/logout')
 def logout():
-    session.pop('logged_in_user_id')
+    session.clear()
     return jsonify('')
 
 
@@ -127,7 +128,8 @@ def return_responses():
 def return_student_responses():
     student_id = request.args.get('studentId')
     section_id = request.args.get('sectionId')
-    responses = crud.get_responses_by_student_and_section(student_id, section_id)
+    responses = crud.get_responses_by_student_and_section(
+        student_id, section_id)
     responses.sort(key=lambda i: i['date'])
     return jsonify(responses)
 
@@ -196,7 +198,7 @@ def return_users():
 
 
 @app.route('/api/login_with_google', methods=['POST'])
-def google():
+def google_login():
     # If this request does not have `X-Requested-With` header, this could be a CSRF
     if not request.headers.get('X-Requested-With'):
         abort(403)
@@ -210,119 +212,36 @@ def google():
     # Exchange auth code for access token, refresh token, and ID token
     credentials = client.credentials_from_clientsecrets_and_code(
         CLIENT_SECRET_FILE,
-        ["https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly", 'profile', 'email'],
+        [
+            "https://www.googleapis.com/auth/classroom.courses.readonly \
+            https://www.googleapis.com/auth/classroom.rosters.readonly \
+            https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+            'profile',
+            'email'
+        ],
         auth_code)
 
     # Get profile info from ID token
     google_userid = credentials.id_token['sub']
     google_email = credentials.id_token['email']
     session['google_userid'] = google_userid
+    
 
-    #get or create user in database
+    # get or create user in database
     if crud.get_user_by_gid(google_userid):
         user = crud.get_user_by_gid(google_userid)
     elif crud.get_user_by_email(google_email):
         user = crud.get_user_by_email(google_email)
         crud.update_user_with_gid(user, google_userid)
     else:
-        user = add_google_user(credentials)
+        user = gapi.add_google_user(credentials)
 
-    #make sure google courses are up to date in db
-    check_google_courses(user, credentials)
-        
+    # make sure google courses are up to date in db
+    gapi.check_google_courses(user, credentials)
+
+    session['logged_in_user_id'] = user.user_id
     name = f'{user.first_name} {user.last_name}'
     return jsonify([user.user_id, name])
-
-
-def add_google_user(credentials):
-    first = credentials.id_token['given_name']
-    last = credentials.id_token['family_name']
-    email = credentials.id_token['email']
-    password = None
-    g_id = credentials.id_token['sub']
-
-    return crud.create_user(first, last, email, password, g_id)
-
-
-def check_google_courses(user, credentials):
-    google_userid = credentials.id_token['sub']
-    courses = get_google_courses(credentials)
-
-    for g_course in courses:
-        google_courseid = g_course.get('id')
-        teachers = get_google_course_teachers(google_courseid, credentials)
-        if google_userid in teachers:
-            print('teacher')
-            role = 'teacher'
-        else:
-            print('student')
-            role = 'student'
-
-        if crud.get_course_by_gid(google_courseid):
-            m_course = crud.get_course_by_gid(google_courseid)
-            print('yup')
-
-            if not crud.get_seas(user, m_course):
-                seas = crud.create_section_assignment(user, m_course, role)
-                print(seas)
-
-        else:
-            print('nope')
-            g_name = g_course.get('name')
-            g_section = g_course.get('section')
-            if g_section:
-                g_name = g_name + f' ({g_section})'
-            start = g_course.get('creationTime')
-            end = None
-            g_id = google_courseid
-            m_course = crud.create_section(g_name, start, end, g_id)
-            print(m_course)
-
-            seas = crud.create_section_assignment(user, m_course, role)
-            print(seas)
-                
-
-def get_google_course_teachers(google_courseid, credentials):
-    http_auth = credentials.authorize(httplib2.Http())
-    classroom = discovery.build('classroom', 'v1', http=http_auth)
-    
-    teachers = []
-    response = (classroom.courses()
-                         .teachers()
-                         .list(courseId=f'{google_courseid}')
-                         .execute()
-                         .get('teachers', []))
-    for res in response:
-        teachers.append(res['userId'])
-    
-    return teachers
-
-
-def get_google_courses(credentials):
-    # Call Google API
-    http_auth = credentials.authorize(httplib2.Http())
-    classroom = discovery.build('classroom', 'v1', http=http_auth)
-    
-    courses = []
-    page_token = None
-    while True:
-        response = classroom.courses().list(pageToken=page_token,
-                                        pageSize=100).execute()
-        courses.extend(response.get('courses', []))
-        page_token = response.get('nextPageToken', None)
-        if not page_token:
-            break
-    
-    #delete post production
-    # if not courses:
-    #     print ('No courses found.')
-    # else:
-    #     print ('Courses:')
-    #     for course in courses:
-    #         courseId = course.get('id')
-    #         print (u'{0} ({1})'.format(course.get('name'), course.get('id')))
-
-    return courses
 
 
 
