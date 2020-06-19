@@ -16,7 +16,7 @@ def create_user(first, last, email, password, g_id=None):
     return user
 
 
-def create_section(name, start, end, g_id=None):
+def create_section(name, start, end=None, g_id=None):
     section = Section(name=name, start_date=start, end_date=end, g_id=g_id)
     db.session.add(section)
     db.session.commit()
@@ -281,6 +281,10 @@ def check_pras_date(section, date):
 
 def get_user_by_gid(g_id):
     return User.query.filter(User.g_id == g_id).first()
+
+
+def get_course_by_gid(g_id):
+    return Section.query.filter(Section.g_id == g_id).first()
 
 
 #update functions
