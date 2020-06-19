@@ -212,7 +212,6 @@ def google():
         CLIENT_SECRET_FILE,
         ["https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly", 'profile', 'email'],
         auth_code)
-    print(credentials, credentials.id_token)
 
     # Get profile info from ID token
     google_userid = credentials.id_token['sub']
@@ -227,6 +226,10 @@ def google():
         crud.update_user_with_gid(user, google_userid)
     else:
         user = add_google_user(credentials)
+
+    #make sure google courses are up to date in db
+    #check_google_courses(user, credentials)
+    get_google_courses(credentials)
         
     return jsonify(user.user_id)
 
@@ -239,6 +242,40 @@ def add_google_user(credentials):
     g_id = credentials.id_token['sub']
 
     return crud.create_user(first, last, email, password, g_id)
+
+
+# def check_google_courses(user, credentials):
+#     google_userid = credentials.id_token['sub']
+#     courses = get_google_courses(credentials)
+
+#     for g_course in courses:
+#         google_courseid = g_course.get('id')
+#         teachers = get_google_course_teachers(google_courseid)
+#         if google_userid in teachers:
+#             role = 'teacher'
+#         else:
+#             role = 'student'
+
+
+#         if crud.get_course_by_gid(google_courseid):
+#             m_course = crud.get_course_by_gid(google_courseid)
+#             if crud.get_seas(user, m_course):
+                
+
+def get_google_course_teachers(google_courseid, credentials):
+    http_auth = credentials.authorize(httplib2.Http())
+    classroom = discovery.build('classroom', 'v1', http=http_auth)
+    
+    teachers = []
+    response = (classroom.courses()
+                         .teachers()
+                         .list(courseId=f'{google_courseid}')
+                         .execute()
+                         .get('teachers', []))
+    for res in response:
+        teachers.append(res['userId'])
+    
+    return teachers
 
 
 def get_google_courses(credentials):
@@ -255,13 +292,18 @@ def get_google_courses(credentials):
         page_token = response.get('nextPageToken', None)
         if not page_token:
             break
-
+    
+    #delete post production
     if not courses:
         print ('No courses found.')
     else:
         print ('Courses:')
         for course in courses:
+            courseId = course.get('id')
+            print(get_google_course_teachers(courseId, credentials))
             print (u'{0} ({1})'.format(course.get('name'), course.get('id')))
+
+    return courses
 
 
 
