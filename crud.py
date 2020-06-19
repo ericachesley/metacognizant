@@ -287,6 +287,12 @@ def get_course_by_gid(g_id):
     return Section.query.filter(Section.g_id == g_id).first()
 
 
+def get_seas(user, section):
+    condition1 = (SectionAssignment.user == user)
+    condition2 = (SectionAssignment.section == section)
+    return SectionAssignment.query.filter(condition1, condition2).first()
+
+
 #update functions
 def update_user_with_gid(user, gid):
     user.g_id = gid

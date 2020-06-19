@@ -260,7 +260,10 @@ def check_google_courses(user, credentials):
         if crud.get_course_by_gid(google_courseid):
             m_course = crud.get_course_by_gid(google_courseid)
             print('yup')
-            #if crud.get_seas(user, m_course):
+
+            if not crud.get_seas(user, m_course):
+                seas = crud.create_section_assignment(user, m_course, role)
+                print(seas)
 
         else:
             print('nope')
@@ -273,6 +276,9 @@ def check_google_courses(user, credentials):
             g_id = google_courseid
             m_course = crud.create_section(g_name, start, end, g_id)
             print(m_course)
+
+            seas = crud.create_section_assignment(user, m_course, role)
+            print(seas)
                 
 
 def get_google_course_teachers(google_courseid, credentials):
