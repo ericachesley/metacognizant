@@ -14,6 +14,7 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String)
     g_id = db.Column(db.String)
+    g_credentials = db.Column(db.PickleType)
 
     #section_assignments
     #responses

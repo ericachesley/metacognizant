@@ -1,6 +1,10 @@
 import crud
+import server
+from model import connect_to_db
+
 from apiclient import discovery, errors
 import httplib2
+
 
 def add_google_user(credentials):
     first = credentials.id_token['given_name']
@@ -9,16 +13,19 @@ def add_google_user(credentials):
     password = None
     g_id = credentials.id_token['sub']
 
-    return crud.create_user(first, last, email, password, g_id)
+    return crud.create_user(first, last, email, password, g_id, credentials)
 
 
 def check_google_courses(user, credentials):
     google_userid = credentials.id_token['sub']
-    courses = get_google_courses(credentials)
+    http_auth = credentials.authorize(httplib2.Http())
+    classroom = discovery.build('classroom', 'v1', http=http_auth)
+
+    courses = get_google_courses(classroom)
 
     for g_course in courses:
         google_courseid = g_course.get('id')
-        teachers = get_google_course_teachers(google_courseid, credentials)
+        teachers = get_google_course_teachers(google_courseid, classroom)
         if google_userid in teachers:
             print('teacher')
             role = 'teacher'
@@ -50,10 +57,7 @@ def check_google_courses(user, credentials):
             print(seas)
 
 
-def get_google_course_teachers(google_courseid, credentials):
-    http_auth = credentials.authorize(httplib2.Http())
-    classroom = discovery.build('classroom', 'v1', http=http_auth)
-
+def get_google_course_teachers(google_courseid, classroom):
     teachers = []
     response = (classroom.courses()
                          .teachers()
@@ -66,11 +70,7 @@ def get_google_course_teachers(google_courseid, credentials):
     return teachers
 
 
-def get_google_courses(credentials):
-    # Call Google API
-    http_auth = credentials.authorize(httplib2.Http())
-    classroom = discovery.build('classroom', 'v1', http=http_auth)
-
+def get_google_courses(classroom):
     courses = []
     page_token = None
     while True:
@@ -81,7 +81,6 @@ def get_google_courses(credentials):
         if not page_token:
             break
 
-
     # if not courses:
     #     print ('No courses found.')
     # else:
@@ -91,3 +90,31 @@ def get_google_courses(credentials):
     #         print (u'{0} ({1})'.format(course.get('name'), course.get('id')))
 
     return courses
+
+
+def create_google_assignment(credentials, google_sectionid, prompt_id, due_date):
+    http_auth = credentials.authorize(httplib2.Http())
+    classroom = discovery.build('classroom', 'v1', http=http_auth)
+
+    courseWork = {
+        'title': 'Reflection',
+        'description': f'{prompt_id}: Follow the link to read and respond to the reflection prompt.',
+        'materials': [
+            {'link': {'url': 'metacognizant.org/classes'}},
+        ],
+        'workType': 'ASSIGNMENT',
+        'state': 'PUBLISHED',
+        'dueDate': due_date,
+        'dueTime': {'hours':11, 'minutes':59, 'seconds':59}
+    }
+
+    courseWork = classroom.courses().courseWork().create(
+    courseId=f'{google_sectionid}', body=courseWork).execute()
+    
+    print('Assignment created with ID {0}'.format(courseWork.get('id')))
+    return courseWork.get('id')
+
+
+if __name__ == '__main__':
+    from server import app
+    connect_to_db(app)

@@ -5,12 +5,13 @@ from datetime import datetime
 
 
 # 'create' functions
-def create_user(first, last, email, password, g_id=None):
+def create_user(first, last, email, password, g_id=None, g_credentials=None):
     user = User(first_name=first,
                 last_name=last,
                 email=email,
                 password=password,
-                g_id=g_id)
+                g_id=g_id,
+                g_credentials=g_credentials)
     db.session.add(user)
     db.session.commit()
     return user
@@ -293,9 +294,28 @@ def get_seas(user, section):
     return SectionAssignment.query.filter(condition1, condition2).first()
 
 
+def get_section(section_id):
+    return Section.query.get(section_id)
+
+
+def get_prompt(prompt_id):
+    return Prompt.query.get(prompt_id)
+
+
+def get_gid_of_section(section_id):
+    section = get_section(section_id)
+    return section.g_id
+
+
+def get_credentials(user_id):
+    user = User.query.get(user_id)
+    return user.g_credentials
+
+
 #update functions
-def update_user_with_gid(user, gid):
+def update_user_with_gid(user, gid, credentials):
     user.g_id = gid
+    user.g_credentials = credentials
     db.session.commit()
 
 

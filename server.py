@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
-import crud
-import gapi
-import tests
-import json
+import crud, gapi, tests
+import json, pickle
+from datetime import datetime
 #import jwt
 
 from apiclient import discovery, errors
@@ -12,6 +11,8 @@ from oauth2client import client
 
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
+
+#credentials = None
 
 
 @app.route('/', defaults={'path': ''})
@@ -151,6 +152,8 @@ def add_prompt_assignment():
     section_ids = data['selectedSections']
     prompt_id = data['selectedPrompt']
     date = data['date']
+    date = datetime.strptime(date, '%Y-%m-%d').date()
+    print(type(date))
     newPrompt = data['newPrompt']
 
     if newPrompt:
@@ -160,8 +163,16 @@ def add_prompt_assignment():
 
     new_pras = []
     for section_id in section_ids:
-        pras = crud.create_prompt_assignment_by_ids(
-            int(section_id), prompt_id, date)
+
+        google_sectionid = crud.get_gid_of_section(section_id)
+        if google_sectionid:
+            credentials = crud.get_credentials(session['logged_in_user_id'])
+            google_prasid = gapi.create_google_assignment(credentials, 
+                                                          google_sectionid, 
+                                                          prompt_id,
+                                                          {'year':2020, 'month':6, 'day':25})
+
+        pras = crud.create_prompt_assignment_by_ids(int(section_id), prompt_id, date)
         new_pras.append({'id': pras.pras_id, 'section': pras.section_id})
 
     return jsonify(new_pras)
@@ -214,12 +225,15 @@ def google_login():
         CLIENT_SECRET_FILE,
         [
             "https://www.googleapis.com/auth/classroom.courses.readonly \
-            https://www.googleapis.com/auth/classroom.rosters.readonly \
-            https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+             https://www.googleapis.com/auth/classroom.rosters.readonly \
+             https://www.googleapis.com/auth/classroom.coursework.students.readonly \
+             https://www.googleapis.com/auth/classroom.coursework.students \
+             https://www.googleapis.com/auth/classroom.coursework.me",
             'profile',
             'email'
         ],
         auth_code)
+    #session['http_auth'] = credentials.authorize(httplib2.Http())
 
     # Get profile info from ID token
     google_userid = credentials.id_token['sub']
@@ -232,7 +246,7 @@ def google_login():
         user = crud.get_user_by_gid(google_userid)
     elif crud.get_user_by_email(google_email):
         user = crud.get_user_by_email(google_email)
-        crud.update_user_with_gid(user, google_userid)
+        crud.update_user_with_gid(user, google_userid, credentials)
     else:
         user = gapi.add_google_user(credentials)
 
