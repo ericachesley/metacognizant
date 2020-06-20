@@ -81,31 +81,25 @@ def get_google_courses(classroom):
         if not page_token:
             break
 
-    # if not courses:
-    #     print ('No courses found.')
-    # else:
-    #     print ('Courses:')
-    #     for course in courses:
-    #         courseId = course.get('id')
-    #         print (u'{0} ({1})'.format(course.get('name'), course.get('id')))
-
     return courses
 
 
-def create_google_assignment(credentials, google_sectionid, prompt_id, due_date):
+def create_google_assignment(credentials, section_id, google_sectionid, prompt_id, due_date):
     http_auth = credentials.authorize(httplib2.Http())
     classroom = discovery.build('classroom', 'v1', http=http_auth)
 
+    content = crud.get_prompt_content(prompt_id)
+
     courseWork = {
-        'title': 'Reflection',
-        'description': f'{prompt_id}: Follow the link to read and respond to the reflection prompt.',
+        'title': f'Reflection: {content}',
+        'description': 'Follow the link to read and respond to the reflection prompt.',
         'materials': [
-            {'link': {'url': 'metacognizant.org/classes'}},
+            {'link': {'url': f'http://localhost:5000/classes/{section_id}'}},
         ],
         'workType': 'ASSIGNMENT',
         'state': 'PUBLISHED',
         'dueDate': due_date,
-        'dueTime': {'hours':11, 'minutes':59, 'seconds':59}
+        'dueTime': {'hours':6, 'minutes':59, 'seconds':59}
     }
 
     courseWork = classroom.courses().courseWork().create(

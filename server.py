@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
 import crud, gapi, tests
 import json, pickle
-from datetime import datetime
+from datetime import datetime, timedelta
 #import jwt
 
 from apiclient import discovery, errors
@@ -152,8 +152,7 @@ def add_prompt_assignment():
     section_ids = data['selectedSections']
     prompt_id = data['selectedPrompt']
     date = data['date']
-    date = datetime.strptime(date, '%Y-%m-%d').date()
-    print(type(date))
+    print(date)
     newPrompt = data['newPrompt']
 
     if newPrompt:
@@ -167,10 +166,19 @@ def add_prompt_assignment():
         google_sectionid = crud.get_gid_of_section(section_id)
         if google_sectionid:
             credentials = crud.get_credentials(session['logged_in_user_id'])
+            adj_date = datetime.strptime(date, '%Y-%m-%d').date()
+            adj_date = adj_date + timedelta(days=1)
+            adj_date = datetime.strftime(adj_date, '%Y-%m-%d')
+            year = int(adj_date[:4])
+            month = int(adj_date[5:7])
+            day = int(adj_date[8:])
+            g_date = {'year':year, 'month':month, 'day':day}
             google_prasid = gapi.create_google_assignment(credentials, 
+                                                          section_id,
                                                           google_sectionid, 
                                                           prompt_id,
-                                                          {'year':2020, 'month':6, 'day':25})
+                                                          g_date)
+                                                          
 
         pras = crud.create_prompt_assignment_by_ids(int(section_id), prompt_id, date)
         new_pras.append({'id': pras.pras_id, 'section': pras.section_id})

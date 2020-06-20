@@ -312,6 +312,11 @@ def get_credentials(user_id):
     return user.g_credentials
 
 
+def get_prompt_content(prompt_id):
+    prompt = Prompt.query.get(prompt_id)
+    return prompt.content
+
+
 #update functions
 def update_user_with_gid(user, gid, credentials):
     user.g_id = gid
