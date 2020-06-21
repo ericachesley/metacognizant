@@ -114,35 +114,58 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
     http_auth = credentials.authorize(httplib2.Http())
     classroom = discovery.build('classroom', 'v1', http=http_auth)
 
+    stu_sub = (classroom.courses()
+               .courseWork()
+               .studentSubmissions()
+               .list(
+        courseId=g_sectionid,
+        courseWorkId=g_prasid,
+        userId=g_userid
+    )
+        .execute())
+
+    stu_sub = stu_sub.get('studentSubmissions')
+    stu_sub.sort(key=lambda i: i['updateTime'])
+    print(stu_sub)
+    stu_sud_id = stu_sub[0].get('id')
+    print(stu_sud_id)
+
     responseData = {
-        "courseId": g_sectionid,
-        "courseWorkId": g_prasid,
-        "userId": g_userid,
-        "updateTime": g_dateify_res(date),
-        "state": 'TURNED_IN',
-        "attachments": [
-            {'link': {'url': f'http://localhost:5000/'}}
-        ],
-        "assignmentSubmission": content,
+        "addAttachments": [
+            {
+                "link": {
+                    "url": f'http://localhost:5000/',
+                }
+            }
+        ]
     }
 
-    #print('~~~~', dir(classroom.courses().courseWork().studentSubmissions().patch()))
+    # print('~~~~', dir(classroom.courses().courseWork().studentSubmissions().patch()))
 
-    stuSub = (classroom.courses()
-                      .courseWork()
-                      .studentSubmissions()
-                      .list(
-                        courseId=g_sectionid,
-                        courseWorkId=g_prasid
-                      )
-                      .execute())
-    print(stuSub)
+    response = (classroom.courses()
+                .courseWork()
+                .studentSubmissions()
+                .modifyAttachments(
+                    courseId=g_sectionid,
+                    courseWorkId=g_prasid,
+                    id=stu_sud_id,
+                    body=responseData)
+                .execute())
 
-    response = classroom.courses().courseWork().studentSubmissions().patch(
-        courseId=f'{g_sectionid}', body=response).execute()
-
-    print('Assignment created with ID {0}'.format(response.get('id')))
+    print('Submission modified - ID {0}'.format(response.get('id')))
     return response.get('id')
+
+    turn_in = (classroom.courses()
+              .courseWork()
+              .studentSubmissions()
+              .turnIn(
+                    courseId=g_sectionid,
+                    courseWorkId=g_prasid,
+                    id=stu_sud_id)
+              .execute())
+
+    print('Submission turned in - ID {0}'.format(turn_in.get('id')))
+    return turn_in.get('id')
 
 
 def g_dateify_pras(date):
@@ -155,11 +178,14 @@ def g_dateify_pras(date):
     return {'year': year, 'month': month, 'day': day}
 
 
-def g_dateify_res(date):
-    year = int(date[:4])
-    month = int(date[5:7])
-    day = int(date[8:10])
-    return {'year': year, 'month': month, 'day': day}
+# def g_dateify_res(date):
+#     year = int(date[:4])
+#     month = int(date[5:7])
+#     day = int(date[8:10])
+#     hours = int(date[11:13])
+#     minutes = int(date[14:16])
+#     seconds = int(date[17:19])
+#     return {'year': year, 'month': month, 'day': day}
 
 
 if __name__ == '__main__':
