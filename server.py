@@ -152,7 +152,6 @@ def add_prompt_assignment():
     section_ids = data['selectedSections']
     prompt_id = data['selectedPrompt']
     date = data['date']
-    print(date)
     newPrompt = data['newPrompt']
 
     if newPrompt:
@@ -163,24 +162,22 @@ def add_prompt_assignment():
     new_pras = []
     for section_id in section_ids:
 
+        google_prasid = None
+
         google_sectionid = crud.get_gid_of_section(section_id)
         if google_sectionid:
             credentials = crud.get_credentials(session['logged_in_user_id'])
-            adj_date = datetime.strptime(date, '%Y-%m-%d').date()
-            adj_date = adj_date + timedelta(days=1)
-            adj_date = datetime.strftime(adj_date, '%Y-%m-%d')
-            year = int(adj_date[:4])
-            month = int(adj_date[5:7])
-            day = int(adj_date[8:])
-            g_date = {'year':year, 'month':month, 'day':day}
             google_prasid = gapi.create_google_assignment(credentials, 
                                                           section_id,
                                                           google_sectionid, 
                                                           prompt_id,
-                                                          g_date)
+                                                          date)
                                                           
 
-        pras = crud.create_prompt_assignment_by_ids(int(section_id), prompt_id, date)
+        pras = crud.create_prompt_assignment_by_ids(int(section_id), 
+                                                    prompt_id, 
+                                                    date, 
+                                                    google_prasid)
         new_pras.append({'id': pras.pras_id, 'section': pras.section_id})
 
     return jsonify(new_pras)
@@ -204,7 +201,26 @@ def create_response():
     date = data['date']
     user_id = session['logged_in_user_id']
     pras_id = data['assignmentId']
-    res = crud.create_response_by_ids(user_id, pras_id, response, date)
+    google_resid = None
+
+    google_prasid = crud.get_gid_of_pras(pras_id)
+    if google_prasid:
+        print('yeah')
+        google_userid = session['google_userid']
+        google_sectionid = crud.get_gid_of_section(crud.get_section_id_of_pras(pras_id))
+        credentials = crud.get_credentials(session['logged_in_user_id'])
+        google_resid = gapi.create_google_response(credentials, 
+                                                   google_sectionid,
+                                                   google_prasid, 
+                                                   google_userid, 
+                                                   response, 
+                                                   date)
+
+    res = crud.create_response_by_ids(user_id, 
+                                      pras_id, 
+                                      response, 
+                                      date, 
+                                      google_resid)
 
     return jsonify({'id': res.response_id})
 

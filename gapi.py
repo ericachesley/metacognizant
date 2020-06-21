@@ -4,6 +4,7 @@ from model import connect_to_db
 
 from apiclient import discovery, errors
 import httplib2
+from datetime import datetime, timedelta
 
 
 def add_google_user(credentials):
@@ -98,15 +99,67 @@ def create_google_assignment(credentials, section_id, google_sectionid, prompt_i
         ],
         'workType': 'ASSIGNMENT',
         'state': 'PUBLISHED',
-        'dueDate': due_date,
-        'dueTime': {'hours':6, 'minutes':59, 'seconds':59}
+        'dueDate': g_dateify_pras(due_date),
+        'dueTime': {'hours': 6, 'minutes': 59, 'seconds': 59}
     }
 
     courseWork = classroom.courses().courseWork().create(
-    courseId=f'{google_sectionid}', body=courseWork).execute()
-    
+        courseId=f'{google_sectionid}', body=courseWork).execute()
+
     print('Assignment created with ID {0}'.format(courseWork.get('id')))
     return courseWork.get('id')
+
+
+def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content, date):
+    http_auth = credentials.authorize(httplib2.Http())
+    classroom = discovery.build('classroom', 'v1', http=http_auth)
+
+    responseData = {
+        "courseId": g_sectionid,
+        "courseWorkId": g_prasid,
+        "userId": g_userid,
+        "updateTime": g_dateify_res(date),
+        "state": 'TURNED_IN',
+        "attachments": [
+            {'link': {'url': f'http://localhost:5000/'}}
+        ],
+        "assignmentSubmission": content,
+    }
+
+    #print('~~~~', dir(classroom.courses().courseWork().studentSubmissions().patch()))
+
+    stuSub = (classroom.courses()
+                      .courseWork()
+                      .studentSubmissions()
+                      .list(
+                        courseId=g_sectionid,
+                        courseWorkId=g_prasid
+                      )
+                      .execute())
+    print(stuSub)
+
+    response = classroom.courses().courseWork().studentSubmissions().patch(
+        courseId=f'{g_sectionid}', body=response).execute()
+
+    print('Assignment created with ID {0}'.format(response.get('id')))
+    return response.get('id')
+
+
+def g_dateify_pras(date):
+    adj_date = datetime.strptime(date, '%Y-%m-%d').date()
+    adj_date = adj_date + timedelta(days=1)
+    adj_date = datetime.strftime(adj_date, '%Y-%m-%d')
+    year = int(adj_date[:4])
+    month = int(adj_date[5:7])
+    day = int(adj_date[8:])
+    return {'year': year, 'month': month, 'day': day}
+
+
+def g_dateify_res(date):
+    year = int(date[:4])
+    month = int(date[5:7])
+    day = int(date[8:10])
+    return {'year': year, 'month': month, 'day': day}
 
 
 if __name__ == '__main__':

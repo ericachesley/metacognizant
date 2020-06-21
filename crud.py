@@ -317,6 +317,15 @@ def get_prompt_content(prompt_id):
     return prompt.content
 
 
+def get_gid_of_pras(pras_id):
+    pras = PromptAssignment.query.get(pras_id)
+    return pras.g_id
+
+def get_section_id_of_pras(pras_id):
+    pras = PromptAssignment.query.get(pras_id)
+    return pras.section_id
+
+
 #update functions
 def update_user_with_gid(user, gid, credentials):
     user.g_id = gid
