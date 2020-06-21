@@ -126,9 +126,7 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
 
     stu_sub = stu_sub.get('studentSubmissions')
     stu_sub.sort(key=lambda i: i['updateTime'])
-    print(stu_sub)
     stu_sud_id = stu_sub[0].get('id')
-    print(stu_sud_id)
 
     responseData = {
         "addAttachments": [
@@ -161,8 +159,8 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
                     id=stu_sud_id)
               .execute())
 
-    print('Submission turned in - ID {0}'.format(turn_in.get('id')))
-    return turn_in.get('id')
+    print('Submission turned in.')
+    return stu_sud_id
 
 
 def g_dateify(date):

@@ -245,7 +245,8 @@ class CreateAssignment extends React.Component {
             date: null,
             sections: [],
             prompts: [],
-            newPrompt: false
+            newPrompt: false,
+            loading: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -294,6 +295,7 @@ class CreateAssignment extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
+        this.setState({ loading: true });
         const formData = {
             'selectedSections': Array.from(this.state.selectedSections),
             'selectedPrompt': this.state.selectedPrompt,
@@ -309,6 +311,7 @@ class CreateAssignment extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
+                this.setState({ loading: false });
                 alert('Prompt assignment submitted')
             })
         this.setState({
@@ -400,7 +403,7 @@ class CreateAssignment extends React.Component {
                         />
                     </div>
                     <p>
-                        <input type='submit' />
+                        {this.state.loading ? <Loader /> : <input type='submit' />}
                     </p>
                 </form>
             </div>
