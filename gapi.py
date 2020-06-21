@@ -99,7 +99,7 @@ def create_google_assignment(credentials, section_id, google_sectionid, prompt_i
         ],
         'workType': 'ASSIGNMENT',
         'state': 'PUBLISHED',
-        'dueDate': g_dateify_pras(due_date),
+        'dueDate': g_dateify(due_date),
         'dueTime': {'hours': 6, 'minutes': 59, 'seconds': 59}
     }
 
@@ -140,8 +140,6 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
         ]
     }
 
-    # print('~~~~', dir(classroom.courses().courseWork().studentSubmissions().patch()))
-
     response = (classroom.courses()
                 .courseWork()
                 .studentSubmissions()
@@ -153,7 +151,6 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
                 .execute())
 
     print('Submission modified - ID {0}'.format(response.get('id')))
-    return response.get('id')
 
     turn_in = (classroom.courses()
               .courseWork()
@@ -168,7 +165,7 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
     return turn_in.get('id')
 
 
-def g_dateify_pras(date):
+def g_dateify(date):
     adj_date = datetime.strptime(date, '%Y-%m-%d').date()
     adj_date = adj_date + timedelta(days=1)
     adj_date = datetime.strftime(adj_date, '%Y-%m-%d')
@@ -176,16 +173,6 @@ def g_dateify_pras(date):
     month = int(adj_date[5:7])
     day = int(adj_date[8:])
     return {'year': year, 'month': month, 'day': day}
-
-
-# def g_dateify_res(date):
-#     year = int(date[:4])
-#     month = int(date[5:7])
-#     day = int(date[8:10])
-#     hours = int(date[11:13])
-#     minutes = int(date[14:16])
-#     seconds = int(date[17:19])
-#     return {'year': year, 'month': month, 'day': day}
 
 
 if __name__ == '__main__':

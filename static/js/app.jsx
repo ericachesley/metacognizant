@@ -171,7 +171,7 @@ class Admin extends React.Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log("User updated")
+        console.log(data);
       })
   }
 

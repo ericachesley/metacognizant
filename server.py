@@ -51,7 +51,10 @@ def check_credentials():
 def update_logged_in():
     user_id = request.args.get('userId')
     session['logged_in_user_id'] = user_id
-    return jsonify('')
+    google_userid = crud.get_user_gid(user_id)
+    if google_userid:
+        session['google_userid'] = google_userid
+    return jsonify('User updated')
 
 
 @app.route('/api/logout')
@@ -171,8 +174,7 @@ def add_prompt_assignment():
                                                           section_id,
                                                           google_sectionid, 
                                                           prompt_id,
-                                                          date)
-                                                          
+                                                          date)                                      
 
         pras = crud.create_prompt_assignment_by_ids(int(section_id), 
                                                     prompt_id, 
@@ -257,7 +259,6 @@ def google_login():
             'email'
         ],
         auth_code)
-    #session['http_auth'] = credentials.authorize(httplib2.Http())
 
     # Get profile info from ID token
     google_userid = credentials.id_token['sub']

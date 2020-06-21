@@ -284,6 +284,11 @@ def get_user_by_gid(g_id):
     return User.query.filter(User.g_id == g_id).first()
 
 
+def get_user_gid(user_id):
+    user = User.query.get(user_id)
+    return user.g_id
+
+
 def get_course_by_gid(g_id):
     return Section.query.filter(Section.g_id == g_id).first()
 
