@@ -71,6 +71,23 @@ def create_account():
     return jsonify(res)
 
 
+@app.route('/api/add_class', methods=['POST'])
+def add_section():
+    data = request.get_json()
+    name = data['name']
+    start = data['start']
+    end = data['end']
+
+    section = crud.create_section(name, start, end)
+    print("Added: ", section)
+
+    user_id = session['logged_in_user_id']
+    seas = crud.create_section_assignment_by_ids(user_id, section.section_id, 'teacher')
+    print('Added: ', seas)
+
+    return jsonify(section.section_id)
+
+
 @app.route('/api/update_logged_in')
 def update_logged_in():
     user_id = request.args.get('userId')

@@ -2,8 +2,11 @@ class Overview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sections: []
+            sections: [],
+            addClass: false,
+            joinClass: false
         };
+        this.toggleAdd = this.toggleAdd.bind(this);
     }
 
     componentDidMount() {
@@ -18,6 +21,14 @@ class Overview extends React.Component {
             .then(data => {
                 this.setState({ sections: data })
             })
+    }
+
+    toggleAdd() {
+        if (this.state.addClass) {
+            this.setState({ addClass: false });
+        } else {
+            this.setState({ addClass: true });
+        }
     }
 
     render() {
@@ -47,6 +58,14 @@ class Overview extends React.Component {
                 {teacherSections.length > 0 ?
                     <div id='container'>{teacherSections}</div> :
                     <p>You are not assigned as a teacher for any sections.</p>
+                }
+                {this.state.addClass ?
+                    <AddClass toggleAdd={this.toggleAdd} /> :
+                    <div>
+                        <button onClick={this.toggleAdd}>
+                            Create a new class
+                        </button>
+                    </div>
                 }
                 <h3>Student</h3>
                 {studentSections.length > 0 ?
@@ -95,5 +114,81 @@ class SectionButton extends React.Component {
                 </div>
             )
         }
+    }
+}
+
+
+class AddClass extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            start: null,
+            end: null,
+        };
+        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleFieldChange(evt) {
+        this.setState({ [evt.target.id]: evt.target.value });
+    }
+
+    handleSubmit(evt) {
+        evt.preventDefault();
+        const formData = {
+            name: this.state.name,
+            start: this.state.start,
+            end: this.state.end
+        }
+        fetch('/api/add_class', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'post',
+            body: JSON.stringify(formData)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.props.toggleAdd()
+            })
+    }
+
+    render() {
+        return (
+            <div id='add-class'>
+                <p></p>
+                <form onSubmit={this.handleSubmit}>
+                    <p>
+                        Class name: <input
+                            id='name'
+                            type='text'
+                            value={this.state.email}
+                            onChange={this.handleFieldChange}
+                        />
+                    </p>
+                    <p>
+                        <label>Start date: </label>
+                        <input onChange={this.handleFieldChange}
+                            id='start'
+                            name='start'
+                            type='date'
+                        />
+                    </p>
+                    <p>
+                        <label>End date (optional): </label>
+                        <input onChange={this.handleFieldChange}
+                            id='end'
+                            name='end'
+                            type='date'
+                        />
+                    </p>
+                    <p>
+                        <input type='submit' />
+                    </p>
+                </form>
+            </div>
+        )
     }
 }

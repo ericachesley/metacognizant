@@ -15,7 +15,6 @@ class Login extends React.Component {
     }
 
     handleFieldChange(evt) {
-        console.log(evt.target.value)
         this.setState({ [evt.target.id]: evt.target.value });
     }
 

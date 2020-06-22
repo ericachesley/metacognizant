@@ -31,6 +31,13 @@ def create_section_assignment(user, section, role):
     return seas
 
 
+def create_section_assignment_by_ids(user_id, section_id, role):
+    seas = SectionAssignment(user_id=user_id, section_id=section_id, role=role)
+    db.session.add(seas)
+    db.session.commit()
+    return seas
+
+
 def create_prompt(content, user=None, prompt_type='text', response_type='text'):
     prompt = Prompt(user=user,
                     prompt_type=prompt_type,
