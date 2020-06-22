@@ -88,6 +88,18 @@ def add_section():
     return jsonify(section.section_id)
 
 
+@app.route('/api/join_class', methods=['POST'])
+def join_section():
+    data = request.get_json()
+    section_id = data['sectionId']
+
+    user_id = session['logged_in_user_id']
+    seas = crud.create_section_assignment_by_ids(user_id, section_id, 'student')
+    print('Added: ', seas)
+
+    return jsonify(seas.seas_id)
+
+
 @app.route('/api/update_logged_in')
 def update_logged_in():
     user_id = request.args.get('userId')
