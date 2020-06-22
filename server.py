@@ -36,13 +36,37 @@ def check_credentials():
     user = crud.get_user_by_email(email)
 
     if not user:
-        res = 'That email address is not associated with a user in our system.'
+        res = 'That email address is not associated with a user in our system. Please create an account.'
     elif user.password != password:
         res = 'Incorrect password. Please try again.'
     else:
         session['logged_in_user_id'] = user.user_id
         name = f'{user.first_name} {user.last_name}'
         res = [user.user_id, name]
+
+    return jsonify(res)
+
+
+@app.route('/api/create_account', methods=['POST'])
+def create_account():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    user = crud.get_user_by_email(email)
+
+    if user:
+        res = 'That email address is already associated with a user in our system. Please log in.'
+    else:
+        first = data['first']
+        last = data['last']
+        password2 = data['password2']
+        if password != password2:
+            res = 'Passwords must match. Please try again.'
+        else:
+            user = crud.create_user(first, last, email, password)
+            session['logged_in_user_id'] = user.user_id
+            name = f'{user.first_name} {user.last_name}'
+            res = [user.user_id, name]
 
     return jsonify(res)
 
