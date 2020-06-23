@@ -61,12 +61,12 @@ class App extends React.Component {
           <Route path='/test'>
             <Tester />
           </Route>
-          <Route path='/classes/:id/assign'>
+          {/* <Route path='/classes/:id/assign'>
             {userId ?
               <CreateAssignment /> :
               <Redirect to='/' />
             }
-          </Route>
+          </Route> */}
           <Route path='/classes/:id/student/:id'>
             {userId ?
               <StudentResponses getSlug={this.getSlug} /> :

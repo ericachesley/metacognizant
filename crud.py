@@ -343,6 +343,15 @@ def update_user_with_gid(user, gid, credentials):
     user.g_id = gid
     user.g_credentials = credentials
     db.session.commit()
+    return user
+
+
+def update_user_at_first_login(user, first, last, password):
+    user.first_name = first
+    user.last_name = last
+    user.password = password
+    db.session.commit()
+    return user
 
 
 if __name__ == '__main__':

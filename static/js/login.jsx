@@ -38,6 +38,9 @@ class Login extends React.Component {
                         this.props.setLoggedIn(data);
                     } else {
                         alert(data);
+                        if (data == 'It looks like this is your first time logging in. Please create an account to complete your login.') {
+                            this.setState({ signIn: false });
+                        }
                     }
                 })
         } else {
@@ -50,7 +53,7 @@ class Login extends React.Component {
             }
             if (formData.password != formData.password2) {
                 alert('Passwords must match. Please try again.')
-                this.setState({password:'', password2:''});
+                this.setState({ password: '', password2: '' });
             } else {
                 fetch('/api/create_account', {
                     headers: {

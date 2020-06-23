@@ -68,6 +68,7 @@ class Overview extends React.Component {
                     <div id='container'>{teacherSections}</div> :
                     <p>You are not assigned as a teacher for any sections.</p>
                 }
+                <p></p>
                 {this.state.addClass ?
                     <AddClass toggleAdd={this.toggleAdd} /> :
                     <div>
@@ -81,6 +82,7 @@ class Overview extends React.Component {
                     <div id='container'>{studentSections}</div> :
                     <p>You are not assigned as a student for any sections.</p>
                 }
+                <p></p>
                 {this.state.joinClass ?
                     <JoinClass toggleJoin={this.toggleJoin} /> :
                     <div>

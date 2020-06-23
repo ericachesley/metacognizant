@@ -37,9 +37,13 @@ class TeacherSection extends React.Component {
         super(props);
         this.state = {
             assignments: [],
-            students: []
+            students: [],
+            addStudent: false,
+            addAssignment: false
         };
         this.sortAssignments = this.sortAssignments.bind(this);
+        this.toggleAddStudent = this.toggleAddStudent.bind(this);
+        this.toggleAddAssignment = this.toggleAddAssignment.bind(this);
     }
 
     componentDidMount() {
@@ -96,6 +100,22 @@ class TeacherSection extends React.Component {
             assignmentButtonsFuture]
     }
 
+    toggleAddStudent() {
+        if (this.state.addStudent) {
+            this.setState({ addStudent: false });
+        } else {
+            this.setState({ addStudent: true });
+        }
+    }
+
+    toggleAddAssignment() {
+        if (this.state.addAssignment) {
+            this.setState({ addAssignment: false });
+        } else {
+            this.setState({ addAssignment: true });
+        }
+    }
+
     render() {
         let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
         [assignmentButtonsToday,
@@ -116,7 +136,11 @@ class TeacherSection extends React.Component {
             <div>
                 <h3>View responses by assignment:</h3>
                 <p>Past assignments</p>
-                <div>{assignmentButtonsPast}</div>
+                {
+                    assignmentButtonsPast[0] == undefined ?
+                        <div><p><i>No past assignments</i></p></div> :
+                        <div>{assignmentButtonsPast}</div>
+                }
                 <p>Today's assignment</p>
                 {
                     assignmentButtonsToday[0] == undefined ?
@@ -124,13 +148,38 @@ class TeacherSection extends React.Component {
                         <div>{assignmentButtonsToday}</div>
                 }
                 <p>Upcoming assignments</p>
-                <div>{assignmentButtonsFuture}</div>
+                {
+                    assignmentButtonsFuture[0] == undefined ?
+                        <div><p><i>No upcoming assignments</i></p></div> :
+                        <div>{assignmentButtonsFuture}</div>
+                }
                 <p></p>
-                <Link to={`/classes/${this.props.sectionId}/assign`}>
+                {this.state.addAssignment ?
+                    <CreateAssignment
+                        toggleAddAssignment={this.toggleAddAssignment}
+                    /> :
+                    <div>
+                        <button onClick={this.toggleAddAssignment}>
+                            Create new assignment
+                        </button>
+                    </div>
+                }
+                {/* <Link to={`/classes/${this.props.sectionId}/assign`}>
                     Create new assignment
-                </Link>
+                </Link> */}
                 <h3>View responses by student:</h3>
-                <div>{studentButtons}</div>
+                {studentButtons[0] == undefined ?
+                    <p><i>There are no students assigned to this class yet.</i></p> :
+                    <div>{studentButtons}</div>}
+                <p></p>
+                {this.state.addStudent ?
+                    <AddStudent toggleAddStudent={this.toggleAddStudent} /> :
+                    <div>
+                        <button onClick={this.toggleAddStudent}>
+                            Add a student
+                        </button>
+                    </div>
+                }
             </div>
         )
     }
@@ -256,5 +305,65 @@ class StudentButton extends React.Component {
                 </div>
             )
         }
+    }
+}
+
+
+class AddStudent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            studentEmail: '',
+        };
+        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleFieldChange(evt) {
+        this.setState({ [evt.target.id]: evt.target.value });
+    }
+
+    handleSubmit(evt) {
+        evt.preventDefault();
+        const formData = {
+            studentEmail: this.state.studentEmail,
+            sectionId: sessionStorage.getItem('sectionId')
+        }
+        fetch('/api/add_student', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'post',
+            body: JSON.stringify(formData)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data[1]) {
+                    alert("That student does not yet have an account. They will need to add their details the first time they log in.")
+                }
+                this.props.toggleAddStudent()
+            })
+    }
+
+    render() {
+        return (
+            <div id='add-student'>
+                <p></p>
+                <form onSubmit={this.handleSubmit}>
+                    <p>
+                        Student email: <input
+                            id='studentEmail'
+                            type='text'
+                            value={this.state.studentEmail}
+                            onChange={this.handleFieldChange}
+                        />
+                    </p>
+                    <p>
+                        <input type='submit' />
+                    </p>
+                </form>
+            </div>
+        )
     }
 }

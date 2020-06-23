@@ -12,8 +12,6 @@ from oauth2client import client
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
 
-#credentials = None
-
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -37,6 +35,10 @@ def check_credentials():
 
     if not user:
         res = 'That email address is not associated with a user in our system. Please create an account.'
+    elif user.password == None and user.g_id == None:
+        res = 'It looks like this is your first time logging in. Please create an account to complete your login.'
+    elif user.password == None and user.g_id:
+        res = 'Please use the log in with Google option to log in.'
     elif user.password != password:
         res = 'Incorrect password. Please try again.'
     else:
@@ -52,21 +54,24 @@ def create_account():
     data = request.get_json()
     email = data['email']
     password = data['password']
+    first = data['first']
+    last = data['last']
+    password2 = data['password2']
+    name = f'{first} {last}'
+
     user = crud.get_user_by_email(email)
 
     if user:
-        res = 'That email address is already associated with a user in our system. Please log in.'
-    else:
-        first = data['first']
-        last = data['last']
-        password2 = data['password2']
-        if password != password2:
-            res = 'Passwords must match. Please try again.'
+        if user.password or user.g_id:
+            res = 'That email address is already associated with a user in our system. Please log in.'
         else:
-            user = crud.create_user(first, last, email, password)
+            user = crud.update_user_at_first_login(user, first, last, password)
             session['logged_in_user_id'] = user.user_id
-            name = f'{user.first_name} {user.last_name}'
             res = [user.user_id, name]
+    else:
+        user = crud.create_user(first, last, email, password)
+        session['logged_in_user_id'] = user.user_id
+        res = [user.user_id, name]
 
     return jsonify(res)
 
@@ -98,6 +103,25 @@ def join_section():
     print('Added: ', seas)
 
     return jsonify(seas.seas_id)
+
+
+@app.route('/api/add_student', methods=['POST'])
+def add_student():
+    data = request.get_json()
+    student_email = data['studentEmail']
+    section_id = data['sectionId']
+    new = False
+
+    student = crud.get_user_by_email(student_email)
+    if not student:
+        new = True
+        student = crud.create_user(student_email, ' ', student_email, None)
+
+    seas = crud.create_section_assignment_by_ids(student.user_id, 
+                                                 section_id, 
+                                                 'student')
+    print('Added: ', seas)
+    return jsonify([seas.seas_id, new])
 
 
 @app.route('/api/update_logged_in')
