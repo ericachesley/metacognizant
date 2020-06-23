@@ -164,9 +164,6 @@ class TeacherSection extends React.Component {
                         </button>
                     </div>
                 }
-                {/* <Link to={`/classes/${this.props.sectionId}/assign`}>
-                    Create new assignment
-                </Link> */}
                 <h3>View responses by student:</h3>
                 {studentButtons[0] == undefined ?
                     <p><i>There are no students assigned to this class yet.</i></p> :

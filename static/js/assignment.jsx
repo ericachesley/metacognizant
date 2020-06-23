@@ -314,13 +314,7 @@ class CreateAssignment extends React.Component {
                 this.setState({ loading: false });
                 alert('Prompt assignment submitted')
             })
-        this.setState({
-            selectedSections: new Set(),
-            selectedPrompt: 'select-one',
-            date: null,
-            newPrompt: false
-        });
-        evt.target.reset();
+        this.props.toggleAddAssignment();
     }
 
 
@@ -355,9 +349,7 @@ class CreateAssignment extends React.Component {
         const sectionId = window.location.pathname.split('/')[2]
 
         return (
-            <div id='assign-prompt'>
-                <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
-                <p></p>
+            <div id='assign-prompt' style={{border:'5px solid black', padding:'5px'}}>
                 <form onSubmit={this.handleSubmit}>
                     <h2>Create new assignment.</h2>
                     <p></p>

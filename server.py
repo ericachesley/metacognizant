@@ -38,7 +38,7 @@ def check_credentials():
     elif user.password == None and user.g_id == None:
         res = 'It looks like this is your first time logging in. Please create an account to complete your login.'
     elif user.password == None and user.g_id:
-        res = 'Please use the log in with Google option to log in.'
+        res = "Please use the 'Sign in with Google' option to log in."
     elif user.password != password:
         res = 'Incorrect password. Please try again.'
     else:
