@@ -8,6 +8,7 @@ class Overview extends React.Component {
         };
         this.toggleAdd = this.toggleAdd.bind(this);
         this.toggleJoin = this.toggleJoin.bind(this);
+        this.getSections = this.getSections.bind(this);
     }
 
     componentDidMount() {
@@ -15,6 +16,10 @@ class Overview extends React.Component {
         sessionStorage.removeItem('sectionName');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem('studentName');
+        this.getSections();
+    }
+
+    getSections() {
         fetch('/api/get_sections', {
             credentials: 'same-origin'
         })
@@ -27,6 +32,7 @@ class Overview extends React.Component {
     toggleAdd() {
         if (this.state.addClass) {
             this.setState({ addClass: false });
+            this.getSections();
         } else {
             this.setState({ addClass: true });
         }
@@ -35,6 +41,7 @@ class Overview extends React.Component {
     toggleJoin() {
         if (this.state.joinClass) {
             this.setState({ joinClass: false });
+            this.getSections();
         } else {
             this.setState({ joinClass: true });
         }

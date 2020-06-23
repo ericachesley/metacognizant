@@ -10,11 +10,6 @@ class Section extends React.Component {
 
     componentDidMount() {
         sessionStorage.removeItem('studentName');
-        // fetch(`/api/get_section_name?sectionId=${this.state.sectionId}`)
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         this.setState({ sectionName: data })
-        //     })
     }
 
     render() {
@@ -44,14 +39,24 @@ class TeacherSection extends React.Component {
         this.sortAssignments = this.sortAssignments.bind(this);
         this.toggleAddStudent = this.toggleAddStudent.bind(this);
         this.toggleAddAssignment = this.toggleAddAssignment.bind(this);
+        this.getPromptAssignments = this.getPromptAssignments.bind(this);
+        this.getStudents = this.getStudents.bind(this);
     }
 
     componentDidMount() {
+        this.getPromptAssignments();
+        this.getStudents();
+    }
+
+    getPromptAssignments() {
         fetch(`/api/get_pras?sectionId=${this.props.sectionId}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ assignments: data })
             })
+    }
+
+    getStudents() {
         fetch(`/api/get_students?sectionId=${this.props.sectionId}`)
             .then(res => res.json())
             .then(data => {
@@ -103,6 +108,7 @@ class TeacherSection extends React.Component {
     toggleAddStudent() {
         if (this.state.addStudent) {
             this.setState({ addStudent: false });
+            this.getStudents();
         } else {
             this.setState({ addStudent: true });
         }
@@ -111,6 +117,7 @@ class TeacherSection extends React.Component {
     toggleAddAssignment() {
         if (this.state.addAssignment) {
             this.setState({ addAssignment: false });
+            this.getPromptAssignments();
         } else {
             this.setState({ addAssignment: true });
         }

@@ -246,7 +246,7 @@ class CreateAssignment extends React.Component {
             sections: [],
             prompts: [],
             newPrompt: false,
-            loading: false
+            //loading: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -295,7 +295,7 @@ class CreateAssignment extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
-        this.setState({ loading: true });
+        //this.setState({ loading: true });
         const formData = {
             'selectedSections': Array.from(this.state.selectedSections),
             'selectedPrompt': this.state.selectedPrompt,
@@ -311,8 +311,8 @@ class CreateAssignment extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
-                this.setState({ loading: false });
-                alert('Prompt assignment submitted')
+                //this.setState({ loading: false });
+                console.log('Prompt assignment submitted')
             })
         this.props.toggleAddAssignment();
     }
@@ -349,7 +349,7 @@ class CreateAssignment extends React.Component {
         const sectionId = window.location.pathname.split('/')[2]
 
         return (
-            <div id='assign-prompt' style={{border:'5px solid black', padding:'5px'}}>
+            <div id='assign-prompt' style={{ border: '5px solid black', padding: '5px' }}>
                 <form onSubmit={this.handleSubmit}>
                     <h2>Create new assignment.</h2>
                     <p></p>
@@ -395,7 +395,8 @@ class CreateAssignment extends React.Component {
                         />
                     </div>
                     <p>
-                        {this.state.loading ? <Loader /> : <input type='submit' />}
+                        {/* {this.state.loading ? <Loader /> : <input type='submit' />} */}
+                        <input type='submit' />
                     </p>
                 </form>
             </div>
