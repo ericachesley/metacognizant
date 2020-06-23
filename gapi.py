@@ -164,12 +164,13 @@ def create_google_response(credentials, g_sectionid, g_prasid, g_userid, content
 
 
 def g_dateify(date):
-    adj_date = datetime.strptime(date, '%Y-%m-%d').date()
-    adj_date = adj_date + timedelta(days=1)
-    adj_date = datetime.strftime(adj_date, '%Y-%m-%d')
-    year = int(adj_date[:4])
-    month = int(adj_date[5:7])
-    day = int(adj_date[8:])
+    # date = date[:10]
+    # adj_date = datetime.strptime(date, '%Y-%m-%d').date()
+    # adj_date = adj_date + timedelta(days=1)
+    # adj_date = datetime.strftime(adj_date, '%Y-%m-%d')
+    year = int(date[:4])
+    month = int(date[5:7])
+    day = int(date[8:10])
     return {'year': year, 'month': month, 'day': day}
 
 

@@ -250,6 +250,7 @@ class CreateAssignment extends React.Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.convertDate = this.convertDate.bind(this);
     }
 
 
@@ -292,14 +293,26 @@ class CreateAssignment extends React.Component {
         }
     }
 
+    convertDate(date) {
+        console.log(date);
+        const year = Number(date.slice(0, 4));
+        const month = Number(date.slice(5, 7));
+        const day = Number(date.slice(8, 10));
+        const dtLocal = luxon.DateTime.local(year, month, day, 23, 59, 59);
+        console.log(dtLocal);
+        const dtUtc = dtLocal.toUTC();
+        console.log(dtUtc);
+        return dtUtc
+    }
+
 
     handleSubmit(evt) {
         evt.preventDefault();
-        //this.setState({ loading: true });
+        //this.setState({ loading: true })
         const formData = {
             'selectedSections': Array.from(this.state.selectedSections),
             'selectedPrompt': this.state.selectedPrompt,
-            'date': this.state.date,
+            'date': this.convertDate(this.state.date),
             'newPrompt': this.state.newPrompt
         }
         fetch('/api/assign_prompt', {

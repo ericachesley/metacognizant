@@ -5,9 +5,6 @@ import json, pickle
 from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
 
-#import bcrypt
-#import jwt
-
 from apiclient import discovery, errors
 import httplib2
 from oauth2client import client
