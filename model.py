@@ -12,7 +12,7 @@ class User(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String)
+    hashed_password = db.Column(db.String)
     g_id = db.Column(db.String)
     g_credentials = db.Column(db.PickleType)
 

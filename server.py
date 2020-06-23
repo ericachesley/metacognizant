@@ -3,6 +3,9 @@ from model import connect_to_db
 import crud, gapi, tests
 import json, pickle
 from datetime import datetime, timedelta
+from flask_bcrypt import Bcrypt
+
+#import bcrypt
 #import jwt
 
 from apiclient import discovery, errors
@@ -11,7 +14,7 @@ from oauth2client import client
 
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
-
+bcrypt = Bcrypt(app)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -35,11 +38,11 @@ def check_credentials():
 
     if not user:
         res = 'That email address is not associated with a user in our system. Please create an account.'
-    elif user.password == None and user.g_id == None:
+    elif user.hashed_password == None and user.g_id == None:
         res = 'It looks like this is your first time logging in. Please create an account to complete your login.'
-    elif user.password == None and user.g_id:
+    elif user.hashed_password == None and user.g_id:
         res = "Please use the 'Sign in with Google' option to log in."
-    elif user.password != password:
+    elif not bcrypt.check_password_hash(user.hashed_password, password):
         res = 'Incorrect password. Please try again.'
     else:
         session['logged_in_user_id'] = user.user_id
@@ -56,20 +59,23 @@ def create_account():
     password = data['password']
     first = data['first']
     last = data['last']
-    password2 = data['password2']
     name = f'{first} {last}'
 
     user = crud.get_user_by_email(email)
+    password_hashed = bcrypt.generate_password_hash(password).decode('utf-8')
 
     if user:
-        if user.password or user.g_id:
+        if user.hashed_password or user.g_id:
             res = 'That email address is already associated with a user in our system. Please log in.'
         else:
-            user = crud.update_user_at_first_login(user, first, last, password)
+            user = crud.update_user_at_first_login(user, 
+                                                   first, 
+                                                   last, 
+                                                   password_hashed)
             session['logged_in_user_id'] = user.user_id
             res = [user.user_id, name]
     else:
-        user = crud.create_user(first, last, email, password)
+        user = crud.create_user(first, last, email, password_hashed)
         session['logged_in_user_id'] = user.user_id
         res = [user.user_id, name]
 

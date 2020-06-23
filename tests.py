@@ -3,7 +3,7 @@ from random import randint
 
 def get_test_user():
     user = model.User.query.get(randint(1, model.User.query.count()))
-    print(user.first_name, user.last_name, user.email, user.password)
+    print(user.first_name, user.last_name, user.email, user.hashed_password)
 
 
 def find_test_teacher():
@@ -18,7 +18,7 @@ def find_test_teacher():
     
 
 def print_user_info(user):
-    print(user.user_id, user.first_name, user.last_name, user.email, user.password)
+    print(user.user_id, user.first_name, user.last_name, user.email, user.hashed_password)
 
 
 if __name__ == '__main__':

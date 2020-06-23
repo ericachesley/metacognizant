@@ -48,10 +48,9 @@ class Login extends React.Component {
                 email: this.state.email,
                 password: this.state.password,
                 first: this.state.first,
-                last: this.state.last,
-                password2: this.state.password2
+                last: this.state.last
             }
-            if (formData.password != formData.password2) {
+            if (formData.password != this.state.password2) {
                 alert('Passwords must match. Please try again.')
                 this.setState({ password: '', password2: '' });
             } else {

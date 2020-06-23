@@ -5,11 +5,11 @@ from datetime import datetime
 
 
 # 'create' functions
-def create_user(first, last, email, password, g_id=None, g_credentials=None):
+def create_user(first, last, email, hashed_password, g_id=None, g_credentials=None):
     user = User(first_name=first,
                 last_name=last,
                 email=email,
-                password=password,
+                hashed_password=hashed_password,
                 g_id=g_id,
                 g_credentials=g_credentials)
     db.session.add(user)
@@ -346,10 +346,10 @@ def update_user_with_gid(user, gid, credentials):
     return user
 
 
-def update_user_at_first_login(user, first, last, password):
+def update_user_at_first_login(user, first, last, hashed_password):
     user.first_name = first
     user.last_name = last
-    user.password = password
+    user.hashed_password = hashed_password
     db.session.commit()
     return user
 
