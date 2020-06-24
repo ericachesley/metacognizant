@@ -1,9 +1,9 @@
-import model
-import crud
-import server
+import model, crud, server
 from unittest import TestCase
 import json
 import os
+from datetime import datetime
+from flask import session
 
 os.system('dropdb testdb')
 os.system('createdb testdb')
@@ -12,9 +12,6 @@ os.system('createdb testdb')
 class CrudTests(TestCase):
 
     def setUp(self):
-        self.client = server.app.test_client()
-        server.app.config['TESTING'] = True
-
         model.connect_to_db(server.app, "postgresql:///testdb")
 
         model.db.create_all()
@@ -47,6 +44,14 @@ class CrudTests(TestCase):
         sections = crud.get_sections_by_user_id(1)
         tf = model.Section.query.get(1)
         self.assertIn((tf, 'student'), sections)
+
+    def test_get_responses_by_assignment_id(self):
+        res = crud.get_responses_by_assignment_id(1)
+        self.assertEqual([
+            'What is the best method for liberating a house elf?',
+            datetime(2020, 6, 30, 0, 0),
+            []
+        ], res)
 
 
 class FlaskTests(TestCase):
@@ -96,6 +101,9 @@ class FlaskTests(TestCase):
 
 class FlaskTestsLoggedIn(TestCase):
     """Flask tests with user logged in to session."""
+    # def __init__(self):
+    #     super().__init__()
+    #     self.fake_session = {}
 
     def setUp(self):
         self.client = server.app.test_client()
@@ -107,20 +115,15 @@ class FlaskTestsLoggedIn(TestCase):
         model.example_data()
 
         with self.client as c:
-            with c.session_transaction() as sess:
-                sess['logged_in_user_id'] = 3
+            with c.session_transaction() as session:
+                session['logged_in_user_id'] = 3
 
-        def _mock_session():
+        # def _mock_add_to_session(self, key, value):
+        #     self.fake_session[key] = value
 
     def tearDown(self):
         model.db.session.close()
         model.db.drop_all()
-
-    def test_get_sections(self):
-        result = self.client.get('/api/get_sections',
-                                 content_type='application/json')
-        self.assertIn(b'{"name":"Potions","role":"student","section_id":2}',
-                      result.data)
 
     def test_add_class(self):
         res = self.client.post("/api/add_class",
@@ -159,14 +162,57 @@ class FlaskTestsLoggedIn(TestCase):
                 .first())
         self.assertEqual('student', seas.role)
 
-    def test_update_logged_in(self):
-        with self.client.session_transaction() as session:
-            res = self.client.get("/api/update_logged_in",
-                               data=json.dumps({"userId": 4}),
-                               content_type='application/json')
-        
-            user_id = session['logged_in_user_id']
-            self.assertEqual(user_id, 4)
+    # def test_update_logged_in(self):
+    #     with self.client.session_transaction() as session:
+    #         res = self.client.get("/api/update_logged_in?userId=4")
+    #     print(res.data)
+    #     user_id = session['logged_in_user_id']
+    #     self.assertEqual(user_id, 4)
+
+    def test_get_sections(self):
+        result = self.client.get('/api/get_sections')
+        self.assertIn(b'{"name":"Potions","role":"student","section_id":2}',
+                      result.data)
+
+    def test_get_pras(self):
+        result = self.client.get('/api/get_pras?sectionId=1')
+        self.assertIn(b'{"date":"Wed, 24 Jun 2020 00:00:00 GMT","pras_id":2}',
+                      result.data)
+
+    def test_get_students(self):
+        result = self.client.get('/api/get_students?sectionId=1')
+        self.assertIn(b'{"name":"Harry Potter","user_id":1}',
+                      result.data)
+
+    # def test_get_pras_to_date(self):
+    #     result = self.client.get('/api/get_pras_to_date?sectionId=1&date=Wed, 24 Jun 2020 00:00:00 GMT')
+    #     res = result.data.decode("utf-8")
+    #     self.assertEqual(len(res), 2)
+
+    def test_get_prompts(self):
+        result = self.client.get('/api/get_prompts')
+        res = result.data.decode("utf-8")
+        self.assertIn('Nitwit', res)
+        self.assertNotIn('bezoar', res)
+
+
+class GapiTests(TestCase):
+
+    def setUp(self):
+        self.client = server.app.test_client()
+        server.app.config['TESTING'] = True
+
+        def _mock_google_login():
+            return 'Gotcha'
+
+        server.google_login = _mock_google_login
+
+    def tearDown(self):
+        pass
+
+    def test_login_with_google(self):
+        res = self.client.post("/api/login_with_google")
+        self.assertEqual(res.data, b'"Gotcha"\n')
 
 
 if __name__ == '__main__':

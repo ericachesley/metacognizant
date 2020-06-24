@@ -16,14 +16,14 @@ bcrypt = Bcrypt(app)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def show_app(path):
-    session['requested_path'] = path
+    #session['requested_path'] = path
     return render_template('index.html')
 
 
-@app.route('/api/get_path')
-def return_path():
-    path = session['requested_path']
-    return jsonify(path)
+# @app.route('/api/get_path')
+# def return_path():
+#     path = session['requested_path']
+#     return jsonify(path)
 
 
 @app.route('/api/login', methods=['POST'])
@@ -131,10 +131,14 @@ def add_student():
 def update_logged_in():
     user_id = request.args.get('userId')
     session['logged_in_user_id'] = user_id
+    #add_to_session('logged_in_user_id', user_id)
     google_userid = crud.get_user_gid(user_id)
     if google_userid:
         session['google_userid'] = google_userid
     return jsonify('User updated')
+
+# def add_to_session(key, value):
+#     session[key] = value
 
 
 @app.route('/api/logout')
@@ -315,6 +319,10 @@ def return_users():
 
 
 @app.route('/api/login_with_google', methods=['POST'])
+def temp_google_login():
+    res = google_login()
+    return jsonify(res)
+
 def google_login():
     # If this request does not have `X-Requested-With` header, this could be a CSRF
     if not request.headers.get('X-Requested-With'):
@@ -366,5 +374,4 @@ def google_login():
 
 if __name__ == '__main__':
     connect_to_db(app)
-    tests.find_test_teacher()
     app.run(host='0.0.0.0', debug=True)
