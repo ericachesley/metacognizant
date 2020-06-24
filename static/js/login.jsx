@@ -143,7 +143,6 @@ class Login extends React.Component {
                 <p>Or:</p>
                 <GoogleLogin
                     setLoggedIn={this.props.setLoggedIn}
-                    signIn={this.state.signIn}
                 />
                 {this.state.signIn ?
                     <div>
@@ -207,10 +206,7 @@ class GoogleLogin extends React.Component {
         return (
             <div id='google-login'>
                 <button id="signinButton" onClick={this.handleClick}>
-                    {this.props.signIn ?
-                        <span>Sign in with Google</span> :
-                        <span>Sign up with Google</span>
-                    }
+                    <span>Sign up / in with Google</span>
                 </button>
             </div>
         )
