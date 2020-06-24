@@ -65,18 +65,20 @@ class FlaskTests(TestCase):
         self.assertIn(b'<div id="app">', result.data)
 
     def test_login(self):
-        res = self.client.post("/login",
-                               data=json.dumps({"email": "hpotter@hogwarts.edu",
-                                                "password": "password"}),
+        hashed_password = server.bcrypt.generate_password_hash(
+            'thestral').decode('utf-8')
+        luna = crud.create_user(
+            'Luna', 'Lovegood', 'llovegood@hogwarts.edu', hashed_password)
+        
+        res = self.client.post("/api/login",
+                               data=json.dumps({"email": "llovegood@hogwarts.edu",
+                                                "password": "thestral"}),
                                content_type='application/json')
-        #data = json.loads(res.data)
-        print(dir(res.data))
-        self.assertEqual(res.get_data(), 1)
+        self.assertEqual(res.data, b'[6,"Luna Lovegood"]\n')
 
     def test_logout(self):
-        res = self.client.post("/logout")
-        data = json.loads(res.get_data(as_text=True))
-        self.assertEqual(data, '')
+        res = self.client.get('/api/logout')
+        self.assertEqual(res.data, b'""\n')
 
 
 class FlaskTestsLoggedIn(TestCase):
