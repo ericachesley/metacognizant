@@ -3,7 +3,10 @@ import crud
 import server
 from unittest import TestCase
 import json
+import os
 
+os.system('dropdb testdb')
+os.system('createdb testdb')
 
 class CrudTests(TestCase):
 
@@ -44,7 +47,6 @@ class CrudTests(TestCase):
         tf = model.Section.query.get(1)
         self.assertIn((tf, 'student'), sections)
 
-
 class FlaskTests(TestCase):
 
     def setUp(self):
@@ -69,7 +71,7 @@ class FlaskTests(TestCase):
             'thestral').decode('utf-8')
         luna = crud.create_user(
             'Luna', 'Lovegood', 'llovegood@hogwarts.edu', hashed_password)
-        
+
         res = self.client.post("/api/login",
                                data=json.dumps({"email": "llovegood@hogwarts.edu",
                                                 "password": "thestral"}),
@@ -85,28 +87,23 @@ class FlaskTestsLoggedIn(TestCase):
     """Flask tests with user logged in to session."""
 
     def setUp(self):
-        """Stuff to do before every test."""
-
-        server.app.config['TESTING'] = True
-        server.app.config['SECRET_KEY'] = 'key'
         self.client = server.app.test_client()
+        server.app.config['TESTING'] = True
+
+        model.connect_to_db(server.app, "postgresql:///testdb")
+
+        model.db.create_all()
+        model.example_data()
 
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['logged_in_user_id'] = 1
 
-    # def test_important_page(self):
-    #     """Test important page."""
-
-    #     result = self.client.get('/api/get_sections')
-    #     print(result)
-    #     data = json.loads(result.data)
-    #     print(data)
-    #     tf = model.Section.query.get(1)
-    #     self.assertIn({'section_id': tf.section_id,
-    #                    'name': tf.name,
-    #                    'role': 'student'
-    #                    }, result.data)
+    def test_get_sections(self):
+        result = self.client.get('/api/get_sections',
+                                 content_type='application/json')
+        self.assertIn(b'{"name":"Potions","role":"student","section_id":2}',
+                      result.data)
 
 
 if __name__ == '__main__':
