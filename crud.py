@@ -293,7 +293,10 @@ def get_user_by_gid(g_id):
 
 def get_user_gid(user_id):
     user = User.query.get(user_id)
-    return user.g_id
+    if user:
+        return user.g_id
+    else:
+        return None
 
 
 def get_course_by_gid(g_id):
