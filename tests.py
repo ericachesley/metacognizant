@@ -106,10 +106,6 @@ class FlaskTests(TestCase):
 
 class FlaskTestsLoggedIn(TestCase):
     """Flask tests with user logged in to session."""
-    # def __init__(self):
-    #     super().__init__()
-    #     self.fake_session = {}
-
     def setUp(self):
         self.client = server.app.test_client()
         server.app.config['TESTING'] = True
@@ -122,9 +118,6 @@ class FlaskTestsLoggedIn(TestCase):
         with self.client as c:
             with c.session_transaction() as session:
                 session['logged_in_user_id'] = 3
-
-        # def _mock_add_to_session(self, key, value):
-        #     self.fake_session[key] = value
 
     def tearDown(self):
         model.db.session.close()
@@ -167,13 +160,6 @@ class FlaskTestsLoggedIn(TestCase):
                 .first())
         self.assertEqual('student', seas.role)
 
-    # def test_update_logged_in(self):
-    #     with self.client.session_transaction() as session:
-    #         res = self.client.get("/api/update_logged_in?userId=4")
-    #     print(res.data)
-    #     user_id = session['logged_in_user_id']
-    #     self.assertEqual(user_id, 4)
-
     def test_get_sections(self):
         result = self.client.get('/api/get_sections')
         self.assertIn(b'{"name":"Potions","role":"student","section_id":2}',
@@ -213,13 +199,6 @@ class GapiTests(TestCase):
             return data
 
         gapi.get_google_courses = _mock_get_google_courses
-
-    def tearDown(self):
-        pass
-
-    # def test_login_with_google(self):
-    #     res = self.client.post("/api/login_with_google")
-    #     self.assertEqual(res.data, b'"Gotcha"\n')
 
     def test_get_google_courses(self):
         courses = gapi.get_google_courses()

@@ -52,7 +52,6 @@ class TeacherSection extends React.Component {
         fetch(`/api/get_pras?sectionId=${this.props.sectionId}`)
             .then(res => res.json())
             .then(data => {
-                console.log('done');
                 this.setState({ assignments: data })
             })
     }
