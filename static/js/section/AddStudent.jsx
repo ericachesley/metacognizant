@@ -52,6 +52,7 @@ class AddStudent extends React.Component {
                         <input type='submit' />
                     </p>
                 </form>
+                <p><button onClick={this.props.toggleAddStudent}>Cancel</button></p>
             </div>
         )
     }

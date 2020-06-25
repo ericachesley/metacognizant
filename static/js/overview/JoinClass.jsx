@@ -48,6 +48,7 @@ class JoinClass extends React.Component {
                         <input type='submit' />
                     </p>
                 </form>
+                <p><button onClick={this.props.toggleJoin}>Cancel</button></p>
             </div>
         )
     }

@@ -180,6 +180,7 @@ class CreateAssignment extends React.Component {
                         {this.state.loading ? <Loader /> : <input type='submit' />}
                     </p>
                 </form>
+                <p><button onClick={this.props.toggle}>Cancel</button></p>
             </div>
         )
     }
