@@ -3,3 +3,5 @@ env*
 *.DS_Store
 .VSCodeCounter/
 credentials.json
+.coverage
+test_courses.json
