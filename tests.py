@@ -1,9 +1,14 @@
-import model, crud, server
+import model
+import crud
+import server
+import gapi
 from unittest import TestCase
 import json
 import os
 from datetime import datetime
 from flask import session
+from apiclient import discovery
+import httplib2
 
 os.system('dropdb testdb')
 os.system('createdb testdb')
@@ -202,17 +207,23 @@ class GapiTests(TestCase):
         self.client = server.app.test_client()
         server.app.config['TESTING'] = True
 
-        def _mock_google_login():
-            return 'Gotcha'
+        def _mock_get_google_courses():
+            with open('test_courses.json') as json_file:
+                data = json.load(json_file)
+            return data
 
-        server.google_login = _mock_google_login
+        gapi.get_google_courses = _mock_get_google_courses
 
     def tearDown(self):
         pass
 
-    def test_login_with_google(self):
-        res = self.client.post("/api/login_with_google")
-        self.assertEqual(res.data, b'"Gotcha"\n')
+    # def test_login_with_google(self):
+    #     res = self.client.post("/api/login_with_google")
+    #     self.assertEqual(res.data, b'"Gotcha"\n')
+
+    def test_get_google_courses(self):
+        courses = gapi.get_google_courses()
+        self.assertIn('Math', courses)
 
 
 if __name__ == '__main__':

@@ -319,10 +319,6 @@ def return_users():
 
 
 @app.route('/api/login_with_google', methods=['POST'])
-def temp_google_login():
-    res = google_login()
-    return jsonify(res)
-
 def google_login():
     # If this request does not have `X-Requested-With` header, this could be a CSRF
     if not request.headers.get('X-Requested-With'):
