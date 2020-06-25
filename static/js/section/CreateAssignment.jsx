@@ -8,13 +8,12 @@ class CreateAssignment extends React.Component {
             sections: [],
             prompts: [],
             newPrompt: false,
-            //loading: false
+            loading: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.convertDate = this.convertDate.bind(this);
     }
-
 
     componentDidMount() {
         fetch('/api/get_sections', {
@@ -32,7 +31,6 @@ class CreateAssignment extends React.Component {
                 this.setState({ prompts: data })
             })
     }
-
 
     handleFieldChange(evt) {
         let fieldName = evt.target.name;
@@ -67,31 +65,35 @@ class CreateAssignment extends React.Component {
         return dtUtc
     }
 
-
     handleSubmit(evt) {
         evt.preventDefault();
-        this.setState({ loading: true })
-        const formData = {
-            'selectedSections': Array.from(this.state.selectedSections),
-            'selectedPrompt': this.state.selectedPrompt,
-            'date': this.convertDate(this.state.date),
-            'newPrompt': this.state.newPrompt
-        }
-        fetch('/api/assign_prompt', {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'post',
-            body: JSON.stringify(formData)
-        })
-            .then(res => res.json())
-            .then(data => {
-                this.setState({ loading: false });
-                alert('Prompt assignment submitted')
-                this.props.toggle();
+        if (this.state.selectedSections.size == 0 ||
+            this.state.selectedPrompt == 'select-one' ||
+            this.state.date == null) {
+            alert('One or more fields is missing. Please try again.')
+        } else {
+            this.setState({ loading: true })
+            const formData = {
+                'selectedSections': Array.from(this.state.selectedSections),
+                'selectedPrompt': this.state.selectedPrompt,
+                'date': this.convertDate(this.state.date),
+                'newPrompt': this.state.newPrompt
+            }
+            fetch('/api/assign_prompt', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'post',
+                body: JSON.stringify(formData)
             })
+                .then(res => res.json())
+                .then(data => {
+                    this.setState({ loading: false });
+                    alert('Prompt assignment submitted')
+                    this.props.toggle();
+                })
+        }
     }
-
 
     render() {
         const sectionOptions = [];
