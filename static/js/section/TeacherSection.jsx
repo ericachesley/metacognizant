@@ -134,7 +134,9 @@ class TeacherSection extends React.Component {
                 <p></p>
                 {this.state.addAssignment ?
                     <CreateAssignment
-                        toggleAddAssignment={this.toggleAddAssignment}
+                        promptId = 'select-one'
+                        sectionId = {this.props.sectionId}
+                        toggle={this.toggleAddAssignment}
                     /> :
                     <div>
                         <button onClick={this.toggleAddAssignment}>

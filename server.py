@@ -206,10 +206,10 @@ def return_assignments_to_date():
 @app.route('/api/get_responses')
 def return_responses():
     assignment_id = request.args.get('assignmentId')
-    prompt, due_date, responses = crud.get_responses_by_assignment_id(
+    prompt, prompt_id, due_date, responses = crud.get_responses_by_assignment_id(
         assignment_id)
     responses.sort(key=lambda i: i['last_name'])
-    return jsonify([prompt, due_date, responses])
+    return jsonify([prompt, prompt_id, due_date, responses])
 
 
 @app.route('/api/get__student_responses')

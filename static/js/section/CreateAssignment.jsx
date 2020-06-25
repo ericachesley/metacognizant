@@ -3,7 +3,7 @@ class CreateAssignment extends React.Component {
         super(props);
         this.state = {
             selectedSections: new Set(),
-            selectedPrompt: 'select-one',
+            selectedPrompt: this.props.promptId,
             date: null,
             sections: [],
             prompts: [],
@@ -87,8 +87,8 @@ class CreateAssignment extends React.Component {
             .then(res => res.json())
             .then(data => {
                 this.setState({ loading: false });
-                console.log('Prompt assignment submitted')
-                this.props.toggleAddAssignment();
+                alert('Prompt assignment submitted')
+                this.props.toggle();
             })
     }
 
@@ -102,7 +102,12 @@ class CreateAssignment extends React.Component {
                         <input onClick={this.handleFieldChange}
                             type='checkbox'
                             name='selectedSections'
-                            value={section.section_id}>
+                            value={section.section_id}
+                            defaultChecked={
+                                section.section_id == this.props.sectionId ?
+                                    true :
+                                    false}
+                        >
                         </input>
                         <label>{section.name}</label>
                     </div>

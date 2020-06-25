@@ -4,9 +4,14 @@ class AssignmentResponses extends React.Component {
         this.state = {
             assignmentId: this.props.getSlug(),
             prompt: '',
+            prmoptId: null,
             due_date: null,
-            responses: []
+            responses: [],
+            again: false,
+            revisit: false
         };
+        this.toggleAssignAgain = this.toggleAssignAgain.bind(this);
+        this.toggleAssignRevisit = this.toggleAssignRevisit.bind(this);
     }
 
     componentDidMount() {
@@ -15,12 +20,28 @@ class AssignmentResponses extends React.Component {
             .then(data => {
                 this.setState({
                     prompt: data[0],
-                    due_date: data[1],
-                    responses: data[2]
+                    promptId: data[1],
+                    due_date: data[2],
+                    responses: data[3]
                 })
             })
     }
 
+    toggleAssignAgain() {
+        if (this.state.again) {
+            this.setState({ again: false });
+        } else {
+            this.setState({ again: true });
+        }
+    }
+
+    toggleAssignRevisit() {
+        if (this.state.revisit) {
+            this.setState({ revisit: false });
+        } else {
+            this.setState({ revisit: true });
+        }
+    }
 
     render() {
         const sectionId = window.location.pathname.split('/')[2]
@@ -34,6 +55,16 @@ class AssignmentResponses extends React.Component {
                 <h1>{sessionStorage.getItem('sectionName')}</h1>
                 <h2>Prompt: {this.state.prompt}</h2>
                 <h3>Due: {dtLocal}</h3>
+
+                {this.state.again ?
+                <CreateAssignment 
+                promptId={this.state.promptId}
+                toggle={this.toggleAssignAgain}
+                /> :
+                <button onClick={this.toggleAssignAgain}>Assign again</button>}
+
+                {/* <button>Assign revisit</button>
+                <CreateRevisitAssignment /> */}
                 {sessionStorage.getItem('role') === 'teacher' ?
                     <ShowResponses responses={this.state.responses} /> :
                     <GetResponse

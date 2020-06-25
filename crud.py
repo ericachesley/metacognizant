@@ -157,6 +157,7 @@ def get_assignments_to_date(section_id, date):
 def get_responses_by_assignment_id(assignment_id):
     pras = PromptAssignment.query.get(assignment_id)
     prompt_content = pras.prompt.content
+    prompt_id = pras.prompt_id
     due_date = pras.due_date
     #get existing responses
     responses = (Response.query
@@ -198,7 +199,7 @@ def get_responses_by_assignment_id(assignment_id):
                          'last_name': student.last_name,
                          'content': 'No response yet.',
                          'date': None})
-    return [prompt_content, due_date, res_info]
+    return [prompt_content, prompt_id, due_date, res_info]
 
 
 def get_pras_by_section_id(section_id):
