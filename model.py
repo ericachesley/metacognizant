@@ -105,6 +105,8 @@ class Response(db.Model):
     content = db.Column(db.Text, nullable=False)
     submission_date = db.Column(db.DateTime)
     g_id = db.Column(db.String)
+    sentiment = db.Column(db.String)
+    confidence = db.Column(db.Float)
 
     user = db.relationship('User', backref='responses')
     prompt_assignment = db.relationship(

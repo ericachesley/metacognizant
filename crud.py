@@ -2,9 +2,15 @@ from model import (db, connect_to_db, User, Section, SectionAssignment,
                    Prompt, PromptAssignment, Response)
 import server
 from datetime import datetime
+from monkeylearn import MonkeyLearn
+import os
 
+ML_API_KEY = os.environ['MONKEYLEARN_KEY']
+ml = MonkeyLearn(ML_API_KEY)
 
 # 'create' functions
+
+
 def create_user(first, last, email, hashed_password, g_id=None, g_credentials=None):
     user = User(first_name=first,
                 last_name=last,
@@ -95,11 +101,24 @@ def create_revisit_assignment(revisit_pras_id, date, g_id=None):
 
 
 def create_response(user, pras, content, sub_date, g_id=None):
+
+    analysis = ml.classifiers.classify(
+        model_id='cl_Jx8qzYJh',
+        data=[content]
+    )
+    print(analysis.body[0]['classifications'][0]['tag_name'])
+    print(analysis.body[0]['classifications'][0]['confidence'])
+
+    sentiment = analysis.body[0]['classifications'][0]['tag_name']
+    confidence = analysis.body[0]['classifications'][0]['confidence']
+
     response = Response(user=user,
                         prompt_assignment=pras,
                         content=content,
                         submission_date=sub_date,
-                        g_id=g_id)
+                        g_id=g_id,
+                        sentiment=sentiment,
+                        confidence=confidence)
     db.session.add(response)
     db.session.commit()
     return response
@@ -215,6 +234,8 @@ def get_responses_by_assignment_id(assignment_id):
         res_info.append({'student': name,
                          'last_name': res.user.last_name,
                          'content': res.content,
+                         'sentiment': res.sentiment,
+                         'confidence': res.confidence,
                          'date': res.submission_date})
         if res.user in students:
             students.remove(res.user)
@@ -224,8 +245,7 @@ def get_responses_by_assignment_id(assignment_id):
         name = f'{student.first_name} {student.last_name}'
         res_info.append({'student': name,
                          'last_name': student.last_name,
-                         'content': 'No response yet.',
-                         'date': None})
+                         'content': 'No response yet.'})
     return [prompt_content, prompt_id, due_date, revisit, orig_date, res_info]
 
 
@@ -247,7 +267,9 @@ def get_responses_by_student_and_section(student_id, section_id):
         if res:
             responses.append({'date': res.submission_date,
                               'prompt': pras.prompt.content,
-                              'response': res.content})
+                              'response': res.content,
+                              'sentiment': res.sentiment,
+                              'confidence': res.confidence})
     return responses
 
 

@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, flash, session, jsonify
 from model import connect_to_db
-import crud, gapi, tests
-import json, pickle
+import crud
+import gapi
+import tests
+import json
+import pickle
 from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
 
@@ -12,6 +15,7 @@ from oauth2client import client
 app = Flask(__name__)
 app.secret_key = 'mygreatsecretkey'
 bcrypt = Bcrypt(app)
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -65,9 +69,9 @@ def create_account():
         if user.hashed_password or user.g_id:
             res = 'That email address is already associated with a user in our system. Please log in.'
         else:
-            user = crud.update_user_at_first_login(user, 
-                                                   first, 
-                                                   last, 
+            user = crud.update_user_at_first_login(user,
+                                                   first,
+                                                   last,
                                                    password_hashed)
             session['logged_in_user_id'] = user.user_id
             res = [user.user_id, name]
@@ -90,7 +94,8 @@ def add_section():
     print("Added: ", section)
 
     user_id = session['logged_in_user_id']
-    seas = crud.create_section_assignment_by_ids(user_id, section.section_id, 'teacher')
+    seas = crud.create_section_assignment_by_ids(
+        user_id, section.section_id, 'teacher')
     print('Added: ', seas)
 
     return jsonify(section.section_id)
@@ -102,7 +107,8 @@ def join_section():
     section_id = data['sectionId']
 
     user_id = session['logged_in_user_id']
-    seas = crud.create_section_assignment_by_ids(user_id, section_id, 'student')
+    seas = crud.create_section_assignment_by_ids(
+        user_id, section_id, 'student')
     print('Added: ', seas)
 
     return jsonify(seas.seas_id)
@@ -120,8 +126,8 @@ def add_student():
         new = True
         student = crud.create_user(student_email, ' ', student_email, None)
 
-    seas = crud.create_section_assignment_by_ids(student.user_id, 
-                                                 section_id, 
+    seas = crud.create_section_assignment_by_ids(student.user_id,
+                                                 section_id,
                                                  'student')
     print('Added: ', seas)
     return jsonify([seas.seas_id, new])
@@ -209,12 +215,12 @@ def return_assignments_to_date():
 @app.route('/api/get_responses')
 def return_responses():
     assignment_id = request.args.get('assignmentId')
-    (prompt, 
-    prompt_id, 
-    due_date,
-    revisit, 
-    orig_date,
-    responses) = crud.get_responses_by_assignment_id(assignment_id)
+    (prompt,
+     prompt_id,
+     due_date,
+     revisit,
+     orig_date,
+     responses) = crud.get_responses_by_assignment_id(assignment_id)
     responses.sort(key=lambda i: i['last_name'])
 
     return jsonify([prompt, prompt_id, due_date, revisit, orig_date, responses])
@@ -270,15 +276,15 @@ def add_prompt_assignment():
         google_sectionid = crud.get_gid_of_section(section_id)
         if google_sectionid:
             credentials = crud.get_credentials(session['logged_in_user_id'])
-            google_prasid = gapi.create_google_assignment(credentials, 
+            google_prasid = gapi.create_google_assignment(credentials,
                                                           section_id,
-                                                          google_sectionid, 
+                                                          google_sectionid,
                                                           prompt_id,
-                                                          date)                                      
+                                                          date)
 
-        pras = crud.create_prompt_assignment_by_ids(int(section_id), 
-                                                    prompt_id, 
-                                                    date, 
+        pras = crud.create_prompt_assignment_by_ids(int(section_id),
+                                                    prompt_id,
+                                                    date,
                                                     google_prasid)
         new_pras.append({'id': pras.pras_id, 'section': pras.section_id})
 
@@ -291,18 +297,19 @@ def assign_revisit():
     revisit_pras_id = data['promptAssignment']
     date = data['date']
 
-    revisit, section_gid = crud.create_revisit_assignment(revisit_pras_id, date)
+    revisit, section_gid = crud.create_revisit_assignment(
+        revisit_pras_id, date)
 
     if section_gid is not None:
         section_id = revisit.section_id
         prompt_id = revisit.prompt_id
 
         credentials = crud.get_credentials(session['logged_in_user_id'])
-        google_prasid = gapi.create_google_assignment(credentials, 
-                                                        section_id,
-                                                        section_gid, 
-                                                        prompt_id,
-                                                        date)                                      
+        google_prasid = gapi.create_google_assignment(credentials,
+                                                      section_id,
+                                                      section_gid,
+                                                      prompt_id,
+                                                      date)
 
         revisit = crud.update_revisit_assignment(revisit, google_prasid)
 
@@ -333,19 +340,20 @@ def create_response():
     if google_prasid:
         print('yeah')
         google_userid = session['google_userid']
-        google_sectionid = crud.get_gid_of_section(crud.get_section_id_of_pras(pras_id))
+        google_sectionid = crud.get_gid_of_section(
+            crud.get_section_id_of_pras(pras_id))
         credentials = crud.get_credentials(session['logged_in_user_id'])
-        google_resid = gapi.create_google_response(credentials, 
+        google_resid = gapi.create_google_response(credentials,
                                                    google_sectionid,
-                                                   google_prasid, 
-                                                   google_userid, 
-                                                   response, 
+                                                   google_prasid,
+                                                   google_userid,
+                                                   response,
                                                    date)
 
-    res = crud.create_response_by_ids(user_id, 
-                                      pras_id, 
-                                      response, 
-                                      date, 
+    res = crud.create_response_by_ids(user_id,
+                                      pras_id,
+                                      response,
+                                      date,
                                       google_resid)
 
     return jsonify({'id': res.response_id})
@@ -388,7 +396,6 @@ def google_login():
     google_userid = credentials.id_token['sub']
     google_email = credentials.id_token['email']
     session['google_userid'] = google_userid
-    
 
     # get or create user in database
     if crud.get_user_by_gid(google_userid):
@@ -405,7 +412,6 @@ def google_login():
     session['logged_in_user_id'] = user.user_id
     name = f'{user.first_name} {user.last_name}'
     return jsonify([user.user_id, name])
-
 
 
 if __name__ == '__main__':

@@ -30,6 +30,8 @@ class StudentResponses extends React.Component {
                     <td>{dtLocal}</td>
                     <td>{this.state.responses[count].prompt}</td>
                     <td>{this.state.responses[count].response}</td>
+                    <td>{this.state.responses[count].sentiment}</td>
+                    <td>{this.state.responses[count].confidence}</td>
                 </tr>
             )
         }
@@ -45,6 +47,8 @@ class StudentResponses extends React.Component {
                             <td><b>Date</b></td>
                             <td><b>Prompt</b></td>
                             <td><b>Response</b></td>
+                            <td><b>Sentiment</b></td>
+                            <td><b>Confidence</b></td>
                         </tr>
                     </thead>
                     <tbody>{responses}</tbody>

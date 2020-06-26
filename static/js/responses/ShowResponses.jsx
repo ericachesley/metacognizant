@@ -15,6 +15,8 @@ class ShowResponses extends React.Component {
                     <tr key={count}>
                         <td>{this.props.responses[count].student}</td>
                         <td>{this.props.responses[count].content}</td>
+                        <td>{this.props.responses[count].sentiment}</td>
+                        <td>{this.props.responses[count].confidence}</td>
                         <td>{date ? dtLocal : ''}</td>
                     </tr>
                 )
@@ -25,6 +27,8 @@ class ShowResponses extends React.Component {
                         <tr>
                             <td><b>Student</b></td>
                             <td><b>Response</b></td>
+                            <td><b>Sentiment</b></td>
+                            <td><b>Confidence</b></td>
                             <td><b>Submitted</b></td>
                         </tr>
                     </thead>

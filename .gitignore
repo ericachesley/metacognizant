@@ -2,6 +2,8 @@ env*
 *pycache*
 *.DS_Store
 .VSCodeCounter/
+.vscode/
 credentials.json
 .coverage
 test_courses.json
+secrets.sh
