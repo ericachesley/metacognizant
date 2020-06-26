@@ -206,10 +206,15 @@ def return_assignments_to_date():
 @app.route('/api/get_responses')
 def return_responses():
     assignment_id = request.args.get('assignmentId')
-    prompt, prompt_id, due_date, responses = crud.get_responses_by_assignment_id(
-        assignment_id)
+    (prompt, 
+    prompt_id, 
+    due_date,
+    revisit, 
+    orig_date,
+    responses) = crud.get_responses_by_assignment_id(assignment_id)
     responses.sort(key=lambda i: i['last_name'])
-    return jsonify([prompt, prompt_id, due_date, responses])
+
+    return jsonify([prompt, prompt_id, due_date, revisit, orig_date, responses])
 
 
 @app.route('/api/get__student_responses')
@@ -267,6 +272,30 @@ def add_prompt_assignment():
         new_pras.append({'id': pras.pras_id, 'section': pras.section_id})
 
     return jsonify(new_pras)
+
+
+@app.route('/api/assign_revisit', methods=['POST'])
+def assign_revisit():
+    data = request.get_json()
+    revisit_pras_id = data['promptAssignment']
+    date = data['date']
+
+    revisit, section_gid = crud.create_revisit_assignment(revisit_pras_id, date)
+
+    if section_gid is not None:
+        section_id = revisit.section_id
+        prompt_id = revisit.prompt_id
+
+        credentials = crud.get_credentials(session['logged_in_user_id'])
+        google_prasid = gapi.create_google_assignment(credentials, 
+                                                        section_id,
+                                                        section_gid, 
+                                                        prompt_id,
+                                                        date)                                      
+
+        revisit = crud.update_revisit_assignment(revisit, google_prasid)
+
+    return jsonify(revisit.pras_id)
 
 
 @app.route('/api/check_response')

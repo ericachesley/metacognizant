@@ -82,10 +82,11 @@ class PromptAssignment(db.Model):
     section_id = db.Column(db.Integer, db.ForeignKey('sections.section_id'))
     prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'))
     due_date = db.Column(db.DateTime, nullable=False)
+    g_id = db.Column(db.String)
+    revisit_pras_id = db.Column(db.Integer)
 
     section = db.relationship('Section', backref='prompt_assignments')
     prompt = db.relationship('Prompt', backref='prompt_assignments')
-    g_id = db.Column(db.String)
 
     # responses
 

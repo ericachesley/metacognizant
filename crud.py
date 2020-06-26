@@ -58,24 +58,40 @@ def create_custom_prompt(content, user_id, prompt_type='text', response_type='te
     return prompt
 
 
-def create_prompt_assignment(section, prompt, due_date, g_id=None):
-    pras = PromptAssignment(section=section, 
-                            prompt=prompt, 
-                            due_date=due_date, 
-                            g_id=g_id)
+def create_prompt_assignment(section, prompt, due_date, g_id=None, revisit_pras_id=None):
+    pras = PromptAssignment(section=section,
+                            prompt=prompt,
+                            due_date=due_date,
+                            g_id=g_id,
+                            revisit_pras_id=revisit_pras_id)
     db.session.add(pras)
     db.session.commit()
     return pras
 
 
-def create_prompt_assignment_by_ids(section_id, prompt_id, due_date, g_id=None):
+def create_prompt_assignment_by_ids(section_id, prompt_id, due_date, g_id=None, revisit_pras_id=None):
     pras = PromptAssignment(section_id=section_id,
                             prompt_id=prompt_id,
                             due_date=due_date,
-                            g_id=g_id)
+                            g_id=g_id,
+                            revisit_pras_id=revisit_pras_id)
     db.session.add(pras)
     db.session.commit()
     return pras
+
+
+def create_revisit_assignment(revisit_pras_id, date, g_id=None):
+    old_pras = PromptAssignment.query.get(revisit_pras_id)
+    section_id = old_pras.section_id
+    prompt_id = old_pras.prompt_id
+    new_pras = PromptAssignment(section_id=section_id,
+                                prompt_id=prompt_id,
+                                due_date=date,
+                                g_id=g_id,
+                                revisit_pras_id=revisit_pras_id)
+    db.session.add(new_pras)
+    db.session.commit()
+    return (new_pras, old_pras.section.g_id)
 
 
 def create_response(user, pras, content, sub_date, g_id=None):
@@ -116,8 +132,8 @@ def get_sections_by_user_id(user_id):
 
 
 def get_section_name(section_id):
-    #return Section.query.with_entities(Section.name).get(section_id)
-    #return db.session.execute(f'SELECT name FROM sections WHERE section_id = {section_id}')
+    # return Section.query.with_entities(Section.name).get(section_id)
+    # return db.session.execute(f'SELECT name FROM sections WHERE section_id = {section_id}')
     section = Section.query.get(section_id)
     return section.name
 
@@ -154,34 +170,45 @@ def get_assignments_to_date(section_id, date):
     return assignments
 
 
+def get_pras_date(pras_id):
+    pras = PromptAssignment.query.get(pras_id)
+    return pras.due_date
+
+
 def get_responses_by_assignment_id(assignment_id):
     pras = PromptAssignment.query.get(assignment_id)
     prompt_content = pras.prompt.content
     prompt_id = pras.prompt_id
     due_date = pras.due_date
-    #get existing responses
+    if pras.revisit_pras_id is not None:
+        revisit = True
+        orig_date = get_pras_date(pras.revisit_pras_id)
+    else:
+        revisit = False
+        orig_date = None
+    # get existing responses
     responses = (Response.query
                          .options(db.joinedload('prompt_assignment'),
                                   db.joinedload('user'))
                          .filter(Response.pras_id == assignment_id)
                          .all())
-    
-    #if no responses yet, return
-    if responses == []:
-        return [prompt_content, due_date, []]
 
-    #get students
+    # if no responses yet, return
+    if responses == []:
+        return [prompt_content, prompt_id, due_date, revisit, orig_date, []]
+
+    # get students
     condition1 = (SectionAssignment.section_id == pras.section_id)
     condition2 = (SectionAssignment.role == 'student')
     seaction_assignments = (SectionAssignment.query
-                                 .options(db.joinedload('user'))
-                                 .filter(condition1, condition2)
-                                 .all())
+                            .options(db.joinedload('user'))
+                            .filter(condition1, condition2)
+                            .all())
     students = []
     for seas in seaction_assignments:
         students.append(seas.user)
 
-    #re-format responses
+    # re-format responses
     res_info = []
     for res in responses:
         name = f'{res.user.first_name} {res.user.last_name}'
@@ -192,14 +219,14 @@ def get_responses_by_assignment_id(assignment_id):
         if res.user in students:
             students.remove(res.user)
 
-    #add in students who have not responded yet
+    # add in students who have not responded yet
     for student in students:
         name = f'{student.first_name} {student.last_name}'
         res_info.append({'student': name,
                          'last_name': student.last_name,
                          'content': 'No response yet.',
                          'date': None})
-    return [prompt_content, prompt_id, due_date, res_info]
+    return [prompt_content, prompt_id, due_date, revisit, orig_date, res_info]
 
 
 def get_pras_by_section_id(section_id):
@@ -212,15 +239,15 @@ def get_responses_by_student_and_section(student_id, section_id):
     prompt_assignments = get_pras_by_section_id(section_id)
     responses = []
     condition1 = (Response.user_id == student_id)
-    for pras in prompt_assignments:  
+    for pras in prompt_assignments:
         condition2 = (Response.prompt_assignment == pras)
         res = (Response.query
                        .filter(condition1, condition2)
                        .first())
         if res:
             responses.append({'date': res.submission_date,
-                            'prompt': pras.prompt.content,
-                            'response': res.content})
+                              'prompt': pras.prompt.content,
+                              'response': res.content})
     return responses
 
 
@@ -279,8 +306,8 @@ def get_users_with_section_info():
 
 def check_pras_date(section, date):
     pras = (PromptAssignment.query
-                            .filter(PromptAssignment.section==section, 
-                                    PromptAssignment.due_date==date)
+                            .filter(PromptAssignment.section == section,
+                                    PromptAssignment.due_date == date)
                             .first())
     if pras:
         return True
@@ -337,12 +364,13 @@ def get_gid_of_pras(pras_id):
     pras = PromptAssignment.query.get(pras_id)
     return pras.g_id
 
+
 def get_section_id_of_pras(pras_id):
     pras = PromptAssignment.query.get(pras_id)
     return pras.section_id
 
 
-#update functions
+# update functions
 def update_user_with_gid(user, gid, credentials):
     user.g_id = gid
     user.g_credentials = credentials
@@ -356,6 +384,12 @@ def update_user_at_first_login(user, first, last, hashed_password):
     user.hashed_password = hashed_password
     db.session.commit()
     return user
+
+
+def update_revisit_assignment(revisit, google_prasid):
+    revisit.g_id = google_prasid
+    db.session.commit()
+    return revisit
 
 
 if __name__ == '__main__':
