@@ -8,8 +8,6 @@ class ShowResponses extends React.Component {
 
 
     componentDidMount() {
-        console.log('mounted');
-        console.log(this.props.isRevisit);
         if (this.props.isRevisit) {
             console.log('yep');
             fetch(`/api/get_all_prev_responses?prasId=${this.props.prasId}`, {
@@ -27,7 +25,6 @@ class ShowResponses extends React.Component {
     }
 
     render() {
-        console.log(this.props.isRevisit);
         if (this.props.isRevisit && this.state.prevRes == null) {
             return (<Loader />)
         } else if (this.props.responses.length == 0) {
