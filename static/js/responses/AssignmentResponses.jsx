@@ -11,13 +11,20 @@ class AssignmentResponses extends React.Component {
             revisit: false,
             isRevisit: false,
             origDate: null,
+            loading: true
         };
         this.toggleAssignAgain = this.toggleAssignAgain.bind(this);
         this.toggleAssignRevisit = this.toggleAssignRevisit.bind(this);
         this.adjustDate = this.adjustDate.bind(this);
+        this.getResponses = this.getResponses.bind(this);
     }
 
     componentDidMount() {
+        this.getResponses();
+    }
+
+    getResponses() {
+        this.setState({ loading: true });
         fetch(`/api/get_responses?assignmentId=${this.state.assignmentId}`)
             .then(res => res.json())
             .then(data => {
@@ -27,7 +34,8 @@ class AssignmentResponses extends React.Component {
                     due_date: data[2],
                     isRevisit: data[3],
                     origDate: data[4],
-                    responses: data[5]
+                    responses: data[5],
+                    loading: false
                 })
             })
     }
@@ -55,6 +63,10 @@ class AssignmentResponses extends React.Component {
     }
 
     render() {
+        if (this.state.loading) {
+            <Loader />
+        }
+
         const role = sessionStorage.getItem('role')
         const sectionId = window.location.pathname.split('/')[2]
         return (
@@ -89,29 +101,35 @@ class AssignmentResponses extends React.Component {
 
                 {role === 'teacher' ?
                     <div>
-                        <p>
-                            {this.state.again ?
-                                <CreateAssignment
-                                    promptId={this.state.promptId}
-                                    toggle={this.toggleAssignAgain}
-                                /> :
-                                <button onClick={this.toggleAssignAgain}>
-                                    Assign again
+                        {this.state.again ?
+                            <CreateAssignment
+                                promptId={this.state.promptId}
+                                toggle={this.toggleAssignAgain}
+                            /> :
+                            <button onClick={this.toggleAssignAgain}>
+                                Assign again
                         </button>}
-                            <br></br>
-                            {this.state.revisit ?
-                                <CreateRevisitAssignment
-                                    assignmentId={this.state.assignmentId}
-                                    toggle={this.toggleAssignRevisit}
-                                /> :
-                                <button onClick={this.toggleAssignRevisit}>Assign revisit</button>
-                            }
-                        </p>
-                        <ShowResponses responses={this.state.responses} />
+                        <br></br>
+                        {this.state.revisit ?
+                            <CreateRevisitAssignment
+                                assignmentId={this.state.assignmentId}
+                                toggle={this.toggleAssignRevisit}
+                            /> :
+                            <button onClick={this.toggleAssignRevisit}>Assign revisit</button>
+                        }
+                        <br></br>
+                        {this.state.loading ?
+                            <Loader /> :
+                            <ShowResponses
+                                responses={this.state.responses}
+                                prasId={this.state.assignmentId}
+                                isRevisit={this.state.isRevisit}
+                            />}
                     </div> :
                     <GetResponse
                         assignmentId={this.state.assignmentId}
                         sectionId={sectionId}
+                        reload={this.getResponses}
                     />
                 }
             </div>

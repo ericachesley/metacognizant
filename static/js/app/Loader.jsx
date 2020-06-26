@@ -3,7 +3,7 @@ class Loader extends React.Component {
       super(props);
       this.state = {
         stage: 0,
-        stages: ['Submitting', 'Submitting.', 'Submitting..', 'Submitting...']
+        stages: ['Loading', 'Loading.', 'Loading..', 'Loading...']
       };
       this.updateStage = this.updateStage.bind(this);
     }

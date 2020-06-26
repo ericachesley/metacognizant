@@ -234,6 +234,18 @@ def get_prev_res():
     return jsonify(res)
 
 
+@app.route('/api/get_all_prev_responses')
+def get_all_prev_res():
+    pras_id = request.args.get('prasId')
+    section_id = crud.get_section_id_of_pras(pras_id)
+    students = crud.get_students_by_section_id(section_id)
+    orig_responses = {}
+    for student in students:
+        res = crud.get_orig_res(pras_id, student['user_id'])
+        orig_responses[student['last_name']] = res
+    return jsonify(orig_responses)
+
+
 @app.route('/api/get__student_responses')
 def return_student_responses():
     student_id = request.args.get('studentId')

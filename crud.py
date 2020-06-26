@@ -125,11 +125,23 @@ def create_response(user, pras, content, sub_date, g_id=None):
 
 
 def create_response_by_ids(user_id, pras_id, content, sub_date, g_id=None):
+    analysis = ml.classifiers.classify(
+        model_id='cl_Jx8qzYJh',
+        data=[content]
+    )
+    print(analysis.body[0]['classifications'][0]['tag_name'])
+    print(analysis.body[0]['classifications'][0]['confidence'])
+
+    sentiment = analysis.body[0]['classifications'][0]['tag_name']
+    confidence = analysis.body[0]['classifications'][0]['confidence']
+    
     response = Response(user_id=user_id,
                         pras_id=pras_id,
                         content=content,
                         submission_date=sub_date,
-                        g_id=g_id)
+                        g_id=g_id,
+                        sentiment=sentiment,
+                        confidence=confidence)
     db.session.add(response)
     db.session.commit()
     return response
@@ -287,7 +299,10 @@ def get_orig_res(pras_id, user_id):
            .filter(Response.user_id == user_id,
                    Response.pras_id == orig_pras.pras_id)
            .first())
-    return res.content
+    if res:
+        return res.content
+    else:
+        return 'No response submitted'
 
 
 def check_response(pras_id, user_id):
