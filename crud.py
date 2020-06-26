@@ -258,6 +258,16 @@ def get_response(pras_id, user_id):
     return response
 
 
+def get_orig_res(pras_id, user_id):
+    pras = PromptAssignment.query.get(pras_id)
+    orig_pras = PromptAssignment.query.get(pras.revisit_pras_id)
+    res = (Response.query
+           .filter(Response.user_id == user_id,
+                   Response.pras_id == orig_pras.pras_id)
+           .first())
+    return res.content
+
+
 def check_response(pras_id, user_id):
     condition1 = (Response.pras_id == pras_id)
     condition2 = (Response.user_id == user_id)

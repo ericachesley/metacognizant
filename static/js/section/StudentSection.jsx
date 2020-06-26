@@ -7,9 +7,7 @@ class StudentSection extends React.Component {
     }
 
     componentDidMount() {
-        const dt = luxon.DateTime;
-        const utcDt = dt.utc().toISO();
-        fetch(`/api/get_pras_to_date?sectionId=${this.props.sectionId}&date=${utcDt}`)
+        fetch(`/api/get_pras?sectionId=${this.props.sectionId}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ assignments: data })
@@ -17,14 +15,19 @@ class StudentSection extends React.Component {
     }
 
     render() {
+        // const dt = luxon.DateTime;
+        // const utcDt = dt.utc().toISO();
+
         const assignmentButtonsComplete = [];
         const assignmentButtonsIncomplete = [];
+
         for (const assignment of this.state.assignments) {
             const button = <AssignmentButton
                 assignment={assignment}
                 sectionId={this.props.sectionId}
                 key={assignment['pras_id']}
             />
+
             if (assignment.res) {
                 assignmentButtonsComplete.push(button);
             } else {

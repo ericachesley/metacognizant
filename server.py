@@ -164,10 +164,13 @@ def return_sections():
 def return_assignments():
     section_id = request.args.get('sectionId')
     assignments = crud.get_assignments_by_section_id(section_id)
+    user_id = session['logged_in_user_id']
     assignments_info = []
     for assignment in assignments:
+        res = crud.check_response(assignment.pras_id, user_id)
         assignments_info.append({'pras_id': assignment.pras_id,
-                                 'date': assignment.due_date})
+                                 'date': assignment.due_date,
+                                 'res': res})
     assignments_info.sort(key=lambda i: i['date'])
     return jsonify(assignments_info)
 
@@ -215,6 +218,14 @@ def return_responses():
     responses.sort(key=lambda i: i['last_name'])
 
     return jsonify([prompt, prompt_id, due_date, revisit, orig_date, responses])
+
+
+@app.route('/api/get_prev_response')
+def get_prev_res():
+    user_id = session['logged_in_user_id']
+    pras_id = request.args.get('prasId')
+    res = crud.get_orig_res(pras_id, user_id)
+    return jsonify(res)
 
 
 @app.route('/api/get__student_responses')

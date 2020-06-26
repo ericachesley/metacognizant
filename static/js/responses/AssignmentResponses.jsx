@@ -55,37 +55,60 @@ class AssignmentResponses extends React.Component {
     }
 
     render() {
+        const role = sessionStorage.getItem('role')
         const sectionId = window.location.pathname.split('/')[2]
         return (
             <div id='assignment'>
+
                 <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
                 <h1>{sessionStorage.getItem('sectionName')}</h1>
+
                 {this.state.isRevisit ?
-                <h2>Prompt revisit from {this.adjustDate(this.state.origDate)}</h2> :
-                null}
-                <h2>Prompt: {this.state.prompt}</h2>
+                    <h2>Prompt revisit from {this.adjustDate(this.state.origDate)}</h2> :
+                    null}
+
+                {role === 'student' && this.state.isRevisit ?
+                    <p>
+                        <b>Instructions</b> <br></br>
+                        Reread the response you gave to the prompt below when it
+                        was previously assigned. <br></br> Then reflect on how
+                        your perspective has or has not changed since.
+                    </p> :
+                    <h2>
+                        Prompt: {this.state.prompt}
+                    </h2>}
+
                 <h3>Due: {this.adjustDate(this.state.due_date)}</h3>
-                <p>
-                    {this.state.again ?
-                        <CreateAssignment
-                            promptId={this.state.promptId}
-                            toggle={this.toggleAssignAgain}
-                        /> :
-                        <button onClick={this.toggleAssignAgain}>
-                            Assign again
+
+                {role === 'student' && this.state.isRevisit ?
+                    <PreviousResponse
+                        prasId={this.state.assignmentId}
+                        prompt={this.state.prompt} ƒ
+                    /> :
+                    null}
+
+                {role === 'teacher' ?
+                    <div>
+                        <p>
+                            {this.state.again ?
+                                <CreateAssignment
+                                    promptId={this.state.promptId}
+                                    toggle={this.toggleAssignAgain}
+                                /> :
+                                <button onClick={this.toggleAssignAgain}>
+                                    Assign again
                         </button>}
-                </p>
-                <p>
-                    {this.state.revisit ?
-                        <CreateRevisitAssignment
-                            assignmentId={this.state.assignmentId}
-                            toggle={this.toggleAssignRevisit}
-                        /> :
-                        <button onClick={this.toggleAssignRevisit}>Assign revisit</button>
-                    }
-                </p>
-                {sessionStorage.getItem('role') === 'teacher' ?
-                    <ShowResponses responses={this.state.responses} /> :
+                            <br></br>
+                            {this.state.revisit ?
+                                <CreateRevisitAssignment
+                                    assignmentId={this.state.assignmentId}
+                                    toggle={this.toggleAssignRevisit}
+                                /> :
+                                <button onClick={this.toggleAssignRevisit}>Assign revisit</button>
+                            }
+                        </p>
+                        <ShowResponses responses={this.state.responses} />
+                    </div> :
                     <GetResponse
                         assignmentId={this.state.assignmentId}
                         sectionId={sectionId}
@@ -170,6 +193,42 @@ class CreateRevisitAssignment extends React.Component {
                     </p>
                 </form>
                 <p><button onClick={this.props.toggle}>Cancel</button></p>
+            </div>
+        )
+    }
+}
+
+
+class PreviousResponse extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            res: '',
+        };
+    }
+
+    componentDidMount() {
+        fetch(`/api/get_prev_response?prasId=${this.props.prasId}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({ res: data });
+            })
+    }
+
+    render() {
+        return (
+            <div>
+                <h2>Prompt: {this.props.prompt}</h2>
+                <p><b>Your previous response</b> <br></br> {this.state.res}</p>
+                <p>
+                    How has your perspective changed (or not) since you wrote
+                    this reflection?
+                    </p>
             </div>
         )
     }
