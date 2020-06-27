@@ -49,7 +49,7 @@ class AddClass extends React.Component {
                         />
                     </p>
                     <p>
-                        <label>Start date: </label>
+                        <label>Start: </label>
                         <input onChange={this.handleFieldChange}
                             id='start'
                             name='start'
@@ -57,7 +57,7 @@ class AddClass extends React.Component {
                         />
                     </p>
                     <p>
-                        <label>End date (optional): </label>
+                        <label>End (optional): </label>
                         <input onChange={this.handleFieldChange}
                             id='end'
                             name='end'
@@ -68,7 +68,7 @@ class AddClass extends React.Component {
                         <input type='submit' />
                     </p>
                 </form>
-                <p><button onClick={this.props.toggleAdd}>Cancel</button></p>
+                <p><a href='#' onClick={this.props.toggleAdd}>Cancel</a></p>
             </div>
         )
     }

@@ -35,13 +35,15 @@ class StudentSection extends React.Component {
             }
         }
         return (
-            <div>
-                <h3>View assignments:</h3>
-                <p>Already responded</p>
-                <div>{assignmentButtonsComplete}</div>
-                <p>No response yet</p>
-                <div>{assignmentButtonsIncomplete}</div>
-                <p></p>
+            <div className='row'>
+                <div className='col-12'>
+                    <h3>View assignments:</h3>
+                    <p>Already responded</p>
+                    <div>{assignmentButtonsComplete}</div>
+                    <p>No response yet</p>
+                    <div>{assignmentButtonsIncomplete}</div>
+                    <p></p>
+                </div>
             </div>
         )
     }

@@ -15,10 +15,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       userId: sessionStorage.getItem('userId'),
-      path: '/'
+      //path: '/'
     };
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.getSlug = this.getSlug.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
 
   setLoggedIn(data) {
@@ -39,21 +40,24 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    fetch('/api/get_path')
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ path: data })
-      })
+  refresh() {
+    this.setState({userId: sessionStorage.getItem('userId')})
   }
+
+  // componentDidMount() {
+  //   fetch('/api/get_path')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       this.setState({ path: data })
+  //     })
+  // }
 
   render() {
     const userId = sessionStorage.getItem('userId');
     return (
       <Router>
-        {sessionStorage.getItem('userId') ?
-          <NavBar /> :
-          <span></span>}
+          <NavBar refresh={this.refresh}/>
+          <NavBarFooter />
         <Switch>
           <Route path='/admin'>
             <Admin />

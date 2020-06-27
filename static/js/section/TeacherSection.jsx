@@ -111,52 +111,56 @@ class TeacherSection extends React.Component {
             )
         }
         return (
-            <div>
-                <h3>View responses by assignment:</h3>
-                <p>Past assignments</p>
-                {
-                    assignmentButtonsPast[0] == undefined ?
-                        <div><p><i>No past assignments</i></p></div> :
-                        <div>{assignmentButtonsPast}</div>
-                }
-                <p>Today's assignment</p>
-                {
-                    assignmentButtonsToday[0] == undefined ?
-                        <div><p><i>Nothing assigned for today</i></p></div> :
-                        <div>{assignmentButtonsToday}</div>
-                }
-                <p>Upcoming assignments</p>
-                {
-                    assignmentButtonsFuture[0] == undefined ?
-                        <div><p><i>No upcoming assignments</i></p></div> :
-                        <div>{assignmentButtonsFuture}</div>
-                }
-                <p></p>
-                {this.state.addAssignment ?
-                    <CreateAssignment
-                        promptId = 'select-one'
-                        sectionId = {this.props.sectionId}
-                        toggle={this.toggleAddAssignment}
-                    /> :
-                    <div>
-                        <button onClick={this.toggleAddAssignment}>
-                            Create new assignment
+            <div className='row'>
+                <div className='col-6'>
+                    <h3>View responses by assignment:</h3>
+                    <p>Past assignments</p>
+                    {
+                        assignmentButtonsPast[0] == undefined ?
+                            <div><p><i>No past assignments</i></p></div> :
+                            <div>{assignmentButtonsPast}</div>
+                    }
+                    <p>Today's assignment</p>
+                    {
+                        assignmentButtonsToday[0] == undefined ?
+                            <div><p><i>Nothing assigned for today</i></p></div> :
+                            <div>{assignmentButtonsToday}</div>
+                    }
+                    <p>Upcoming assignments</p>
+                    {
+                        assignmentButtonsFuture[0] == undefined ?
+                            <div><p><i>No upcoming assignments</i></p></div> :
+                            <div>{assignmentButtonsFuture}</div>
+                    }
+                    <p></p>
+                    {this.state.addAssignment ?
+                        <CreateAssignment
+                            promptId='select-one'
+                            sectionId={this.props.sectionId}
+                            toggle={this.toggleAddAssignment}
+                        /> :
+                        <div>
+                            <button onClick={this.toggleAddAssignment}>
+                                Create new assignment
                         </button>
-                    </div>
-                }
-                <h3>View responses by student:</h3>
-                {studentButtons[0] == undefined ?
-                    <p><i>There are no students assigned to this class yet.</i></p> :
-                    <div>{studentButtons}</div>}
-                <p></p>
-                {this.state.addStudent ?
-                    <AddStudent toggleAddStudent={this.toggleAddStudent} /> :
-                    <div>
-                        <button onClick={this.toggleAddStudent}>
-                            Add a student
+                        </div>
+                    }
+                </div>
+                <div className='col-6'>
+                    <h3>View responses by student:</h3>
+                    {studentButtons[0] == undefined ?
+                        <p><i>There are no students assigned to this class yet.</i></p> :
+                        <div>{studentButtons}</div>}
+                    <p></p>
+                    {this.state.addStudent ?
+                        <AddStudent toggleAddStudent={this.toggleAddStudent} /> :
+                        <div>
+                            <button onClick={this.toggleAddStudent}>
+                                Add a student
                         </button>
-                    </div>
-                }
+                        </div>
+                    }
+                </div>
             </div>
         )
     }

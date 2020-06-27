@@ -68,37 +68,47 @@ class Overview extends React.Component {
             }
         }
         return (
-            <div id='overview'>
-                <h2>Your classes</h2>
-                <h3>Teacher</h3>
-                {teacherSections.length > 0 ?
-                    <div id='container'>{teacherSections}</div> :
-                    <p>You are not assigned as a teacher for any sections.</p>
-                }
-                <p></p>
-                {this.state.addClass ?
-                    <AddClass toggleAdd={this.toggleAdd} /> :
-                    <div>
-                        <button onClick={this.toggleAdd}>
-                            Create a new class
-                        </button>
+            <section className='container-fluid' id='overview'>
+                <div className='row justify-content-center static-height'>
+                    <div id='yourclasses' className='col-6 col-xs-6 col-sm-6 col-md-10 col-lg-10 rounded shadow p-3 mb-5 rounded'>
+                        <h2>Your Classes</h2>
                     </div>
-                }
-                <h3>Student</h3>
-                {studentSections.length > 0 ?
-                    <div id='container'>{studentSections}</div> :
-                    <p>You are not assigned as a student for any sections.</p>
-                }
-                <p></p>
-                {this.state.joinClass ?
-                    <JoinClass toggleJoin={this.toggleJoin} /> :
-                    <div>
-                        <button onClick={this.toggleJoin}>
-                            Join a class
-                        </button>
+                </div>
+                <div className='row justify-content-center static-height'>
+                    <div id='teacher' height='100' className='col-6 col-xs-6 col-sm-6 col-md-4 col-lg-4 rounded shadow p-3 mb-5 rounded'>
+                        <h3>Teacher</h3>
+                        {teacherSections.length > 0 ?
+                            <div id='container'>{teacherSections}</div> :
+                            <p>You are not assigned as a teacher for any sections.</p>
+                        }
+                        <p></p>
+                        {this.state.addClass ?
+                            <AddClass toggleAdd={this.toggleAdd} /> :
+                            <div>
+                                <a href='#' onClick={this.toggleAdd}>
+                                    Create a new class
+                        </a>
+                            </div>
+                        }
                     </div>
-                }
-            </div>
+                    <div id='student' className='col-5 col-xs-6 col-sm-6 col-md-4 col-lg-4 rounded shadow p-3 mb-5 rounded'>
+                        <h3>Student</h3>
+                        {studentSections.length > 0 ?
+                            <div id='container'>{studentSections}</div> :
+                            <p>You are not assigned as a student for any sections.</p>
+                        }
+                        <p></p>
+                        {this.state.joinClass ?
+                            <JoinClass toggleJoin={this.toggleJoin} /> :
+                            <div>
+                                <a href='#' onClick={this.toggleJoin}>
+                                    Join a class
+                        </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
         )
     }
 }

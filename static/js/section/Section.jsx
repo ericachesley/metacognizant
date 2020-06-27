@@ -14,15 +14,22 @@ class Section extends React.Component {
 
     render() {
         return (
-            <div id='section'>
-                <Link to='/classes'>Back to all classes</Link>
-                <h1>{this.state.sectionName}</h1>
-                <h2>Role: {this.state.role}</h2>
+            <section id='section' className='container-fluid'>
+                <Link className='back' to='/classes'>
+                    <svg id='backicon' width="2em" height="2em" viewBox="0 0 16 16" className="bi bi-arrow-left-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.354 10.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L6.207 7.5H11a.5.5 0 0 1 0 1H6.207l2.147 2.146z" />
+                    </svg>
+                    Back to all classes
+                    </Link>
+                <div id='yourclasses' className='col-6 col-xs-6 col-sm-6 col-md-10 col-lg-10 rounded shadow p-3 mb-5 rounded'>
+                    <h1>{this.state.sectionName}</h1>
+                    <h2>Role: {this.state.role}</h2>
+                </div>
                 <p></p>
                 {this.state.role === 'teacher' ?
                     <TeacherSection sectionId={this.state.sectionId} /> :
                     <StudentSection sectionId={this.state.sectionId} />}
-            </div>
+            </section>
         )
     }
 }

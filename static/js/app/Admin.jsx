@@ -69,7 +69,7 @@ class Admin extends React.Component {
       }
   
       return (
-        <div>
+        <div id='admin'>
           {users}
         </div>
       )

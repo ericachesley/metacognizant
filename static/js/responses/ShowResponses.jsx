@@ -9,7 +9,6 @@ class ShowResponses extends React.Component {
 
     componentDidMount() {
         if (this.props.isRevisit) {
-            console.log('yep');
             fetch(`/api/get_all_prev_responses?prasId=${this.props.prasId}`, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -18,7 +17,6 @@ class ShowResponses extends React.Component {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
                     this.setState({ prevRes: data });
                 })
         }
@@ -64,7 +62,7 @@ class ShowResponses extends React.Component {
                 }
             }
             return (
-                <table id='response-table'>
+                <table id='response-table' className="table table-striped table-hover">
                     <thead>
                         <tr>
                             <td><b>Student</b></td>

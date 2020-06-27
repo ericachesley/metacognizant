@@ -37,7 +37,7 @@ class JoinClass extends React.Component {
                 <p></p>
                 <form onSubmit={this.handleSubmit}>
                     <p>
-                        Section id (get this from your teacher): <input
+                        Section ID (get this from your teacher): <input
                             id='sectionId'
                             type='text'
                             value={this.state.sectionId}
@@ -48,7 +48,7 @@ class JoinClass extends React.Component {
                         <input type='submit' />
                     </p>
                 </form>
-                <p><button onClick={this.props.toggleJoin}>Cancel</button></p>
+                <p><a href='#' onClick={this.props.toggleJoin}>Cancel</a></p>
             </div>
         )
     }

@@ -83,78 +83,97 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div id='login'>
-                <img src="/static/images/MetacognizantLogo.png" />
-                <p></p>
-                <form onSubmit={this.handleSubmit}>
-                    {this.state.signIn ?
-                        <span><b>Please log in.</b></span> :
-                        <span><b>Create an account.</b></span>}
-                    {this.state.signIn ?
-                        null :
-                        <div>
-                            <p>
-                                First name: <input
-                                    id='first'
-                                    type='text'
-                                    value={this.state.first}
-                                    onChange={this.handleFieldChange}
-                                />
-                            </p>
-                            <p>
-                                Last name: <input
-                                    id='last'
-                                    type='text'
-                                    value={this.state.last}
-                                    onChange={this.handleFieldChange}
-                                />
-                            </p>
-                        </div>}
-                    <p>
-                        Email: <input
-                            id='email'
-                            type='text'
-                            value={this.state.email}
-                            onChange={this.handleFieldChange}
+            <section className='container-fluid'>
+                <div id='about'>
+                    <h2>Build students' metacognitive skills and ownership of learning with daily reflection prompts.</h2>
+                </div>
+                <div
+                    className="row justify-content-center static-height">
+                    <div
+                        id='login'
+                        className='col-5 col-xs-6 col-sm-6 col-md-3 col-lg-3 rounded shadow p-3 mb-5 rounded'
+                    >
+                        <div id='card'>
+                            <form onSubmit={this.handleSubmit}>
+                                {this.state.signIn ?
+                                    <span><h3>Please log in.</h3></span> :
+                                    <span><h3>Create an account.</h3></span>}
+                                <p></p>
+                                {this.state.signIn ?
+                                    null :
+                                    <div>
+                                        <p>
+                                            <input
+                                                id='first'
+                                                type='text'
+                                                value={this.state.first}
+                                                placeholder='First name'
+                                                onChange={this.handleFieldChange}
+                                            />
+                                        </p>
+                                        <p>
+                                            <input
+                                                id='last'
+                                                type='text'
+                                                value={this.state.last}
+                                                placeholder='Last Name'
+                                                onChange={this.handleFieldChange}
+                                            />
+                                        </p>
+                                    </div>}
+                                <p>
+                                    <input
+                                        id='email'
+                                        type='text'
+                                        value={this.state.email}
+                                        placeholder='Email'
+                                        onChange={this.handleFieldChange}
+                                    />
+                                </p>
+                                <p>
+                                    <input
+                                        id='password'
+                                        type='password'
+                                        value={this.state.password}
+                                        placeholder='Password'
+                                        onChange={this.handleFieldChange}
+                                    />
+                                </p>
+                                {this.state.signIn ?
+                                    null :
+                                    <p>
+                                        <input
+                                            id='password2'
+                                            type='password'
+                                            value={this.state.password2}
+                                            placeholder='Confirm password'
+                                            onChange={this.handleFieldChange}
+                                        />
+                                    </p>}
+                                <p>
+                                    <input type='submit' />
+                                </p>
+                            </form>
+                        </div>
+                        <p></p>
+                        {this.state.signIn ?
+                            <div>
+                                <p><b>Don't have an account yet?</b><br></br>
+                                    <a href='#' onClick={this.toggleForm}>Sign up</a></p>
+                            </div> :
+                            <div>
+                                <p><b>Already have an account?</b><br></br>
+                                    <a href='#' onClick={this.toggleForm}>Sign in</a></p>
+                            </div>
+                        }
+
+                        <p>------or------</p>
+                        <GoogleLogin
+                            setLoggedIn={this.props.setLoggedIn}
                         />
-                    </p>
-                    <p>
-                        Password: <input
-                            id='password'
-                            type='password'
-                            value={this.state.password}
-                            onChange={this.handleFieldChange}
-                        />
-                    </p>
-                    {this.state.signIn ?
-                        null :
-                        <p>
-                            Confirm password: <input
-                                id='password2'
-                                type='password'
-                                value={this.state.password2}
-                                onChange={this.handleFieldChange}
-                            />
-                        </p>}
-                    <p>
-                        <input type='submit' />
-                    </p>
-                </form>
-                <p>Or:</p>
-                <GoogleLogin
-                    setLoggedIn={this.props.setLoggedIn}
-                />
-                {this.state.signIn ?
-                    <div>
-                        <p><b>Don't have an account yet?</b></p>
-                        <p><button onClick={this.toggleForm}>Sign up</button></p>
-                    </div> :
-                    <div>
-                        <p><b>Already have an account?</b></p>
-                        <p><button onClick={this.toggleForm}>Sign in</button></p>
                     </div>
-                }
-            </div>
+                </div>
+            </section>
         )
     }
 }

@@ -10,7 +10,7 @@ class GoogleLogin extends React.Component {
 
         loader.addEventListener('load', () => {
             gapi.load('auth2', () => {
-                this.auth2 = gapi.auth2.init({
+                this.auth2 = gapi.auth2.getAuthInstance({
                     client_id: '43951011110-a6h3g2mrqr9cg1r2ipor23gpt10uoadc.apps.googleusercontent.com',
                     scope: "https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly https://www.googleapis.com/auth/classroom.coursework.students https://www.googleapis.com/auth/classroom.coursework.me"
                 });
@@ -44,9 +44,10 @@ class GoogleLogin extends React.Component {
     render() {
         return (
             <div id='google-login'>
-                <button id="signinButton" onClick={this.handleClick}>
+                <div className="g-signin2" data-theme='dark' data-longtitle="true" id="signinButton" onClick={this.handleClick}></div>
+                {/* <button id="signinButton" onClick={this.handleClick}>
                     <span>Sign up / in with Google</span>
-                </button>
+                </button> */}
             </div>
         )
     }
