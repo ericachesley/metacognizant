@@ -75,8 +75,16 @@ button {
     width: 50%;
 }
 
+button:hover {
+    background-color: lightgray;
+}
+
 #admin a {
     color: navy;
+}
+
+.back:hover, .nav-link:hover {
+    color: lightgray;
 }
 
 .back {
