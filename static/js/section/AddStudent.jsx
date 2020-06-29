@@ -41,7 +41,8 @@ class AddStudent extends React.Component {
                 <p></p>
                 <form onSubmit={this.handleSubmit}>
                     <p>
-                        Student email: <input
+                        <input
+                            placeholder="Student's email"
                             id='studentEmail'
                             type='text'
                             value={this.state.studentEmail}
@@ -52,7 +53,7 @@ class AddStudent extends React.Component {
                         <input type='submit' />
                     </p>
                 </form>
-                <p><button onClick={this.props.toggleAddStudent}>Cancel</button></p>
+                <p><a href='#' onClick={this.props.toggleAddStudent}>Cancel</a></p>
             </div>
         )
     }

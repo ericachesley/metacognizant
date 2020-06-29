@@ -37,9 +37,35 @@ class NavBar extends React.Component {
               <a className="dropdown-item" href="#" onClick={this.handleLogout}>Log Out</a>
             </div>
           </div> :
-          null}
+          <a className="nav-link" href="#" id="navbarDropdown">
+          Log in
+        </a>}
 
       </nav>
+    )
+  }
+}
+
+
+class SideBar extends React.Component {
+  render() {
+    const links = [];
+    for (const element of this.props.nav) {
+      links.push(
+        <Link className="nav-link" key={element['url']} to={element['url']}>
+          {element['title']}
+        </Link>
+      )
+    }
+    return (
+      <aside className="navbar align-items-start w-25">
+        <nav className="nav flex-column position-sticky">
+          <a className="navbar-brand" href="#sidebar-nav">
+            Navigation
+					</a>
+          {links}
+        </nav>
+      </aside>
     )
   }
 }

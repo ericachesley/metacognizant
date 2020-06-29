@@ -131,17 +131,17 @@ class CreateAssignment extends React.Component {
         const sectionId = window.location.pathname.split('/')[2]
 
         return (
-            <div id='assign-prompt' style={{ border: '5px solid black', padding: '5px' }}>
+            <div id='assign-prompt'>
                 <form onSubmit={this.handleSubmit}>
                     <h2>Create new assignment.</h2>
                     <p></p>
                     <div>
-                        <label>Choose section(s) to assign prompt to: </label>
+                        <label>Section(s)</label>
                         {sectionOptions}
                     </div>
                     <p></p>
                     <div>
-                        <label>Choose prompt to assign: </label>
+                        <label>Prompt </label><br></br>
                         <select
                             name="selectedPrompt"
                             value={this.state.selectedPrompt}
@@ -169,18 +169,18 @@ class CreateAssignment extends React.Component {
                     </div>
                     <p></p>
                     <div>
-                        <label>Choose due date: </label>
+                        <label>Due date </label><br></br>
                         <input onChange={this.handleFieldChange}
                             id='due-date'
                             name='date'
                             type='date'
                         />
-                    </div>
+                    </div><br></br>
                     <p>
                         {this.state.loading ? <Loader /> : <input type='submit' />}
                     </p>
                 </form>
-                <p><button onClick={this.props.toggle}>Cancel</button></p>
+                <p><a href='#' onClick={this.props.toggle}>Cancel</a></p>
             </div>
         )
     }

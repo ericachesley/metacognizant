@@ -95,11 +95,14 @@ class App extends React.Component {
               <Redirect to='/' />
             }
           </Route>
-          <Route path='/'>
+          <Route path='/login'>
             {userId ?
               <Redirect to='/classes' /> :
               <Login setLoggedIn={this.setLoggedIn} />
             }
+          </Route>
+          <Route path='/'>
+            <Landing />
           </Route>
         </Switch>
       </Router>

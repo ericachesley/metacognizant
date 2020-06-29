@@ -40,30 +40,26 @@ class AddClass extends React.Component {
             <div id='add-class'>
                 <p></p>
                 <form onSubmit={this.handleSubmit}>
-                    <p>
-                        Class name: <input
+                        Class name*<br></br>
+                        <input
                             id='name'
                             type='text'
                             value={this.state.email}
                             onChange={this.handleFieldChange}
                         />
-                    </p>
-                    <p>
-                        <label>Start: </label>
+                        <br></br>Start*<br></br>
                         <input onChange={this.handleFieldChange}
                             id='start'
                             name='start'
                             type='date'
                         />
-                    </p>
-                    <p>
-                        <label>End (optional): </label>
+                        <br></br>End<br></br>
                         <input onChange={this.handleFieldChange}
                             id='end'
                             name='end'
                             type='date'
                         />
-                    </p>
+                    <p></p>
                     <p>
                         <input type='submit' />
                     </p>

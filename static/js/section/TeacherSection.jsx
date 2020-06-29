@@ -5,7 +5,8 @@ class TeacherSection extends React.Component {
             assignments: [],
             students: [],
             addStudent: false,
-            addAssignment: false
+            addAssignment: false,
+            view: 0
         };
         this.sortAssignments = this.sortAssignments.bind(this);
         this.toggleAddStudent = this.toggleAddStudent.bind(this);
@@ -94,6 +95,14 @@ class TeacherSection extends React.Component {
         }
     }
 
+    toggleView = () => {
+        if (this.state.view == 0) {
+            this.setState({ view: 1 });
+        } else {
+            this.setState({ view: 0 })
+        }
+    }
+
     render() {
         let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
         [assignmentButtonsToday,
@@ -108,60 +117,99 @@ class TeacherSection extends React.Component {
                     sectionId={this.props.sectionId}
                     key={student['user_id']}
                 />
+            );
+        }
+        if (this.state.view == 0) {
+            return (
+                <div className='container-fluid'>
+                    <div className='row d-flex align-items-start'>
+                        <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded' id='assignments'>
+                            <h3>Responses by assignment</h3>
+                            <a href='#' onClick={this.toggleView}>
+                                View by student
+                            </a>
+                            {this.state.addAssignment ?
+                                <CreateAssignment
+                                    promptId='select-one'
+                                    sectionId={this.props.sectionId}
+                                    toggle={this.toggleAddAssignment}
+                                /> :
+                                <div>
+                                    <a href='#' onClick={this.toggleAddAssignment}>
+                                        Create new assignment
+                                        </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div className='row d-flex align-items-start'>
+                        <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded' id='assignments'>
+                            <p>Today's assignment</p>
+                            {
+                                assignmentButtonsToday[0] == undefined ?
+                                    <div><p><i>Nothing assigned for today</i></p></div> :
+                                    <div>{assignmentButtonsToday}</div>
+                            }
+                        </div>
+                    </div>
+                    <div className='row justify-content-around' id='by-assignment'>
+                        <div className='col-6 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded' id='past'>
+                            <p>Past assignments</p>
+                            {
+                                assignmentButtonsPast[0] == undefined ?
+                                    <div><p><i>No past assignments</i></p></div> :
+                                    <div>{assignmentButtonsPast}</div>
+                            }
+                        </div>
+                        <div className='col-6 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded' id='future'>
+                            <p>Upcoming assignments</p>
+                            {
+                                assignmentButtonsFuture[0] == undefined ?
+                                    <div><p><i>No upcoming assignments</i></p></div> :
+                                    <div>{assignmentButtonsFuture}</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className='container-fluid'>
+                    <div className='row d-flex align-items-start'>
+                        <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded' id='students'>
+                            <h3>Responses by student</h3>
+                            <a href='#' onClick={this.toggleView}>
+                                View by assignment
+                            </a>
+                            {this.state.addStudent ?
+                                <AddStudent toggleAddStudent={this.toggleAddStudent} /> :
+                                <div>
+                                    <a href='#' onClick={this.toggleAddStudent}>
+                                        Add a student
+                            </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    {studentButtons[0] == undefined ?
+                        <div className='row d-flex align-items-start'>
+                            <div className='col-11 rounded shadow p-3 mb-5 rounded' id='students'>
+                                <p><i>There are no students assigned to this class yet.</i></p>
+                            </div>
+                        </div> :
+                        <div className='row justify-content-around rounded shadow p-3 mb-5 rounded' id='student-buttons'>
+                            <div className='col-11 col-xs-11 col-sm-11 col-md-11 col-lg-3'>
+                                <div>{studentButtons.slice(0, Math.ceil(studentButtons.length / 3))}</div>
+                            </div>
+                            <div className='col-11 col-xs-11 col-sm-11 col-md-11 col-lg-3'>
+                                <div>{studentButtons.slice(Math.ceil(studentButtons.length / 3), Math.ceil(studentButtons.length / 3) * 2)}</div>
+                            </div>
+                            <div className='col-11 col-xs-11 col-sm-11 col-md-11 col-lg-3'>
+                                <div>{studentButtons.slice(Math.ceil(studentButtons.length / 3) * 2, studentButtons.length)}</div>
+                            </div>
+                        </div>}
+                </div>
             )
         }
-        return (
-            <div className='row'>
-                <div className='col-6'>
-                    <h3>View responses by assignment:</h3>
-                    <p>Past assignments</p>
-                    {
-                        assignmentButtonsPast[0] == undefined ?
-                            <div><p><i>No past assignments</i></p></div> :
-                            <div>{assignmentButtonsPast}</div>
-                    }
-                    <p>Today's assignment</p>
-                    {
-                        assignmentButtonsToday[0] == undefined ?
-                            <div><p><i>Nothing assigned for today</i></p></div> :
-                            <div>{assignmentButtonsToday}</div>
-                    }
-                    <p>Upcoming assignments</p>
-                    {
-                        assignmentButtonsFuture[0] == undefined ?
-                            <div><p><i>No upcoming assignments</i></p></div> :
-                            <div>{assignmentButtonsFuture}</div>
-                    }
-                    <p></p>
-                    {this.state.addAssignment ?
-                        <CreateAssignment
-                            promptId='select-one'
-                            sectionId={this.props.sectionId}
-                            toggle={this.toggleAddAssignment}
-                        /> :
-                        <div>
-                            <button onClick={this.toggleAddAssignment}>
-                                Create new assignment
-                        </button>
-                        </div>
-                    }
-                </div>
-                <div className='col-6'>
-                    <h3>View responses by student:</h3>
-                    {studentButtons[0] == undefined ?
-                        <p><i>There are no students assigned to this class yet.</i></p> :
-                        <div>{studentButtons}</div>}
-                    <p></p>
-                    {this.state.addStudent ?
-                        <AddStudent toggleAddStudent={this.toggleAddStudent} /> :
-                        <div>
-                            <button onClick={this.toggleAddStudent}>
-                                Add a student
-                        </button>
-                        </div>
-                    }
-                </div>
-            </div>
-        )
     }
 }
