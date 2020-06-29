@@ -57,7 +57,7 @@ class App extends React.Component {
     return (
       <Router>
           <NavBar refresh={this.refresh}/>
-          <NavBarFooter />
+          {/* <NavBarFooter /> */}
         <Switch>
           <Route path='/admin'>
             <Admin />
@@ -98,7 +98,7 @@ class App extends React.Component {
           <Route path='/login'>
             {userId ?
               <Redirect to='/classes' /> :
-              <Login setLoggedIn={this.setLoggedIn} />
+              <Redirect to='/#login-holder' />
             }
           </Route>
           <Route path='/'>

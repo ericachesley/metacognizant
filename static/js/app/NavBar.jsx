@@ -37,7 +37,7 @@ class NavBar extends React.Component {
               <a className="dropdown-item" href="#" onClick={this.handleLogout}>Log Out</a>
             </div>
           </div> :
-          <a className="nav-link" href="#" id="navbarDropdown">
+          <a className="nav-link" href="/#login-holder" id="navbarDropdown">
           Log in
         </a>}
 
