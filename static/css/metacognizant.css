@@ -6,13 +6,6 @@ html, body {
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: whitesmoke;
-    /* background-image: url('../images/christozov-crVn1gULWZ8-unsplash.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    color: #000;
-    line-height: 1.3;
-    -webkit-font-smoothing: antialiased; */
 }
 
 h1, h2, h3 {
@@ -30,6 +23,17 @@ h1, h2, h3 {
     height: 60vh;
 }
 
+.nav-link {
+    color: white;
+}
+
+#logout {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .abcRioButtonBlue {
     display: block;
     margin-left: auto;
@@ -39,6 +43,12 @@ h1, h2, h3 {
 #intro {
     padding: 20px;
     color: whitesmoke;
+    margin-top: 50px;
+    padding-left: 60px;
+}
+
+#intro h1 {
+    vertical-align: middle;
 }
 
 .about {
@@ -52,37 +62,27 @@ h1, h2, h3 {
     text-align: right;
 }
 
-#intro {
-    margin-top: 50px;
-    padding-left: 60px;
-}
-
-#intro h1 {
-    vertical-align: middle;
-}
-
 #teacher, #student, #assignments, #students, #past, #present, #future, #student-buttons {
     background-color: white;
     margin: auto;
     text-align: center;
 }
 
-#yourclasses {
-    background-color: #75A878;
+.heading {
     color: whitesmoke;
     text-align: center;
+}
+
+#yourclasses {
+    background: linear-gradient(#3e8689b9, #75a878c2), url('/static/images/mountain-kid-2.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: 100%;
+    line-height: 1.3;
+    -webkit-font-smoothing: antialiased;
+    height: 10vh;
     margin-top: 20px;
-}
-
-.nav-link {
-    color: white;
-}
-
-#logout {
-    text-align: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    ;
 }
 
 button {
@@ -102,12 +102,9 @@ button:hover {
     color: lightgray;
 }
 
-.back {
-    /* color: whitesmoke; */
-}
-
 #backicon {
     margin: 10px;
+    color: #3E8689;
 }
 
 .col-6, .col-12 {
@@ -123,6 +120,15 @@ aside a {
     color: black;
 }
 
+aside button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #3E8689;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+}
 
 #student-buttons button {
     width: 100%;
@@ -146,7 +152,6 @@ aside a {
     width: 30vw;
     margin-left: 45px;
 }
-
 
 #about-holder {
     background-color: #3E8689;
@@ -175,6 +180,5 @@ aside a {
 #front-page {
     scroll-behavior: smooth;
 }
-
 
 /* green #75A878 blue #3E8689 yellow #F4B339 brown 2e26218f*/
