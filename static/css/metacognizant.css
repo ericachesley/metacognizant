@@ -7,7 +7,6 @@ body {
     font-family: 'Open Sans', sans-serif;
     background-color: whitesmoke;
     overflow: hidden;
-    
 }
 
 h1, h2, h3 {
@@ -97,8 +96,12 @@ h1, h2, h3 {
 }
 
 button {
-    margin: 5px;
-    width: 50%;
+    margin: auto;
+    width: 75%;
+    margin-bottom: 5px;
+    background-color: #3E8689;
+    border-color: #3E8689;
+    color: whitesmoke;
 }
 
 button:hover {
@@ -143,7 +146,7 @@ aside a {
     color: whitesmoke;
 }
 
-aside button {
+aside .btn {
     background: none;
     border: none;
     padding: 0;
@@ -153,8 +156,13 @@ aside button {
     width: 100%;
 }
 
-.curr {
+.curr.btn {
     color: #343B40;
+}
+
+.section-btn {
+    background-color: #3e8689d8;
+    border-color: #3e8689d8;
 }
 
 #student-buttons button {
@@ -250,30 +258,41 @@ thead {
 
 hr {
     border: 0;
-    clear:both;
-    display:block;
-    width: 100%;               
+    clear: both;
+    display: block;
+    width: 100%;
     background-color: whitesmoke;
     height: 1px;
-  }
+}
 
-  .late {
-      border-color: red;
-  }
+.res {
+    border-color: #75A878;
+    border-width: medium;
+}
 
-  #prompt-info {
-      background-color: #F4B339;
-      margin: 0;
-  }
+#prompt-info {
+    background-color: #F4B339;
+    margin: 0;
+}
 
-  #prevres {
+#prevres {
     background-color: #F4B339;
     margin: auto;
-  }
+}
 
-  .instructions {
-      vertical-align: middle;
-  }
+.instructions {
+    vertical-align: middle;
+}
 
+.revisit {
+    border-color: #F4B339;
+    border-width: medium;
+}
 
-/* green #75A878 blue #3E8689 yellow #F4B339 gray #343B40*/
+.res.revisit {
+    border-image-source: linear-gradient(45deg, #75A878, #F4B339);
+    border-image-slice: 1;
+    border-image-outset: inherit;
+}
+
+/* green #75A878 blue #3E8689 yellow #F4B339 gray #343B40 */

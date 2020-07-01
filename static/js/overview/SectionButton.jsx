@@ -32,7 +32,7 @@ class SectionButton extends React.Component {
                 <div className='section_button_holder'>
                     <button type='section_button'
                         id={this.props.section['section_id']}
-                        className={status}
+                        className={status + ' ' + 'btn btn-secondary section-btn'}
                         onClick={this.handleClick}>
                         {this.props.section['name']}
                     </button>

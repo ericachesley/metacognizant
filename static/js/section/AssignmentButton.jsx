@@ -29,11 +29,23 @@ class AssignmentButton extends React.Component {
                 status = 'late';
             }
 
+            if (this.props.res) {
+                status += ' res'
+            } else {
+                status += ' no-res'
+            }
+
+            if (this.props.assignment['is_revisit']) {
+                status += ' revisit'
+            } else {
+                status += ' original'
+            }
+
             return (
                 <div className='assignment_button_holder'>
                     <button type='assignment_button'
                         id={this.props.assignment['pras_id']}
-                        className={status}
+                        className={status+' '+'btn btn-secondary'}
                         onClick={this.handleClick}>
                         {dtLocal}
                     </button>

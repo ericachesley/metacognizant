@@ -174,9 +174,11 @@ def return_assignments():
     assignments_info = []
     for assignment in assignments:
         res = crud.check_response(assignment.pras_id, user_id)
+        is_revisit = (assignment.revisit_pras_id is not None)
         assignments_info.append({'pras_id': assignment.pras_id,
                                  'date': assignment.due_date,
-                                 'res': res})
+                                 'res': res,
+                                 'is_revisit': is_revisit})
     assignments_info.sort(key=lambda i: i['date'])
     return jsonify(assignments_info)
 
