@@ -80,7 +80,7 @@ class SideBar extends React.Component {
     return (
       <aside className="navbar align-items-start w-25">
         <nav className="nav flex-column position-sticky w-100">
-          <a className="navbar-brand" href="#sidebar-nav">
+          <a className="navbar-brand" href="#sidebar-nav" style={{'color':'#343B40'}}>
             Navigation
 					</a>
           {this.props.back}

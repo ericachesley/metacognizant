@@ -7,7 +7,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     background-color: whitesmoke;
     overflow: hidden;
-    padding-bottom: 50px;
+    
 }
 
 h1, h2, h3 {
@@ -125,6 +125,7 @@ button:hover {
 main {
     overflow: scroll;
     position: relative;
+    padding-bottom: 100px;
 }
 
 aside {
@@ -256,13 +257,22 @@ hr {
     height: 1px;
   }
 
-  .no-res {
-      border-color: #F4B339;
+  .late {
+      border-color: red;
   }
 
   #prompt-info {
       background-color: #F4B339;
       margin: 0;
+  }
+
+  #prevres {
+    background-color: #F4B339;
+    margin: auto;
+  }
+
+  .instructions {
+      vertical-align: middle;
   }
 
 

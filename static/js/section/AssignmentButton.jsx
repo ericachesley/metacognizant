@@ -24,9 +24,9 @@ class AssignmentButton extends React.Component {
             const dtLocal = dt.toLocal()
                 .toLocaleString(luxon.DateTime.DATE_FULL);
 
-            let status = 'no-res';
-            if (this.props.res) {
-                status = 'res';
+            let status = 'not-late';
+            if (this.props.late) {
+                status = 'late';
             }
 
             return (

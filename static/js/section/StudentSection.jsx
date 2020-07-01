@@ -27,6 +27,7 @@ class StudentSection extends React.Component {
 
             const button = <AssignmentButton
                 res={assignment.res}
+                late={dtLocal < now && assignment.res == false}
                 assignment={assignment}
                 sectionId={this.props.sectionId}
                 key={assignment['pras_id']}

@@ -27,7 +27,7 @@ class ShowResponses extends React.Component {
             return (<Loader />)
         } else if (this.props.responses.length == 0) {
             return (
-                <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow rounded'>
+                <div className='col-12 my-2 p-3 rounded shadow rounded'>
                     <p>No responses yet.</p>
                 </div>
             )

@@ -80,42 +80,32 @@ class AssignmentResponses extends React.Component {
                     <section className='container-fluid' id='assignment'>
                         <div className='row d-flex align-items-start'>
                             <div id='yourclasses' className='col-12'>
-                                {/* <h1 className='heading'>{sessionStorage.getItem('sectionName')}</h1>
-                                {sessionStorage.getItem('role') == 'student' ?
-                                    <img src='/static/images/sac_de_cours.png' height='30' /> :
-                                    <img id='apple' src='/static/images/apple.png' height='30' />}
-                            </div>
-                        </div>
-                        <div className='row d-flex align-items-start'>
-                            <div id='prompt-info' className='col-12 p-3'> */}
                                 {this.state.isRevisit ?
                                     <h2>Prompt revisit from {this.adjustDate(this.state.origDate)}</h2> :
                                     null}
 
-                                {role === 'student' && this.state.isRevisit ?
-                                    <p>
-                                        <b>Instructions</b> <br></br>
-                                    Reread the response you gave to the prompt below when it
-                                    was previously assigned. <br></br> Then reflect on how
-                                    your perspective has or has not changed since.
-                                </p> :
-                                    <h2>
-                                        Prompt: {this.state.prompt}
-                                    </h2>}
-
                                 <h3>Due: {this.adjustDate(this.state.due_date)}</h3>
 
-
                                 {role === 'student' && this.state.isRevisit ?
-                                    <PreviousResponse
-                                        prasId={this.state.assignmentId}
-                                        prompt={this.state.prompt}
-                                    /> :
-                                    null}
+                                    <div id='revisit-instructions'>
+                                        <p className='p-3'>
+                                            <b>Instructions</b> <br></br>
+                                    Reread the response you gave to the prompt below when it
+                                    was previously assigned. <br></br> Then reflect on how
+                                    your perspective has (or has not) changed since.
+                                </p>
+                                        <PreviousResponse
+                                            prasId={this.state.assignmentId}
+                                            prompt={this.state.prompt}
+                                        />
+                                    </div> :
+                                    <h2>
+                                        {this.state.prompt}
+                                    </h2>}
                             </div>
                         </div>
                         <div className='row d-flex align-items-start'>
-                            <div id='options' className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 my-2'>
+                            <div id='options' className='col-12 my-2'>
                                 {role === 'teacher' ?
                                     <div>
 

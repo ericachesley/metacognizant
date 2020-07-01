@@ -21,13 +21,11 @@ class PreviousResponse extends React.Component {
 
     render() {
         return (
-            <div>
-                <h2>Prompt: {this.props.prompt}</h2>
-                <p><b>Your previous response</b> <br></br> {this.state.res}</p>
-                <p>
-                    How has your perspective changed (or not) since you wrote
-                    this reflection?
-                    </p>
+            <div className='row d-flex align-items-start'>
+                <div id='prevres' className='col-10 p-3 rounded shadow rounded'>
+                    <h2>{this.props.prompt}</h2>
+                    <p><b>Your response</b> <br></br> {this.state.res}</p>
+                </div>
             </div>
         )
     }
