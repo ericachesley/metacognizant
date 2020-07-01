@@ -131,56 +131,58 @@ class CreateAssignment extends React.Component {
         const sectionId = window.location.pathname.split('/')[2]
 
         return (
-            <div id='assign-prompt'>
-                <form onSubmit={this.handleSubmit}>
-                    <h2>Create new assignment.</h2>
-                    <p></p>
-                    <div>
-                        <label>Section(s)</label>
-                        {sectionOptions}
-                    </div>
-                    <p></p>
-                    <div>
-                        <label>Prompt </label><br></br>
-                        <select
-                            name="selectedPrompt"
-                            value={this.state.selectedPrompt}
-                            onChange={this.handleFieldChange}>
-                            <option name='prompts' value='select-one'>
-                                --Select a prompt--
-                            </option>
-                            {promptOptions}
-                            <option name='prompts' value='add-new'>
-                                --Add a new prompt--
-                            </option>
-                        </select>
-                    </div>
-                    <div>
+            <div id='assign-prompt' className='modal'>
+                <div className='modal-content'>
+                    <form onSubmit={this.handleSubmit}>
+                        <h2>Create new assignment</h2>
                         <p></p>
-                        {this.state.newPrompt ?
-                            <textarea
-                                onChange={this.handleFieldChange}
-                                name='selectedPrompt'
-                                rows="10" cols="50"
-                                placeholder='Your prompt'
-                                value={this.state.selectedPrompt}>
-                            </textarea> :
-                            <span></span>}
-                    </div>
-                    <p></p>
-                    <div>
-                        <label>Due date </label><br></br>
-                        <input onChange={this.handleFieldChange}
-                            id='due-date'
-                            name='date'
-                            type='date'
-                        />
-                    </div><br></br>
-                    <p>
-                        {this.state.loading ? <Loader /> : <input type='submit' />}
-                    </p>
-                </form>
-                <p><a href='#' onClick={this.props.toggle}>Cancel</a></p>
+                        <div style={{'text-align':'left', 'margin-left':'45%'}}>
+                            <label>Section(s)</label>
+                            {sectionOptions}
+                        </div>
+                        <p></p>
+                        <div>
+                            <label>Prompt </label><br></br>
+                            <select
+                                name="selectedPrompt"
+                                value={this.state.selectedPrompt}
+                                onChange={this.handleFieldChange}>
+                                <option name='prompts' value='select-one'>
+                                    --Select a prompt--
+                            </option>
+                                {promptOptions}
+                                <option name='prompts' value='add-new'>
+                                    --Add a new prompt--
+                            </option>
+                            </select>
+                        </div>
+                        <div>
+                            <p></p>
+                            {this.state.newPrompt ?
+                                <textarea
+                                    onChange={this.handleFieldChange}
+                                    name='selectedPrompt'
+                                    rows="10" cols="50"
+                                    placeholder='Your prompt'
+                                    value={this.state.selectedPrompt}>
+                                </textarea> :
+                                <span></span>}
+                        </div>
+                        <p></p>
+                        <div>
+                            <label>Due date </label><br></br>
+                            <input onChange={this.handleFieldChange}
+                                id='due-date'
+                                name='date'
+                                type='date'
+                            />
+                        </div><br></br>
+                        <p>
+                            {this.state.loading ? <Loader /> : <input type='submit' />}
+                        </p>
+                    </form>
+                    <p><a href='#' onClick={this.props.toggle}>Cancel</a></p>
+                </div>
             </div>
         )
     }

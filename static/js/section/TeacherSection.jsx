@@ -152,7 +152,7 @@ class TeacherSection extends React.Component {
                             }
                         </div>
                     </div>
-                    <div className='row justify-content-around' id='by-assignment'>
+                    <div className='row d-flex' id='by-assignment'>
                         <div className='col-6 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded' id='past'>
                             <p>Past assignments</p>
                             {

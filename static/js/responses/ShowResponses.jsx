@@ -27,7 +27,9 @@ class ShowResponses extends React.Component {
             return (<Loader />)
         } else if (this.props.responses.length == 0) {
             return (
-                <p>No responses yet.</p>
+                <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow rounded'>
+                    <p>No responses yet.</p>
+                </div>
             )
         } else {
             const responses = [];
@@ -61,26 +63,29 @@ class ShowResponses extends React.Component {
                     )
                 }
             }
+
             return (
-                <table id='response-table' className="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <td><b>Student</b></td>
-                            {this.props.isRevisit ?
-                                <td><b>Original Response</b></td> :
-                                null
-                            }
-                            {this.props.isRevisit ?
-                                <td><b>Revisit Response</b></td> :
-                                <td><b>Response</b></td>
-                            }
-                            <td><b>Sentiment</b></td>
-                            <td><b>Confidence</b></td>
-                            <td><b>Submitted</b></td>
-                        </tr>
-                    </thead>
-                    <tbody>{responses}</tbody>
-                </table>
+                <div id='show-responses' className='col-12'>
+                    <table id='response-table' className="table table-hover">
+                        <thead>
+                            <tr>
+                                <td><b>Student</b></td>
+                                {this.props.isRevisit ?
+                                    <td><b>Original Response</b></td> :
+                                    null
+                                }
+                                {this.props.isRevisit ?
+                                    <td><b>Revisit Response</b></td> :
+                                    <td><b>Response</b></td>
+                                }
+                                <td><b>Sentiment</b></td>
+                                <td><b>Confidence</b></td>
+                                <td><b>Submitted</b></td>
+                            </tr>
+                        </thead>
+                        <tbody>{responses}</tbody>
+                    </table>
+                </div>
             )
         }
     }

@@ -54,23 +54,27 @@ class CreateRevisitAssignment extends React.Component {
 
     render() {
         return (
-            <div id='assign-prompt' style={{ border: '5px solid black', padding: '5px' }}>
-                <form onSubmit={this.handleSubmit}>
-                    <h2>Assign revisit.</h2>
-                    <p></p>
-                    <div>
-                        <label>Choose a date on which to revisit this assignment: </label>
-                        <input onChange={this.handleFieldChange}
-                            id='due-date'
-                            name='date'
-                            type='date'
-                        />
-                    </div>
-                    <p>
-                        {this.state.loading ? <Loader /> : <input type='submit' />}
-                    </p>
-                </form>
-                <p><button onClick={this.props.toggle}>Cancel</button></p>
+            <div className='modal-holder'>
+                <div id='assign-prompt' className='modal'>
+                <div className='modal-content'>
+                    <form onSubmit={this.handleSubmit}>
+                        <h2>Assign revisit</h2>
+                        <p></p>
+                        <div>
+                            <label>Choose date for revisit </label><br></br>
+                            <input onChange={this.handleFieldChange}
+                                id='due-date'
+                                name='date'
+                                type='date'
+                            />
+                        </div>
+                        <p>
+                            {this.state.loading ? <Loader /> : <input type='submit' />}
+                        </p>
+                    </form>
+                    <p><a href='#' onClick={this.props.toggle}>Cancel</a></p>
+                </div>
+            </div>
             </div>
         )
     }

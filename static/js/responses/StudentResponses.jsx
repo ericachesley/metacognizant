@@ -37,22 +37,40 @@ class StudentResponses extends React.Component {
         }
 
         return (
-            <div id='assignment'>
-                <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
-                <h1>{sessionStorage.getItem('sectionName')}</h1>
-                <h2>Student: {sessionStorage.getItem('studentName')}</h2>
-                <table id='response-table'>
-                    <thead>
-                        <tr>
-                            <td><b>Date</b></td>
-                            <td><b>Prompt</b></td>
-                            <td><b>Response</b></td>
-                            <td><b>Sentiment</b></td>
-                            <td><b>Confidence</b></td>
-                        </tr>
-                    </thead>
-                    <tbody>{responses}</tbody>
-                </table>
+            <div className="d-flex align-items-stretch h-100">
+
+                <aside className="navbar align-items-start w-25">
+                    <nav className="nav flex-column position-sticky">
+                        <a className="navbar-brand" href="#sidebar-nav">
+                            Navigation
+					</a>
+                        {/* {links} */}
+                    </nav>
+                </aside>
+
+                <main className="main-content w-100">
+                    <div id='assignment' className='container-fluid'>
+                        <Link to={`/classes/${sectionId}`}>Back to class overview</Link>
+                        <row className='row'>
+                            <div className='col-12'>
+                            <h1>{sessionStorage.getItem('sectionName')}</h1>
+                            <h2>Student: {sessionStorage.getItem('studentName')}</h2>
+                            </div>
+                        </row>
+                        <table className='table table-hover' id='response-table'>
+                            <thead>
+                                <tr>
+                                    <td><b>Date</b></td>
+                                    <td><b>Prompt</b></td>
+                                    <td><b>Response</b></td>
+                                    <td><b>Sentiment</b></td>
+                                    <td><b>Confidence</b></td>
+                                </tr>
+                            </thead>
+                            <tbody>{responses}</tbody>
+                        </table>
+                    </div>
+                </main>
             </div>
         )
     }

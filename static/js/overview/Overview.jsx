@@ -53,9 +53,9 @@ class Overview extends React.Component {
         const links = [];
         for (const section of this.state.sections) {
             const button = <SectionButton
-            section={section}
-            key={section['section_id']}
-        />
+                section={section}
+                key={section['section_id']}
+            />
             if (section.role === 'teacher') {
                 teacherSections.push(button);
             } else {
@@ -78,43 +78,55 @@ class Overview extends React.Component {
 
                 <main className="main-content w-100">
                     <section className='container pt-2 right' id='overview'>
-                        <div className='row justify-content-center static-height'>
-                            <div id='yourclasses' className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded'>
+                        <div className='row d-flex align-items-start'>
+                            <div id='yourclasses' className='col-12 mb-2'>
                                 <h2 className='heading'>Your Classes</h2>
                             </div>
                         </div>
-                        <div className='row justify-content-center static-height'>
-                            <div id='teacher' className='col-6 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded'>
-                                <img id='apple' src='/static/images/apple.png' height='40' />
-                                {teacherSections.length > 0 ?
-                                    <div id='container'>{teacherSections}</div> :
-                                    <p>You are not assigned as a teacher for any sections.</p>
-                                }
-                                <p></p>
-                                {this.state.addClass ?
-                                    <AddClass toggleAdd={this.toggleAdd} /> :
-                                    <div>
-                                        <a href='#' onClick={this.toggleAdd}>
-                                            Create a new class
-                                            </a>
+                        <div className='row d-flex align-items-start'>
+                            <div className='card-deck col-12 my-2'>
+                                <div id='teacher' className='card rounded shadow p-3 rounded'>
+                                    <div className='card-body'>
+                                        <img id='apple' src='/static/images/apple.png' height='40' />
+                                        {teacherSections.length > 0 ?
+                                            <div className="card-text">{teacherSections}</div> :
+                                            <p className="card-text">You are not assigned as a teacher for any sections.</p>
+                                        }
                                     </div>
-                                }
-                            </div>
-                            <div id='student' className='col-5 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded'>
-                                <img src='/static/images/sac_de_cours.png' height='40' />
-                                {studentSections.length > 0 ?
-                                    <div id='container'>{studentSections}</div> :
-                                    <p>You are not assigned as a student for any sections.</p>
-                                }
-                                <p></p>
-                                {this.state.joinClass ?
-                                    <JoinClass toggleJoin={this.toggleJoin} /> :
-                                    <div>
-                                        <a href='#' onClick={this.toggleJoin}>
-                                            Join a class
-                                            </a>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            {this.state.addClass ?
+                                                <AddClass toggleAdd={this.toggleAdd} /> :
+                                                <div>
+                                                    <a href='#' onClick={this.toggleAdd}>
+                                                        Create a new class
+                                                    </a>
+                                                </div>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div id='student' className='card rounded shadow p-3 rounded'>
+                                    <div className='card-body'>
+                                        <img src='/static/images/sac_de_cours.png' height='40' />
+                                        {studentSections.length > 0 ?
+                                            <div className="card-text">{studentSections}</div> :
+                                            <p className="card-text">You are not assigned as a student for any sections.</p>
+                                        }
                                     </div>
-                                }
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            {this.state.joinClass ?
+                                                <JoinClass toggleJoin={this.toggleJoin} /> :
+                                                <div>
+                                                    <a href='#' onClick={this.toggleJoin}>
+                                                        Join a class
+                                                    </a>
+                                                </div>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </section>
