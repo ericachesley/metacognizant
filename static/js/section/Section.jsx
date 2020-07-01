@@ -6,10 +6,19 @@ class Section extends React.Component {
             sectionName: sessionStorage.getItem('sectionName'),
             role: sessionStorage.getItem('role')
         };
+        this.update = this.update.bind(this);
     }
 
     componentDidMount() {
         sessionStorage.removeItem('studentName');
+    }
+
+    update() {
+        this.setState({
+            sectionId: this.props.getSlug(),
+            sectionName: sessionStorage.getItem('sectionName'),
+            role: sessionStorage.getItem('role')
+        });
     }
 
     render() {
@@ -17,17 +26,12 @@ class Section extends React.Component {
         return (
             <div className="d-flex align-items-stretch h-100">
 
-                <aside className="navbar align-items-start w-25">
-                    <nav className="nav flex-column position-sticky">
-                        <a className="navbar-brand" href="#sidebar-nav">
-                            Navigation
-					</a>
-                    <Link className='back' to='/classes'>
+                <SideBar
+                    update={this.update}
+                    back={<Link className='back' to='/classes'>
                         Back to all classes
-                        </Link>
-                        {/* {links} */}
-                    </nav>
-                </aside>
+                        </Link>}
+                />
 
                 <main className="main-content w-100">
                     <section id='section' className='container-fluid'>

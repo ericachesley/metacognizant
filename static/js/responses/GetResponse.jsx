@@ -64,27 +64,32 @@ class GetResponse extends React.Component {
             )
         } else if (this.state.done) {
             return (
-                <div>
+                <div className='row d-flex align-items-start px-5'>
                     <p>You already submitted a response to this prompt.</p>
-                    <p>Response: {this.state.response}</p>
-                    <p>Submitted: {this.state.date}</p>
-                </div>
+                    <div className='col-10 rounded shadow p-3 rounded' style={{'background-color': 'white'}}>
+                        <p>Response: {this.state.response}</p>
+                        <p>Submitted: {this.state.date}</p>
+                    </div>
+                </div >
             )
         } else {
             return (
-                <div>
-                    <form onSubmit={this.handleSubmit} action={`/classes/${this.props.sectionId}`}>
-                        <textarea
-                            id='response'
-                            name='response'
-                            rows="15" cols="50"
-                            placeholder="Your response"
-                            value={this.state.response}
-                            onChange={this.handleFieldChange}>
-                        </textarea>
-                        <p></p>
-                        <input type='submit'></input>
-                    </form>
+                <div className='row d-flex align-items-start px-5'>
+                    <div className='col-10 mx-5'>
+                        <form onSubmit={this.handleSubmit} action={`/classes/${this.props.sectionId}`}>
+                            <textarea
+                                className='rounded shadow p-3 rounded'
+                                id='response'
+                                name='response'
+                                rows="15" cols="100"
+                                placeholder="Your response"
+                                value={this.state.response}
+                                onChange={this.handleFieldChange}>
+                            </textarea>
+                            <p></p>
+                            <input type='submit'></input>
+                        </form>
+                    </div>
                 </div>
             )
         }

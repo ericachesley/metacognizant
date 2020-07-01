@@ -23,11 +23,17 @@ class AssignmentButton extends React.Component {
             const dt = luxon.DateTime.fromHTTP(date);
             const dtLocal = dt.toLocal()
                 .toLocaleString(luxon.DateTime.DATE_FULL);
+
+            let status = 'no-res';
+            if (this.props.res) {
+                status = 'res';
+            }
+
             return (
                 <div className='assignment_button_holder'>
                     <button type='assignment_button'
                         id={this.props.assignment['pras_id']}
-                        className={this.props.assignment['date']}
+                        className={status}
                         onClick={this.handleClick}>
                         {dtLocal}
                     </button>

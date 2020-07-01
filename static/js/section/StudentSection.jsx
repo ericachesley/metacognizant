@@ -14,35 +14,76 @@ class StudentSection extends React.Component {
             })
     }
 
-    render() {
-        // const dt = luxon.DateTime;
-        // const utcDt = dt.utc().toISO();
-
-        const assignmentButtonsComplete = [];
-        const assignmentButtonsIncomplete = [];
+    sortAssignments = () => {
+        var now = luxon.DateTime.local();
+        const assignmentButtonsToday = [];
+        const assignmentButtonsPast = [];
+        const assignmentButtonsFuture = [];
 
         for (const assignment of this.state.assignments) {
+            const date = assignment.date
+            const dt = luxon.DateTime.fromHTTP(date);
+            const dtLocal = dt.toLocal()
+
             const button = <AssignmentButton
+                res={assignment.res}
                 assignment={assignment}
                 sectionId={this.props.sectionId}
                 key={assignment['pras_id']}
-            />
+            />;
 
-            if (assignment.res) {
-                assignmentButtonsComplete.push(button);
+            if (dtLocal.year == now.year && dtLocal.ordinal == now.ordinal) {
+                assignmentButtonsToday.push(button);
+            } else if (dtLocal < now) {
+                assignmentButtonsPast.push(button);
             } else {
-                assignmentButtonsIncomplete.push(button);
+                assignmentButtonsFuture.push(button);
             }
         }
+        return [assignmentButtonsToday,
+            assignmentButtonsPast,
+            assignmentButtonsFuture]
+    }
+
+
+    render() {
+        let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
+        [assignmentButtonsToday,
+            assignmentButtonsPast,
+            assignmentButtonsFuture] = this.sortAssignments();
+
         return (
-            <div className='row'>
-                <div className='col-12'>
-                    <h3>View assignments:</h3>
-                    <p>Already responded</p>
-                    <div>{assignmentButtonsComplete}</div>
-                    <p>No response yet</p>
-                    <div>{assignmentButtonsIncomplete}</div>
-                    <p></p>
+            <div className='container-fluid'>
+                <div className='row d-flex align-items-start'>
+                    <div className='col-12 m-3'>
+                        <h3>View assignments</h3>
+                        <div className='card-deck'>
+                            <div className='card rounded shadow p-3 rounded'>
+                                <p>Past assignments</p>
+                                {
+                                    assignmentButtonsPast[0] == undefined ?
+                                        <div><p><i>No past assignments</i></p></div> :
+                                        <div>{assignmentButtonsPast}</div>
+                                }
+                            </div>
+                            <div className='card rounded shadow p-3 rounded'>
+                                <p>Today's assignment</p>
+                                {
+                                    assignmentButtonsToday[0] == undefined ?
+                                        <div><p><i>Nothing assigned for today</i></p></div> :
+                                        <div>{assignmentButtonsToday}</div>
+                                }
+                            </div>
+                            <div className='card rounded shadow p-3 rounded'>
+                                <p>Upcoming assignments</p>
+                                {
+                                    assignmentButtonsFuture[0] == undefined ?
+                                        <div><p><i>No upcoming assignments</i></p></div> :
+                                        <div>{assignmentButtonsFuture}</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

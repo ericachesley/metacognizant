@@ -123,7 +123,7 @@ class TeacherSection extends React.Component {
             return (
                 <div className='container-fluid'>
                     <div className='row d-flex align-items-start'>
-                        <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded' id='assignments'>
+                        <div className='col-12 m-3'>
                             <h3>Responses by assignment</h3>
                             <a href='#' onClick={this.toggleView}>
                                 View by student
@@ -142,18 +142,8 @@ class TeacherSection extends React.Component {
                             }
                         </div>
                     </div>
-                    <div className='row d-flex align-items-start'>
-                        <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded' id='assignments'>
-                            <p>Today's assignment</p>
-                            {
-                                assignmentButtonsToday[0] == undefined ?
-                                    <div><p><i>Nothing assigned for today</i></p></div> :
-                                    <div>{assignmentButtonsToday}</div>
-                            }
-                        </div>
-                    </div>
-                    <div className='row d-flex' id='by-assignment'>
-                        <div className='col-6 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded' id='past'>
+                    <div className='card-deck'>
+                        <div className='card rounded shadow p-3 rounded'>
                             <p>Past assignments</p>
                             {
                                 assignmentButtonsPast[0] == undefined ?
@@ -161,7 +151,15 @@ class TeacherSection extends React.Component {
                                     <div>{assignmentButtonsPast}</div>
                             }
                         </div>
-                        <div className='col-6 col-xs-6 col-sm-6 col-md-5 col-lg-5 rounded shadow p-3 mb-5 rounded' id='future'>
+                        <div className='card rounded shadow p-3 rounded'>
+                            <p>Today's assignment</p>
+                            {
+                                assignmentButtonsToday[0] == undefined ?
+                                    <div><p><i>Nothing assigned for today</i></p></div> :
+                                    <div>{assignmentButtonsToday}</div>
+                            }
+                        </div>
+                        <div className='card rounded shadow p-3 rounded'>
                             <p>Upcoming assignments</p>
                             {
                                 assignmentButtonsFuture[0] == undefined ?
@@ -176,7 +174,7 @@ class TeacherSection extends React.Component {
             return (
                 <div className='container-fluid'>
                     <div className='row d-flex align-items-start'>
-                        <div className='col-6 col-xs-6 col-sm-6 col-md-11 col-lg-11 rounded shadow p-3 mb-5 rounded' id='students'>
+                        <div className='col-12 m-3'>
                             <h3>Responses by student</h3>
                             <a href='#' onClick={this.toggleView}>
                                 View by assignment
@@ -198,13 +196,13 @@ class TeacherSection extends React.Component {
                             </div>
                         </div> :
                         <div className='row justify-content-around rounded shadow p-3 mb-5 rounded' id='student-buttons'>
-                            <div className='col-11 col-xs-11 col-sm-11 col-md-11 col-lg-3'>
+                            <div className='col-3'>
                                 <div>{studentButtons.slice(0, Math.ceil(studentButtons.length / 3))}</div>
                             </div>
-                            <div className='col-11 col-xs-11 col-sm-11 col-md-11 col-lg-3'>
+                            <div className='col-3'>
                                 <div>{studentButtons.slice(Math.ceil(studentButtons.length / 3), Math.ceil(studentButtons.length / 3) * 2)}</div>
                             </div>
-                            <div className='col-11 col-xs-11 col-sm-11 col-md-11 col-lg-3'>
+                            <div className='col-3'>
                                 <div>{studentButtons.slice(Math.ceil(studentButtons.length / 3) * 2, studentButtons.length)}</div>
                             </div>
                         </div>}

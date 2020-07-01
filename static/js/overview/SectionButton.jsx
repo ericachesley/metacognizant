@@ -12,6 +12,7 @@ class SectionButton extends React.Component {
         sessionStorage.setItem('sectionId', this.props.section['section_id'])
         sessionStorage.setItem('sectionName', this.props.section['name'])
         sessionStorage.setItem('role', this.props.section['role'])
+        this.props.update();
         this.setState({ clicked: true })
     }
 
@@ -23,11 +24,15 @@ class SectionButton extends React.Component {
                 />
             )
         } else {
+            let status = 'not-curr';
+            if (this.props.isCurr) {
+                status = 'curr';
+            }
             return (
                 <div className='section_button_holder'>
                     <button type='section_button'
                         id={this.props.section['section_id']}
-                        className={this.props.section['role']}
+                        className={status}
                         onClick={this.handleClick}>
                         {this.props.section['name']}
                     </button>

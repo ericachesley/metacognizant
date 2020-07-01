@@ -50,9 +50,9 @@ class Overview extends React.Component {
     render() {
         const teacherSections = [];
         const studentSections = [];
-        const links = [];
         for (const section of this.state.sections) {
             const button = <SectionButton
+                update={()=>{return}}
                 section={section}
                 key={section['section_id']}
             />
@@ -61,25 +61,17 @@ class Overview extends React.Component {
             } else {
                 studentSections.push(button);
             }
-            links.push(button);
         }
-        console.log(links);
+
         return (
             <div className="d-flex align-items-stretch h-100">
 
-                <aside className="navbar align-items-start w-25">
-                    <nav className="nav flex-column position-sticky">
-                        <a className="navbar-brand" href="#sidebar-nav">
-                            Navigation
-					</a>
-                        {links}
-                    </nav>
-                </aside>
+                <SideBar />
 
                 <main className="main-content w-100">
-                    <section className='container pt-2 right' id='overview'>
+                    <section className='container-fluid' id='overview'>
                         <div className='row d-flex align-items-start'>
-                            <div id='yourclasses' className='col-12 mb-2'>
+                            <div id='yourclasses' className='col-12'>
                                 <h2 className='heading'>Your Classes</h2>
                             </div>
                         </div>

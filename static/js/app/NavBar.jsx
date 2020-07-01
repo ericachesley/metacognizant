@@ -38,7 +38,7 @@ class NavBar extends React.Component {
             </div>
           </div> :
           <a className="nav-link" href="/#login-holder" id="navbarDropdown">
-          Log in
+            Log in
         </a>}
 
       </nav>
@@ -47,28 +47,51 @@ class NavBar extends React.Component {
 }
 
 
-// class SideBar extends React.Component {
-//   render() {
-//     const links = [];
-//     for (const element of this.props.nav) {
-//       links.push(
-//         <Link className="nav-link" key={element['url']} to={element['url']}>
-//           {element['title']}
-//         </Link>
-//       )
-//     }
-//     return (
-//       <aside className="navbar align-items-start w-25">
-//         <nav className="nav flex-column position-sticky">
-//           <a className="navbar-brand" href="#sidebar-nav">
-//             Navigation
-// 					</a>
-//           {links}
-//         </nav>
-//       </aside>
-//     )
-//   }
-// }
+class SideBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sections: []
+    };
+  }
+
+  componentDidMount() {
+    fetch('/api/get_sections', {
+      credentials: 'same-origin'
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ sections: data })
+      })
+  }
+
+  render() {
+    const curr = sessionStorage.getItem('sectionName');
+    const links = [];
+    for (const section of this.state.sections) {
+      const button = <SectionButton
+        update={this.props.update}
+        isCurr={section['name'] == curr}
+        section={section}
+        key={section['section_id']} />;
+      links.push(button);
+    }
+
+    return (
+      <aside className="navbar align-items-start w-25">
+        <nav className="nav flex-column position-sticky w-100">
+          <a className="navbar-brand" href="#sidebar-nav">
+            Navigation
+					</a>
+          {this.props.back}
+          <hr/>
+          <p></p>
+          {links}
+        </nav>
+      </aside>
+    )
+  }
+}
 
 
 class NavBarFooter extends React.Component {
