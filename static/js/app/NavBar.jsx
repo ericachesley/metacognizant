@@ -45,62 +45,6 @@ class NavBar extends React.Component {
 }
 
 
-// class SideBar extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       sections: []
-//     };
-//   }
-
-//   componentDidMount() {
-//     fetch('/api/get_sections', {
-//       credentials: 'same-origin'
-//     })
-//       .then(res => res.json())
-//       .then(data => {
-//         this.setState({ sections: data })
-//       })
-//   }
-
-//   render() {
-//     const curr = sessionStorage.getItem('sectionName');
-//     const links = [];
-//     for (const section of this.state.sections) {
-//       const button = <SectionButton
-//         update={this.props.update}
-//         isCurr={section['name'] == curr}
-//         section={section}
-//         key={section['section_id']} />;
-//       links.push(button);
-//     }
-
-//     return (
-//       <aside className="navbar align-items-start w-25">
-//         <nav className="nav flex-column position-sticky w-100">
-//           <a className="navbar-brand" href="#sidebar-nav" style={{ 'color': '#343B40' }}>
-//             Navigation
-// 					</a>
-//           {this.props.back}
-//           <hr />
-//           <p></p>
-//           {links}
-//         </nav>
-//       </aside>
-//     )
-//   }
-// }
-
-
-class NavBarFooter extends React.Component {
-  render() {
-    return (
-      <nav id='footernav' className="navbar fixed-bottom navbar-dark bg-dark">
-      </nav>
-    )
-  }
-}
-
 class SideBar extends React.Component {
   constructor(props) {
     super(props);

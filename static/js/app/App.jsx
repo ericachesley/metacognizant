@@ -45,21 +45,12 @@ class App extends React.Component {
     this.setState({ userId: sessionStorage.getItem('userId') })
   }
 
-  // componentDidMount() {
-  //   fetch('/api/get_path')
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       this.setState({ path: data })
-  //     })
-  // }
-
   render() {
     const userId = sessionStorage.getItem('userId');
     return (
       <Router>
         <ScrollToTop />
         <NavBar refresh={this.refresh} />
-        {/* <NavBarFooter /> */}
         <Switch>
           <Route path='/admin'>
             <Admin />
@@ -67,12 +58,6 @@ class App extends React.Component {
           <Route path='/test'>
             <Tester />
           </Route>
-          {/* <Route path='/classes/:id/assign'>
-            {userId ?
-              <CreateAssignment /> :
-              <Redirect to='/' />
-            }
-          </Route> */}
           <Route path='/classes/:id/student/:id'>
             {userId ?
               <StudentResponses getSlug={this.getSlug} /> :
@@ -134,7 +119,6 @@ function ScrollToTop() {
 
   return null;
 }
-
 
 ReactDOM.render(
   <App />,

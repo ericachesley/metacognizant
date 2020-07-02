@@ -119,13 +119,6 @@ for i in range(len(section_names)):
     sections.append(section)
 
     # seed section_assignments
-
-    # section_teachers = sample(teachers, 3)
-    # for user in section_teachers:
-    #     role = choice(weighted_roles_teacher)
-    #     seas = crud.create_section_assignment(user, section, role)
-    #     section_assignments.append(seas)
-
     section_students = sample(students, 21)
     for user in section_students:
         role = choice(weighted_roles_student)

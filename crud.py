@@ -13,8 +13,6 @@ ml = MonkeyLearn(ML_API_KEY)
 bcrypt = Bcrypt(server.app)
 
 # 'create' functions
-
-
 def create_user(first, last, email, password, g_id=None, g_credentials=None):
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -108,18 +106,18 @@ def create_revisit_assignment(revisit_pras_id, date, g_id=None):
 
 def create_response(user, pras, content, sub_date, g_id=None):
 
-    # analysis = ml.classifiers.classify(
-    #     model_id='cl_pi3C7JiL',
-    #     data=[content]
-    # )
-    # print(analysis.body[0]['classifications'][0]['tag_name'])
-    # print(analysis.body[0]['classifications'][0]['confidence'])
+    analysis = ml.classifiers.classify(
+        model_id='cl_pi3C7JiL',
+        data=[content]
+    )
+    print(analysis.body[0]['classifications'][0]['tag_name'])
+    print(analysis.body[0]['classifications'][0]['confidence'])
 
-    # sentiment = analysis.body[0]['classifications'][0]['tag_name']
-    # confidence = analysis.body[0]['classifications'][0]['confidence']
+    sentiment = analysis.body[0]['classifications'][0]['tag_name']
+    confidence = analysis.body[0]['classifications'][0]['confidence']
 
-    sentiment = choice(['Positive', 'Negative', 'Neutral'])
-    confidence = random()
+    # sentiment = choice(['Positive', 'Negative', 'Neutral'])
+    # confidence = random()
 
     response = Response(user=user,
                         prompt_assignment=pras,
@@ -134,18 +132,18 @@ def create_response(user, pras, content, sub_date, g_id=None):
 
 
 def create_response_by_ids(user_id, pras_id, content, sub_date, g_id=None):
-    # analysis = ml.classifiers.classify(
-    #     model_id='cl_Jx8qzYJh',
-    #     data=[content]
-    # )
-    # print(analysis.body[0]['classifications'][0]['tag_name'])
-    # print(analysis.body[0]['classifications'][0]['confidence'])
+    analysis = ml.classifiers.classify(
+        model_id='cl_Jx8qzYJh',
+        data=[content]
+    )
+    print(analysis.body[0]['classifications'][0]['tag_name'])
+    print(analysis.body[0]['classifications'][0]['confidence'])
 
-    # sentiment = analysis.body[0]['classifications'][0]['tag_name']
-    # confidence = analysis.body[0]['classifications'][0]['confidence']
+    sentiment = analysis.body[0]['classifications'][0]['tag_name']
+    confidence = analysis.body[0]['classifications'][0]['confidence']
 
-    sentiment = choice(['Positive', 'Negative', 'Neutral'])
-    confidence = random()
+    # sentiment = choice(['Positive', 'Negative', 'Neutral'])
+    # confidence = random()
     
     response = Response(user_id=user_id,
                         pras_id=pras_id,
@@ -175,8 +173,6 @@ def get_sections_by_user_id(user_id):
 
 
 def get_section_name(section_id):
-    # return Section.query.with_entities(Section.name).get(section_id)
-    # return db.session.execute(f'SELECT name FROM sections WHERE section_id = {section_id}')
     section = Section.query.get(section_id)
     return section.name
 
