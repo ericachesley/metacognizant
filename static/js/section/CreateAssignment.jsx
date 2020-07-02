@@ -55,14 +55,11 @@ class CreateAssignment extends React.Component {
     }
 
     convertDate(date) {
-        console.log(date);
         const year = Number(date.slice(0, 4));
         const month = Number(date.slice(5, 7));
         const day = Number(date.slice(8, 10));
         const dtLocal = luxon.DateTime.local(year, month, day, 23, 59, 59);
-        console.log(dtLocal);
         const dtUtc = dtLocal.toUTC();
-        console.log(dtUtc);
         return dtUtc
     }
 

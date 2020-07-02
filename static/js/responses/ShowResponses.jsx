@@ -39,8 +39,6 @@ class ShowResponses extends React.Component {
                 const dtLocal = dt.toLocal()
                     .toLocaleString(luxon.DateTime.DATETIME_SHORT);
 
-                console.log(this.props.responses[count].sentiment, this.props.responses[count].confidence)
-
                 let bg = 'bg-danger';
                 if (this.props.responses[count].sentiment == 'Positive') {
                     bg = 'bg-success';

@@ -26,8 +26,6 @@ class StudentResponses extends React.Component {
             const dtLocal = dt.toLocal()
                 .toLocaleString(luxon.DateTime.DATETIME_SHORT);
 
-            console.log(this.state.responses[count].sentiment, this.state.responses[count].confidence)
-
             let bg = 'bg-danger';
             if (this.state.responses[count].sentiment == 'Positive') {
                 bg = 'bg-success';
