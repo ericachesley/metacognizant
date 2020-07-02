@@ -50,7 +50,6 @@ class GetResponse extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
-                alert('Response submitted')
                 this.setState({ submitted: true });
                 this.props.getResponses();
             })

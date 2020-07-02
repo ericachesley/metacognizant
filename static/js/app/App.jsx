@@ -8,6 +8,7 @@ const Switch = window.ReactRouterDOM.Switch;
 const Redirect = window.ReactRouterDOM.Redirect;
 const useLocation = window.ReactRouterDOM.useLocation;
 const useRouteMatch = window.ReactRouterDOM.useRouteMatch;
+const useEffect = window.React.useEffect;
 
 
 class App extends React.Component {
@@ -56,6 +57,7 @@ class App extends React.Component {
     const userId = sessionStorage.getItem('userId');
     return (
       <Router>
+        <ScrollToTop />
         <NavBar refresh={this.refresh} />
         {/* <NavBarFooter /> */}
         <Switch>
@@ -121,6 +123,16 @@ class Tester extends React.Component {
       </div>
     )
   }
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
 }
 
 

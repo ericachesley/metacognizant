@@ -69,7 +69,7 @@ class AssignmentResponses extends React.Component {
 
         const role = sessionStorage.getItem('role')
         const sectionId = window.location.pathname.split('/')[2]
-        
+
         return (
             <div className="everything-holder d-flex align-items-stretch h-100">
 
@@ -142,6 +142,7 @@ class AssignmentResponses extends React.Component {
                     </section>
                     {this.state.again ?
                         <CreateAssignment
+                            sectionId={sectionId}
                             promptId={this.state.promptId}
                             toggle={this.toggleAssignAgain}
                         /> : null}

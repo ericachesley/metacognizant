@@ -30,6 +30,7 @@ class CreateAssignment extends React.Component {
             .then(data => {
                 this.setState({ prompts: data })
             })
+        this.state.selectedSections.add(this.props.sectionId);
     }
 
     handleFieldChange(evt) {
@@ -89,7 +90,6 @@ class CreateAssignment extends React.Component {
                 .then(res => res.json())
                 .then(data => {
                     this.setState({ loading: false });
-                    alert('Prompt assignment submitted')
                     this.props.toggle();
                 })
         }
@@ -136,7 +136,7 @@ class CreateAssignment extends React.Component {
                     <form onSubmit={this.handleSubmit}>
                         <h2>Create new assignment</h2>
                         <p></p>
-                        <div style={{'text-align':'left', 'margin-left':'45%'}}>
+                        <div style={{ 'textAlign': 'left', 'marginLeft': '45%' }}>
                             <label>Section(s)</label>
                             {sectionOptions}
                         </div>

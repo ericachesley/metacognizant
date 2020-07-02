@@ -133,7 +133,7 @@ class SideBar extends React.Component {
   render() {
     const buttons = [];
     const curr = sessionStorage.getItem('sectionName');
-    
+
     for (const section of this.state.sections) {
       let status = 'not-curr';
       if (section['name'] == curr) {
@@ -143,6 +143,7 @@ class SideBar extends React.Component {
         <a href={`/classes/${section['section_id']}`}
           type='section_button'
           id={section['section_id']}
+          key={section['section_id']}
           name={section['name']}
           role={section['role']}
           className={status + ' ' + 'btn btn-secondary section-btn'}
