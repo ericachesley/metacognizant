@@ -52,7 +52,6 @@ class Overview extends React.Component {
         const studentSections = [];
         for (const section of this.state.sections) {
             const button = <SectionButton
-                update={()=>{return}}
                 section={section}
                 key={section['section_id']}
             />
@@ -75,7 +74,7 @@ class Overview extends React.Component {
                                 <h2 className='heading'>Your Classes</h2>
                             </div>
                         </div>
-                        <div className='row d-flex align-items-start'>
+                        <div className='row d-flex align-items-start p-3'>
                             <div className='card-deck col-12 my-2'>
                                 <div id='teacher' className='card rounded shadow p-3 rounded'>
                                     <div className='card-body'>

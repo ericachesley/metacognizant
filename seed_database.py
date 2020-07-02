@@ -14,27 +14,96 @@ model.db.create_all()
 
 fake = Faker()
 
+student_names = [
+    'Hannah Abbott',
+    'Katie Bell',
+    'Susan Bones',
+    'Terry Boot',
+    'Lavender Brown',
+    'Millicent Bulstrode',
+    'Cho Chang',
+    'Penelope Clearwater',
+    'Vincent Crabbe',
+    'Colin Creevey',
+    'Dennis Creevey',
+    'Cedric Diggory',
+    'Seamus Finnigan',
+    'Marcus Flint',
+    'Gregory Goyle',
+    'Hermione Granger',
+    'Angelina Johnson',
+    'Lee Jordan',
+    'Neville Longbottom',
+    'Luna Lovegood',
+    'Draco Malfoy',
+    'Pansy Parkinson',
+    'Padma Patil',
+    'Parvati Patil',
+    'Harry Potter',
+    'Fred Weasley',
+    'George Weasley',
+    'Ginny Weasley',
+    'Percy Weasley',
+    'Ron Weasley',
+    'Oliver Wood'
+]
+
+teacher_names = [
+    'Cuthbert Binns',
+    'Albus Dumbledore',
+    'Argus Filch',
+    'Filius Flitwick',
+    'Rubeus Hagrid',
+    'Rolanda Hooch',
+    'Silvanus Kettleburn',
+    'Gilderoy Lockhart',
+    'Remus Lupin',
+    'Minerva McGonagall',
+    'Alastor Moody',
+    'Quirinus Quirrell',
+    'Severus Snape',
+    'Pomona Sprout',
+    'Sybill Trelawney',
+    'Dolores Umbridge'
+]
+
 # seed users
-users = []
+students = []
+teachers = []
 
-for _ in range(30):
-    profile = fake.simple_profile()
-    first = profile['name'].split()[0]
-    last = profile['name'].split()[1]
-    email = profile['mail']
+print('Students')
+for student_name in student_names:
+    #profile = fake.simple_profile()
+    first = student_name.split()[0]
+    last = student_name.split()[1]
+    email = f'{first}{last[0]}@hogwarts.edu'
     password = fake.password()
-    users.append(crud.create_user(first, last, email, password))
+    print(email, password)
+    students.append(crud.create_user(first, last, email, password))
 
+print('Teachers')
+for teacher_name in teacher_names:
+    #profile = fake.simple_profile()
+    first = teacher_name.split()[0]
+    last = teacher_name.split()[1]
+    email = f'{first[0]}{last}@hogwarts.edu'
+    password = fake.password()
+    print(email, password)
+    teachers.append(crud.create_user(first, last, email, password))
 
 # seed sections & assignments
-section_names = ['Algebra',
-                 'U.S. History',
-                 'Chemistry',
-                 'Greek',
-                 'Computer Science']
+section_names = ['Potions',
+                 'Transfiguration',
+                 'Charms',
+                 'Herbology',
+                 'History of Magic',
+                 'Defense Against the Dark Arts',
+                 'Divination',
+                 'Care of Magical Creatures']
 sections = []
 section_assignments = []
-weighted_roles = ['teacher'] + 7 * ['student']
+weighted_roles_student = ['teacher'] + 10 * ['student']
+weighted_roles_teacher = ['student'] + 10 * ['teacher']
 
 # seed sections
 for i in range(len(section_names)):
@@ -44,12 +113,37 @@ for i in range(len(section_names)):
     sections.append(section)
 
     # seed section_assignments
-    section_members = sample(users, 21)
-    for user in section_members:
-        role = choice(weighted_roles)
+
+    # section_teachers = sample(teachers, 3)
+    # for user in section_teachers:
+    #     role = choice(weighted_roles_teacher)
+    #     seas = crud.create_section_assignment(user, section, role)
+    #     section_assignments.append(seas)
+
+    section_students = sample(students, 21)
+    for user in section_students:
+        role = choice(weighted_roles_student)
         seas = crud.create_section_assignment(user, section, role)
         section_assignments.append(seas)
 
+for teacher in teachers:
+    sections_for_teacher = sample(sections, 5)
+    for section in sections_for_teacher:
+        role = choice(weighted_roles_teacher)
+        seas = crud.create_section_assignment(teacher, section, role)
+        section_assignments.append(seas)
+
+
+prompt_questions = [
+    'What surprised you today, and why?',
+    'What made you curious today? How does learning feel different when you’re curious?',
+    'What was most challenging today? What did you do in response?',
+    'When were you at your best today, and why?',
+    "What would you do differently if you were teaching today's lesson?",
+    'What did you learn today? How does it connect to the bigger picture?',
+    'What do you feel most and least confident about from today?',
+    'How well do you feel you collaborated with your peers today, and why?'
+]
 
 # seed prompts, assignments, & responses
 prompts = []
@@ -57,12 +151,12 @@ prompt_assignments = []
 responses = []
 
 # seed prompts
-for _ in range(10):
-    prompt = crud.create_prompt(fake.sentence())
+for question in prompt_questions:
+    prompt = crud.create_prompt(question)
     prompts.append(prompt)
 
     # seed prompt_assignments
-    prompt_sections = sample(sections, 2)
+    prompt_sections = sample(sections, 6)
     for section in prompt_sections:
         date = fake.date_this_year(True, True)
         while crud.check_pras_date(section, date):
@@ -96,7 +190,7 @@ for _ in range(10):
                                        sub_date)
 
 # add individuals' prompts
-teachers = crud.get_teacher_assignments()
-for teacher in teachers:
-    for i in range(2):
-        crud.create_prompt(fake.sentence(), teacher)
+# teachers = crud.get_teacher_assignments()
+# for teacher in teachers:
+#     for i in range(2):
+#         crud.create_prompt(fake.sentence(), teacher)

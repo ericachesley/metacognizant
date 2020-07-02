@@ -58,12 +58,13 @@ h1, h2, h3 {
 
 .about {
     font-size: larger;
-    margin-top: 100px;
     padding: 20px;
     color: whitesmoke;
+    margin: auto;
+    vertical-align: middle;
 }
 
-#about2 {
+#about1 {
     text-align: right;
 }
 
@@ -147,9 +148,7 @@ aside {
     overflow: hidden;
     position: fixed;
     z-index: 1;
-    /* Stay on top */
     top: 0;
-    /* Stay at the top */
     left: 0;
 }
 
@@ -198,8 +197,7 @@ aside .btn:active {
 #about-holder {
     background-color: #3E8689;
     height: 95vh;
-    padding: 50px;
-    padding-top: 0;
+    padding-top: 20px;
 }
 
 #login-holder {
@@ -305,6 +303,20 @@ hr {
     background-color: #75A878;
 }
 
+.studentview {
+    float: right;
+    height: 35vh;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.teacherview {
+    float: left;
+    height: 35vh;
+    margin-right: 30px;
+    margin-top: 20px;
+    border-color: whitesmoke;
+}
 
 
 /* green #75A878 blue #3E8689 yellow #F4B339 gray #343B40 */

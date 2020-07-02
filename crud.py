@@ -4,6 +4,7 @@ import server
 from datetime import datetime
 from monkeylearn import MonkeyLearn
 import os
+from random import choice, random
 
 ML_API_KEY = os.environ['MONKEYLEARN_KEY']
 ml = MonkeyLearn(ML_API_KEY)
@@ -102,15 +103,18 @@ def create_revisit_assignment(revisit_pras_id, date, g_id=None):
 
 def create_response(user, pras, content, sub_date, g_id=None):
 
-    analysis = ml.classifiers.classify(
-        model_id='cl_Jx8qzYJh',
-        data=[content]
-    )
-    print(analysis.body[0]['classifications'][0]['tag_name'])
-    print(analysis.body[0]['classifications'][0]['confidence'])
+    # analysis = ml.classifiers.classify(
+    #     model_id='cl_pi3C7JiL',
+    #     data=[content]
+    # )
+    # print(analysis.body[0]['classifications'][0]['tag_name'])
+    # print(analysis.body[0]['classifications'][0]['confidence'])
 
-    sentiment = analysis.body[0]['classifications'][0]['tag_name']
-    confidence = analysis.body[0]['classifications'][0]['confidence']
+    # sentiment = analysis.body[0]['classifications'][0]['tag_name']
+    # confidence = analysis.body[0]['classifications'][0]['confidence']
+
+    sentiment = choice(['Positive', 'Negative', 'Neutral'])
+    confidence = random()
 
     response = Response(user=user,
                         prompt_assignment=pras,
@@ -125,15 +129,18 @@ def create_response(user, pras, content, sub_date, g_id=None):
 
 
 def create_response_by_ids(user_id, pras_id, content, sub_date, g_id=None):
-    analysis = ml.classifiers.classify(
-        model_id='cl_Jx8qzYJh',
-        data=[content]
-    )
-    print(analysis.body[0]['classifications'][0]['tag_name'])
-    print(analysis.body[0]['classifications'][0]['confidence'])
+    # analysis = ml.classifiers.classify(
+    #     model_id='cl_Jx8qzYJh',
+    #     data=[content]
+    # )
+    # print(analysis.body[0]['classifications'][0]['tag_name'])
+    # print(analysis.body[0]['classifications'][0]['confidence'])
 
-    sentiment = analysis.body[0]['classifications'][0]['tag_name']
-    confidence = analysis.body[0]['classifications'][0]['confidence']
+    # sentiment = analysis.body[0]['classifications'][0]['tag_name']
+    # confidence = analysis.body[0]['classifications'][0]['confidence']
+
+    sentiment = choice(['Positive', 'Negative', 'Neutral'])
+    confidence = random()
     
     response = Response(user_id=user_id,
                         pras_id=pras_id,
