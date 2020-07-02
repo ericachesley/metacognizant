@@ -37,23 +37,29 @@ class AddStudent extends React.Component {
 
     render() {
         return (
-            <div id='add-student'>
-                <p></p>
-                <form onSubmit={this.handleSubmit}>
+            <div id='add-student' className='modal'>
+                <div className='modal-content'>
+                    <h3>Add student</h3>
+                    <form onSubmit={this.handleSubmit}>
+                        <p>
+                            <input
+                                placeholder="Student's email"
+                                id='studentEmail'
+                                type='text'
+                                value={this.state.studentEmail}
+                                onChange={this.handleFieldChange}
+                            />
+                        </p>
+                        <p>
+                            <input type='submit' />
+                        </p>
+                    </form>
                     <p>
-                        <input
-                            placeholder="Student's email"
-                            id='studentEmail'
-                            type='text'
-                            value={this.state.studentEmail}
-                            onChange={this.handleFieldChange}
-                        />
+                        <a href='#' onClick={this.props.toggleAddStudent}>
+                            Cancel
+                    </a>
                     </p>
-                    <p>
-                        <input type='submit' />
-                    </p>
-                </form>
-                <p><a href='#' onClick={this.props.toggleAddStudent}>Cancel</a></p>
+                </div>
             </div>
         )
     }

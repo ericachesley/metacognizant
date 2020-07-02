@@ -24,7 +24,7 @@ class Section extends React.Component {
     render() {
         const links = [];
         return (
-            <div className="d-flex align-items-stretch h-100">
+            <div className="everything-holder d-flex align-items-stretch h-100">
 
                 <SideBar
                     update={this.update}

@@ -45,7 +45,7 @@ class AssignmentButton extends React.Component {
                 <div className='assignment_button_holder'>
                     <button type='assignment_button'
                         id={this.props.assignment['pras_id']}
-                        className={status+' '+'btn btn-secondary'}
+                        className={status+' '+'btn btn-secondary assignment-btn'}
                         onClick={this.handleClick}>
                         {dtLocal}
                     </button>

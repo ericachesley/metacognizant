@@ -69,8 +69,9 @@ class AssignmentResponses extends React.Component {
 
         const role = sessionStorage.getItem('role')
         const sectionId = window.location.pathname.split('/')[2]
+        
         return (
-            <div className="d-flex align-items-stretch h-100">
+            <div className="everything-holder d-flex align-items-stretch h-100">
 
                 <SideBar back={<Link to={`/classes/${sectionId}`}>
                     Back to class overview

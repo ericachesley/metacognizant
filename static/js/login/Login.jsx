@@ -183,8 +183,6 @@ class Landing extends React.Component {
         };
     }
 
-
-
     toggleForm() {
         if (this.state.signIn) {
             this.setState({ signIn: false });
@@ -193,9 +191,15 @@ class Landing extends React.Component {
         }
     }
 
+    smoothScroll = () => {
+        document.querySelector('#about-holder').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+
     render() {
         return (
-            <div id='front-page'>
+            <main id='front-page'>
                 <section className='container-fluid' id='landing'>
                     <div className='row'>
                         <div id='intro' className="col-5 col-xs-6 col-sm-6 col-md-11 col-lg-11">
@@ -208,49 +212,50 @@ class Landing extends React.Component {
                 </section>
                 <section className='container-fluid' id='about-holder'>
                     <div className='row justify-content-center static-height'>
-                        <a href='#about-holder'>
+                        <a href='#about-holder'
+                            onClick={this. smoothScroll}>
                             <svg width="2em" height="2em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ 'fill': 'white' }}>
-                                <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                            </svg>
+                            <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                        </svg>
                         </a>
                     </div>
-                    <div className='row align-items-start static-height'>
-                        <div id='about1' className=" about col-5 col-xs-6 col-sm-6 col-md-11 col-lg-11">
-                            <p>
-                                Through daily reflections, students develop
-                                their identities as active participants in
-                                their own education. By regularly thinking about
-                                their learning process, students can begin to
-                                notice what does and does not work for them
-                                as learners, and adapt their approach accordingly.
+                <div className='row align-items-start static-height'>
+                    <div id='about1' className=" about col-5 col-xs-6 col-sm-6 col-md-11 col-lg-11">
+                        <p>
+                            Through daily reflections, students develop
+                            their identities as active participants in
+                            their own education. By regularly thinking about
+                            their learning process, students can begin to
+                            notice what does and does not work for them
+                            as learners, and adapt their approach accordingly.
                                 </p>
-                        </div>
                     </div>
-                    <div className='row align-items-start static-height'>
-                        <div id='about2' className="about col-5 col-xs-6 col-sm-6 col-md-11 col-lg-11">
-                            <p>
-                                Teachers easily select from a bank of proven,
-                                research-based prompts, or add their own. With
-                                a few clicks, teachers can schedule assignments
-                                and review responses, or even have students
-                                revist and reflect on their own past
-                                reflections, encouraging them to see (and
-                                celebrate) their growth and evolution over time.
+                </div>
+                <div className='row align-items-start static-height'>
+                    <div id='about2' className="about col-5 col-xs-6 col-sm-6 col-md-11 col-lg-11">
+                        <p>
+                            Teachers easily select from a bank of proven,
+                            research-based prompts, or add their own. With
+                            a few clicks, teachers can schedule assignments
+                            and review responses, or even have students
+                            revist and reflect on their own past
+                            reflections, encouraging them to see (and
+                            celebrate) their growth and evolution over time.
                                 </p>
-                        </div>
                     </div>
+                </div>
                 </section>
-                <section className='container-fluid' id='login-holder'>
+            <section className='container-fluid' id='login-holder'>
                 <div className='row justify-content-center static-height'>
-                        <a href='#login-holder'>
-                            <svg width="2em" height="2em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ 'fill': 'white' }}>
-                                <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                        </a>
-                    </div>
-                    <Login setLoggedIn={this.setLoggedIn} />
-                </section>
-            </div>
+                    <a href='#login-holder'>
+                        <svg width="2em" height="2em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ 'fill': 'white' }}>
+                            <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </a>
+                </div>
+                <Login setLoggedIn={this.setLoggedIn} />
+            </section>
+            </main >
         )
     }
 }

@@ -17,27 +17,25 @@ class SectionButton extends React.Component {
     }
 
     render() {
-        if (this.state.clicked) {
-            return (
-                <Redirect
-                    to={`/classes/${this.props.section['section_id']}`}
-                />
-            )
-        } else {
-            let status = 'not-curr';
-            if (this.props.isCurr) {
-                status = 'curr';
-            }
-            return (
-                <div className='section_button_holder'>
-                    <button type='section_button'
-                        id={this.props.section['section_id']}
-                        className={status + ' ' + 'btn btn-secondary section-btn'}
-                        onClick={this.handleClick}>
-                        {this.props.section['name']}
-                    </button>
-                </div>
-            )
+        let status = 'not-curr';
+        if (this.props.isCurr) {
+            status = 'curr';
         }
+        return (
+            <div className='section_button_holder'>
+                <button type='section_button'
+                    id={this.props.section['section_id']}
+                    className={status + ' ' + 'btn btn-secondary section-btn'}
+                    onClick={this.handleClick}>
+                    {this.props.section['name']}
+                </button>
+                {this.state.clicked ?
+                    <Redirect
+                        to={`/classes/${this.props.section['section_id']}`}
+                    /> :
+                    null}
+            </div>
+        )
     }
 }
+// }

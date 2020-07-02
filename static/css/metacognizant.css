@@ -6,6 +6,10 @@ html, body {
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: whitesmoke;
+    /* overflow: hidden; */
+}
+
+.everything-holder {
     overflow: hidden;
 }
 
@@ -85,14 +89,13 @@ h1, h2, h3 {
 }
 
 .heading {
-    color: whitesmoke;
     text-align: center;
 }
 
 #yourclasses {
     background-color: #75A878;
     padding: 15px;
-    ;
+    margin: 0;
 }
 
 button {
@@ -101,16 +104,16 @@ button {
     margin-bottom: 5px;
     background-color: #3E8689;
     border-color: #3E8689;
-    color: whitesmoke;
+    /* color: whitesmoke; */
 }
 
 button:hover {
     background-color: lightgray;
 }
 
-#admin a {
+/* #admin a {
     color: navy;
-}
+} */
 
 .back:hover, .nav-link:hover {
     color: lightgray;
@@ -128,7 +131,15 @@ button:hover {
 main {
     overflow: scroll;
     position: relative;
-    padding-bottom: 100px;
+    width: 100%;
+}
+
+.btn {
+    background-color: transparent;
+    border-color: #343B40;
+    color: #343B40;
+    margin: 5px 0;
+    width: 75%;
 }
 
 aside {
@@ -156,17 +167,13 @@ aside .btn {
     width: 100%;
 }
 
+aside .btn:active {
+    background-color: tomato;
+
+}
+
 .curr.btn {
     color: #343B40;
-}
-
-.section-btn {
-    background-color: #3e8689d8;
-    border-color: #3e8689d8;
-}
-
-#student-buttons button {
-    width: 100%;
 }
 
 #landing {
@@ -197,7 +204,7 @@ aside .btn {
 
 #login-holder {
     background-color: #F4B339;
-    height: 95vh;
+    height: 100vh;
     padding: 50px;
     padding-top: 0;
     vertical-align: middle;
@@ -210,10 +217,6 @@ aside .btn {
 
 #intro h2 a {
     color: #1f4446;
-}
-
-#front-page {
-    scroll-behavior: smooth;
 }
 
 thead {
@@ -294,5 +297,14 @@ hr {
     border-image-slice: 1;
     border-image-outset: inherit;
 }
+.table .row{
+    margin: -1px;
+}
+
+.bg-success {
+    background-color: #75A878;
+}
+
+
 
 /* green #75A878 blue #3E8689 yellow #F4B339 gray #343B40 */

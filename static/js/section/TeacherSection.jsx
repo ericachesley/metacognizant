@@ -128,17 +128,17 @@ class TeacherSection extends React.Component {
                             <a href='#' onClick={this.toggleView}>
                                 View by student
                             </a>
+                            <span>  |  </span>
+                            <a href='#' onClick={this.toggleAddAssignment}>
+                                Create new assignment
+                                        </a>
                             {this.state.addAssignment ?
                                 <CreateAssignment
                                     promptId='select-one'
                                     sectionId={this.props.sectionId}
                                     toggle={this.toggleAddAssignment}
                                 /> :
-                                <div>
-                                    <a href='#' onClick={this.toggleAddAssignment}>
-                                        Create new assignment
-                                        </a>
-                                </div>
+                                null
                             }
                         </div>
                     </div>
@@ -179,13 +179,13 @@ class TeacherSection extends React.Component {
                             <a href='#' onClick={this.toggleView}>
                                 View by assignment
                             </a>
+                            <span>  |  </span>
+                            <a href='#' onClick={this.toggleAddStudent}>
+                                Add a student
+                            </a>
                             {this.state.addStudent ?
                                 <AddStudent toggleAddStudent={this.toggleAddStudent} /> :
-                                <div>
-                                    <a href='#' onClick={this.toggleAddStudent}>
-                                        Add a student
-                            </a>
-                                </div>
+                                null
                             }
                         </div>
                     </div>

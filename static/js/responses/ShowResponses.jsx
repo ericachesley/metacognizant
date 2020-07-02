@@ -27,9 +27,9 @@ class ShowResponses extends React.Component {
             return (<Loader />)
         } else if (this.props.responses.length == 0) {
             return (
-                <div className='col-12 my-2 p-3 rounded shadow rounded'>
-                    <p>No responses yet.</p>
-                </div>
+                    <div className='col-12'>
+                        <p>No responses yet.</p>
+                    </div>
             )
         } else {
             const responses = [];
@@ -39,6 +39,25 @@ class ShowResponses extends React.Component {
                 const dtLocal = dt.toLocal()
                     .toLocaleString(luxon.DateTime.DATETIME_SHORT);
 
+                console.log(this.props.responses[count].sentiment, this.props.responses[count].confidence)
+
+                let bg = 'bg-danger';
+                if (this.props.responses[count].sentiment == 'Positive') {
+                    bg = 'bg-success';
+                } else if (this.props.responses[count].sentiment == 'Neutral') {
+                    bg = 'bg-warning';
+                }
+
+                const sentimentBar = <div className='progress'>
+                    <div className={"progress-bar" + ' ' + bg}
+                        role="progressbar"
+                        style={{ "width": `${this.props.responses[count].confidence * 100}` }}
+                        aria-valuenow={this.props.responses[count].confidence * 100}
+                        aria-valuemin="0"
+                        aria-valuemax="100">
+                    </div>
+                </div>
+
                 if (this.props.isRevisit) {
                     const last = this.props.responses[count].last_name;
                     responses.push(
@@ -46,8 +65,7 @@ class ShowResponses extends React.Component {
                             <td>{this.props.responses[count].student}</td>
                             <td>{this.state.prevRes[last]}</td>
                             <td>{this.props.responses[count].content}</td>
-                            <td>{this.props.responses[count].sentiment}</td>
-                            <td>{this.props.responses[count].confidence}</td>
+                            <td>{sentimentBar}</td>
                             <td>{date ? dtLocal : ''}</td>
                         </tr>
                     )
@@ -56,8 +74,8 @@ class ShowResponses extends React.Component {
                         <tr key={count}>
                             <td>{this.props.responses[count].student}</td>
                             <td>{this.props.responses[count].content}</td>
-                            <td>{this.props.responses[count].sentiment}</td>
-                            <td>{this.props.responses[count].confidence}</td>
+                            <td>{sentimentBar}</td>
+
                             <td>{date ? dtLocal : ''}</td>
                         </tr>
                     )
@@ -79,7 +97,6 @@ class ShowResponses extends React.Component {
                                     <td><b>Response</b></td>
                                 }
                                 <td><b>Sentiment</b></td>
-                                <td><b>Confidence</b></td>
                                 <td><b>Submitted</b></td>
                             </tr>
                         </thead>

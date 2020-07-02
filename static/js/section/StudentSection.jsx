@@ -7,6 +7,10 @@ class StudentSection extends React.Component {
     }
 
     componentDidMount() {
+        this.getPras();
+    }
+
+    getPras = () => {
         fetch(`/api/get_pras?sectionId=${this.props.sectionId}`)
             .then(res => res.json())
             .then(data => {
@@ -26,6 +30,7 @@ class StudentSection extends React.Component {
             const dtLocal = dt.toLocal()
 
             const button = <AssignmentButton
+                getPras={this.getPras}
                 res={assignment.res}
                 late={dtLocal < now && assignment.res == false}
                 assignment={assignment}

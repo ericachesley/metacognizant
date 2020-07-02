@@ -24,7 +24,7 @@ class StudentButton extends React.Component {
             return (
                 <div className='student_button_holder'>
                     <button type='student_button'
-                    className='btn'
+                    className='btn btn-secondary'
                         id={this.props.student['user_id']}
                         onClick={this.handleClick}>
                         {this.props.student['name']}

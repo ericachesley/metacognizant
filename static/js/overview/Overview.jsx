@@ -64,7 +64,7 @@ class Overview extends React.Component {
         }
 
         return (
-            <div className="d-flex align-items-stretch h-100">
+            <div className="everything-holder d-flex align-items-stretch h-100">
 
                 <SideBar />
 

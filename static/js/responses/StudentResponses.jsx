@@ -25,13 +25,32 @@ class StudentResponses extends React.Component {
             const dt = luxon.DateTime.fromHTTP(date);
             const dtLocal = dt.toLocal()
                 .toLocaleString(luxon.DateTime.DATETIME_SHORT);
+
+            console.log(this.state.responses[count].sentiment, this.state.responses[count].confidence)
+
+            let bg = 'bg-danger';
+            if (this.state.responses[count].sentiment == 'Positive') {
+                bg = 'bg-success';
+            } else if (this.state.responses[count].sentiment == 'Neutral') {
+                bg = 'bg-warning';
+            }
+
+            const sentimentBar = <div className='progress'>
+                <div className={"progress-bar" + ' ' + bg}
+                    role="progressbar"
+                    style={{ "width": `${this.state.responses[count].confidence * 100}` }}
+                    aria-valuenow={this.state.responses[count].confidence * 100}
+                    aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+            </div>
+
             responses.push(
                 <tr key={count}>
                     <td>{dtLocal}</td>
                     <td>{this.state.responses[count].prompt}</td>
                     <td>{this.state.responses[count].response}</td>
-                    <td>{this.state.responses[count].sentiment}</td>
-                    <td>{this.state.responses[count].confidence}</td>
+                    <td>{sentimentBar}</td>
                 </tr>
             )
         }
@@ -46,27 +65,35 @@ class StudentResponses extends React.Component {
                 />
 
                 <main className="main-content w-100">
-                    <div id='assignment' className='container-fluid'>
-                        <row className='row d-flex align-items-start'>
-                            <div id='yourclasses' className='col-12'>
-                                <h2>{sessionStorage.getItem('studentName')}</h2>
+                    <section className='container-fluid' id='student'>
+                        <div className='row d-flex align-items-start'>
+                            <div id='assignment' className='container-fluid'>
+                                <div className='row d-flex align-items-start'>
+                                    <div id='yourclasses' className='col-12'>
+                                        <h2>{sessionStorage.getItem('studentName')}</h2>
+                                    </div>
+                                </div>
+                                <div className='row d-flex align-items-start'>
+                                    <div id='show-responses' className='col-12'>
+                                        <table className='table table-hover' id='response-table'>
+                                            <thead>
+                                                <tr>
+                                                    <td><b>Date</b></td>
+                                                    <td><b>Prompt</b></td>
+                                                    <td><b>Response</b></td>
+                                                    <td><b>Sentiment</b></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {responses}
+                                                <tr><td /><td /><td /><td /></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </row>
-                        <row className='row d-flex align-items-start'>
-                            <table className='table table-hover' id='response-table'>
-                                <thead>
-                                    <tr>
-                                        <td><b>Date</b></td>
-                                        <td><b>Prompt</b></td>
-                                        <td><b>Response</b></td>
-                                        <td><b>Sentiment</b></td>
-                                        <td><b>Confidence</b></td>
-                                    </tr>
-                                </thead>
-                                <tbody>{responses}</tbody>
-                            </table>
-                        </row>
-                    </div>
+                        </div>
+                    </section>
                 </main>
             </div >
         )
