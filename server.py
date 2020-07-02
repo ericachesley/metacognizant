@@ -63,7 +63,6 @@ def create_account():
     name = f'{first} {last}'
 
     user = crud.get_user_by_email(email)
-    password_hashed = bcrypt.generate_password_hash(password).decode('utf-8')
 
     if user:
         if user.hashed_password or user.g_id:
@@ -72,11 +71,11 @@ def create_account():
             user = crud.update_user_at_first_login(user,
                                                    first,
                                                    last,
-                                                   password_hashed)
+                                                   password)
             session['logged_in_user_id'] = user.user_id
             res = [user.user_id, name]
     else:
-        user = crud.create_user(first, last, email, password_hashed)
+        user = crud.create_user(first, last, email, password)
         session['logged_in_user_id'] = user.user_id
         res = [user.user_id, name]
 
@@ -375,9 +374,12 @@ def create_response():
 
 @app.route('/api/get_all_users')
 def return_users():
-    users = crud.get_users_with_section_info()
-    users.sort(key=lambda i: i['name'])
-    return jsonify(users)
+    if 'logged_in_user_id' not in session.keys() or session['logged_in_user_id'] != 1:
+        return jsonify('insufficient permissions')
+    else:
+        users = crud.get_users_with_section_info()
+        users.sort(key=lambda i: i['name'])
+        return jsonify(users)
 
 
 @app.route('/api/login_with_google', methods=['POST'])

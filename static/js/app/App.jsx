@@ -41,7 +41,7 @@ class App extends React.Component {
   }
 
   refresh() {
-    this.setState({userId: sessionStorage.getItem('userId')})
+    this.setState({ userId: sessionStorage.getItem('userId') })
   }
 
   // componentDidMount() {
@@ -56,8 +56,8 @@ class App extends React.Component {
     const userId = sessionStorage.getItem('userId');
     return (
       <Router>
-          <NavBar refresh={this.refresh}/>
-          {/* <NavBarFooter /> */}
+        <NavBar refresh={this.refresh} />
+        {/* <NavBarFooter /> */}
         <Switch>
           <Route path='/admin'>
             <Admin />
@@ -102,7 +102,10 @@ class App extends React.Component {
             }
           </Route>
           <Route path='/'>
-            <Landing />
+            {userId ?
+              <Redirect to='/classes' /> :
+              <Landing setLoggedIn={this.setLoggedIn} />
+            }
           </Route>
         </Switch>
       </Router>

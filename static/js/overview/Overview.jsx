@@ -84,8 +84,8 @@ class Overview extends React.Component {
                                             <p className="card-text">You are not assigned as a teacher for any sections.</p>
                                         }
                                     </div>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item">
                                             {this.state.addClass ?
                                                 <AddClass toggleAdd={this.toggleAdd} /> :
                                                 <div>
@@ -105,8 +105,8 @@ class Overview extends React.Component {
                                             <p className="card-text">You are not assigned as a student for any sections.</p>
                                         }
                                     </div>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item">
                                             {this.state.joinClass ?
                                                 <JoinClass toggleJoin={this.toggleJoin} /> :
                                                 <div>

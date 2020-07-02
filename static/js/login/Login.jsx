@@ -83,7 +83,6 @@ class Login extends React.Component {
 
     render() {
         return (
-
             <div className='row align-items-start justify-content-center static-height'>
                 <div
                     id='login'
@@ -261,7 +260,7 @@ class Landing extends React.Component {
                             </svg>
                         </a>
                     </div>
-                    <Login setLoggedIn={this.setLoggedIn} />
+                    <Login setLoggedIn={this.props.setLoggedIn} />
                 </section>
             </main >
         )

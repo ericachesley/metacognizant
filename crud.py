@@ -5,14 +5,19 @@ from datetime import datetime
 from monkeylearn import MonkeyLearn
 import os
 from random import choice, random
+from flask_bcrypt import Bcrypt
 
 ML_API_KEY = os.environ['MONKEYLEARN_KEY']
 ml = MonkeyLearn(ML_API_KEY)
 
+bcrypt = Bcrypt(server.app)
+
 # 'create' functions
 
 
-def create_user(first, last, email, hashed_password, g_id=None, g_credentials=None):
+def create_user(first, last, email, password, g_id=None, g_credentials=None):
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
     user = User(first_name=first,
                 last_name=last,
                 email=email,
@@ -432,7 +437,8 @@ def update_user_with_gid(user, gid, credentials):
     return user
 
 
-def update_user_at_first_login(user, first, last, hashed_password):
+def update_user_at_first_login(user, first, last, password):
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     user.first_name = first
     user.last_name = last
     user.hashed_password = hashed_password

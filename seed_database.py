@@ -9,6 +9,8 @@ from datetime import datetime, timezone, timedelta, date
 os.system('dropdb metacognizant')
 os.system('createdb metacognizant')
 
+ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
+
 model.connect_to_db(server.app)
 model.db.create_all()
 
@@ -68,6 +70,10 @@ teacher_names = [
 ]
 
 # seed users
+
+# user 1 as admin
+crud.create_user('Admin', ' ', 'admin@metacognizant.org', ADMIN_PASSWORD)
+
 students = []
 teachers = []
 

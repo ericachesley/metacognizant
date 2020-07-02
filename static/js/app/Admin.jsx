@@ -2,7 +2,8 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: []
+      users: [],
+      allowed: true
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -14,7 +15,12 @@ class Admin extends React.Component {
     })
       .then(res => res.json())
       .then(data => {
-        this.setState({ users: data })
+        if (data == 'insufficient permissions') {
+          this.setState({allowed:false})
+          alert('You do not have permission to view this page. Please log in as an administrator.');
+        } else {
+          this.setState({ users: data });
+        } 
       })
   }
 
@@ -38,6 +44,11 @@ class Admin extends React.Component {
   }
 
   render() {
+    if (! this.state.allowed) {
+      return (
+        <Redirect to='/' />
+      )
+    }
     const users = []
     for (const user of this.state.users) {
       const list = [
