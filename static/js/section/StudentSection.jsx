@@ -3,10 +3,14 @@ class StudentSection extends React.Component {
         super(props);
         this.state = {
             assignments: [],
+            modal: true
         };
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('studentSectionModal')) {
+            this.setState({ modal: false })
+        }
         this.getPras();
     }
 
@@ -51,6 +55,10 @@ class StudentSection extends React.Component {
             assignmentButtonsFuture]
     }
 
+    closeModal = () => {
+        this.setState({ modal: false });
+        sessionStorage.setItem('studentSectionModal', 'seen')
+    }
 
     render() {
         let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
@@ -60,6 +68,28 @@ class StudentSection extends React.Component {
 
         return (
             <div className='container-fluid'>
+
+                {this.state.modal ?
+                    <div className='modal targeted '>
+                        <a href='#' onClick={this.closeModal}>X</a>
+                        <div className='modal-content targeted shadow'>
+                            On this page, you can see and respond <br></br>
+                            to reflection questions assigned <br></br>
+                            by your teacher.
+                            <br></br><br></br>
+                            Completed assignments are highlighted <br></br>
+                            in green. Special assignments called <br></br>
+                            revisits are highlighted in yellow.
+                            <br></br><br></br>
+                            In a revisit assignment, you will <br></br>
+                            see a response that you wrote for a <br></br>
+                            previous reflection and be asked to <br></br>
+                            reflect on how your thinking and <br></br>
+                            perspective may have evolved since <br></br>
+                            you wrote it.
+                        </div>
+                    </div> : null}
+
                 <div className='row d-flex align-items-start'>
                     <div className='col-12 m-3'>
                         <h3>View assignments</h3>

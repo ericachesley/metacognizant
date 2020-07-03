@@ -3,11 +3,15 @@ class ShowResponses extends React.Component {
         super(props);
         this.state = {
             prevRes: null,
+            modal: true
         };
     }
 
 
     componentDidMount() {
+        if (sessionStorage.getItem('showResponsesModal')) {
+            this.setState({ modal: false })
+        }
         if (this.props.isRevisit) {
             fetch(`/api/get_all_prev_responses?prasId=${this.props.prasId}`, {
                 headers: {
@@ -22,14 +26,19 @@ class ShowResponses extends React.Component {
         }
     }
 
+    closeModal = () => {
+        this.setState({ modal: false });
+        sessionStorage.setItem('showResponsesModal', 'seen')
+    }
+
     render() {
         if (this.props.isRevisit && this.state.prevRes == null) {
             return (<Loader />)
         } else if (this.props.responses.length == 0) {
             return (
-                    <div className='col-12'>
-                        <p>No responses yet.</p>
-                    </div>
+                <div className='col-12'>
+                    <p>No responses yet.</p>
+                </div>
             )
         } else {
             const responses = [];
@@ -82,6 +91,38 @@ class ShowResponses extends React.Component {
 
             return (
                 <div id='show-responses' className='col-12'>
+
+                    {this.state.modal ?
+                        <div className='modal targeted'>
+                            <a href='#' onClick={this.closeModal}>X</a>
+                            <div className='modal-content targeted shadow'>
+                                Here you have all submitted responses <br></br>
+                                for this assignment, along with <br></br>
+                                submission date and time.
+                                <br></br><br></br>
+                                The sentiment column gives you an <br></br>
+                                at-a-glance analysis of the tone of <br></br>
+                                the given response. Color indicates <br></br>
+                                positive, neutral, or negative, <br></br>
+                                and the size of the bar conveys the <br></br>
+                                level of confidence for that choice.
+                                <br></br><br></br>
+                                At the top of the page you can assign <br></br>
+                                this same prompt for a new date, or <br></br>
+                                you can assign a 'revisit' of this <br></br>
+                                particular assignment.
+                                <br></br><br></br>
+                                In a revisit assignment, each student <br></br>
+                                will be shown their own response from <br></br>
+                                this assignment and be asked to <br></br>
+                                reflect on how their thinking and <br></br>
+                                perspective may have evolved since the <br></br>
+                                initial reflection. This helps students <br></br>
+                                see their own growth over time and <br></br>
+                                take ownership of their learning.
+                    </div>
+                        </div> : null}
+
                     <table id='response-table' className="table table-hover">
                         <thead>
                             <tr>

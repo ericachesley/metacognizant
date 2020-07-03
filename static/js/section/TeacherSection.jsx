@@ -6,7 +6,8 @@ class TeacherSection extends React.Component {
             students: [],
             addStudent: false,
             addAssignment: false,
-            view: 0
+            view: 0,
+            modal: true
         };
         this.sortAssignments = this.sortAssignments.bind(this);
         this.toggleAddStudent = this.toggleAddStudent.bind(this);
@@ -16,6 +17,9 @@ class TeacherSection extends React.Component {
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('teacherSectionModal')) {
+            this.setState({ modal: false })
+        }
         this.getPromptAssignments();
         this.getStudents();
     }
@@ -103,6 +107,11 @@ class TeacherSection extends React.Component {
         }
     }
 
+    closeModal = () => {
+        this.setState({ modal: false });
+        sessionStorage.setItem('teacherSectionModal', 'seen')
+    }
+
     render() {
         let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
         [assignmentButtonsToday,
@@ -122,6 +131,28 @@ class TeacherSection extends React.Component {
         if (this.state.view == 0) {
             return (
                 <div className='container-fluid'>
+
+                    {this.state.modal ?
+                        <div className='modal targeted '>
+                            <a href='#' onClick={this.closeModal}>X</a>
+                            <div className='modal-content targeted shadow'>
+                                On this page, you can assign future <br></br>
+                                reflections prompts and read student <br></br>
+                                responses.
+                                <br></br><br></br>
+                                You can toggle between <br></br>
+                                reading responses by assignment or <br></br>
+                                by student. In the 'view by student' <br></br>
+                                page, you can also add additional <br></br>
+                                students to this class.
+                                <br></br><br></br>
+                                When you create new assignments from <br></br>
+                                within any section, you'll have the <br></br>
+                                option to assign to any of your other <br></br>
+                                class sections as well.
+                    </div>
+                        </div> : null}
+
                     <div className='row d-flex align-items-start'>
                         <div className='col-12 m-3'>
                             <h3>Responses by assignment</h3>

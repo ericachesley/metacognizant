@@ -4,11 +4,15 @@ class StudentResponses extends React.Component {
         this.state = {
             studentId: this.props.getSlug(),
             sectionId: sessionStorage.getItem('sectionId'),
-            responses: []
+            responses: [],
+            modal: true
         };
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('studentResponsesModal')) {
+            this.setState({ modal: false })
+        }
         fetch(`/api/get__student_responses?studentId=${this.state.studentId}&sectionId=${this.state.sectionId}`)
             .then(res => res.json())
             .then(data => {
@@ -16,6 +20,10 @@ class StudentResponses extends React.Component {
             })
     }
 
+    closeModal = () => {
+        this.setState({ modal: false });
+        sessionStorage.setItem('studentResponsesModal', 'seen')
+    }
 
     render() {
         const sectionId = window.location.pathname.split('/')[2]
@@ -57,10 +65,35 @@ class StudentResponses extends React.Component {
             <div className="d-flex align-items-stretch h-100">
 
                 <SideBar
-                    back={<Link to={`/classes/${sectionId}`}>
-                        Back to class overview
-                    </Link>}
+                    back={<div>
+                        <Link className='back' to='/classes'>
+                            Back to all classes
+                        </Link>
+                        <br></br>
+                        <Link className='back' to={`/classes/${sectionId}`}>
+                            Back to class overview
+                        </Link>
+                    </div>}
                 />
+
+                {this.state.modal ?
+                    <div className='modal targeted'>
+                        <a href='#' onClick={this.closeModal}>X</a>
+                            <div className='modal-content targeted shadow'>
+                                Here you have all  of this student's <br></br>
+                                reflections for this class, in order <br></br>
+                                of submission.
+                                <br></br><br></br>
+                                As in the by assignment view, the <br></br>
+                                sentiment column provides an <br></br>
+                                at-a-glance analysis of the tone <br></br>
+                                of each response. Color indicates <br></br>
+                                positive, neutral, or negative, <br></br>
+                                and the size of the bar conveys the <br></br>
+                                level of confidence for that choice.
+                        </div>
+                    </div> : null}
+
 
                 <main className="main-content w-100">
                     <section className='container-fluid' id='student'>

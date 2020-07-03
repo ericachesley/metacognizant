@@ -27,7 +27,6 @@ class Section extends React.Component {
             <div className="everything-holder d-flex align-items-stretch h-100">
 
                 <SideBar
-                    update={this.update}
                     back={<Link className='back' to='/classes'>
                         Back to all classes
                         </Link>}

@@ -205,7 +205,7 @@ class Landing extends React.Component {
                             <h1>Metacognizant helps teachers help students
                                     own their learning journey.</h1>
                             <br></br>
-                            <h2><Link to='/login'>Get started</Link></h2>
+                            <h2><a href='/#login-holder'>Get started</a></h2>
                         </div>
                     </div>
                 </section>

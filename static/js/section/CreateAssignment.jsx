@@ -8,7 +8,8 @@ class CreateAssignment extends React.Component {
             sections: [],
             prompts: [],
             newPrompt: false,
-            loading: false
+            loading: false,
+            modal: true
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -16,6 +17,9 @@ class CreateAssignment extends React.Component {
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('createAssignmentModal')) {
+            this.setState({ modal: false })
+        }
         fetch('/api/get_sections', {
             credentials: 'same-origin'
         })
@@ -92,6 +96,11 @@ class CreateAssignment extends React.Component {
         }
     }
 
+    closeModal = () => {
+        this.setState({ modal: false });
+        sessionStorage.setItem('createAssignmentModal', 'seen')
+    }
+
     render() {
         const sectionOptions = [];
         for (const section of this.state.sections) {
@@ -129,6 +138,29 @@ class CreateAssignment extends React.Component {
 
         return (
             <div id='assign-prompt' className='modal'>
+
+                {this.state.modal ?
+                    <div className='modal targeted'>
+                        <a href='#' onClick={this.closeModal}>X</a>
+                            <div className='modal-content targeted shadow'>
+                                When you create a new assignment you <br></br>
+                                can choose from the list of suggested <br></br>
+                                prompts, or you can create your own. <br></br>
+                                Any prompt that you write yourself <br></br>
+                                will be stored in your account and <br></br>
+                                available for you to reuse in all <br></br>
+                                future assignments.
+                                <br></br><br></br>
+                                If you have logged in with Google <br></br>
+                                and your classes are set up on <br></br>
+                                Google Classroom, then all new <br></br>
+                                assignments will also show up <br></br>
+                                under coursework in Google Classroom <br></br>
+                                and be marked completed as students <br></br>
+                                submit responses here.
+                        </div>
+                    </div> : null}
+
                 <div className='modal-content'>
                     <form onSubmit={this.handleSubmit}>
                         <h2>Create new assignment</h2>

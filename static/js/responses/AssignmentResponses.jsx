@@ -73,9 +73,17 @@ class AssignmentResponses extends React.Component {
         return (
             <div className="everything-holder d-flex align-items-stretch h-100">
 
-                <SideBar back={<Link to={`/classes/${sectionId}`}>
-                    Back to class overview
-                    </Link>} />
+                <SideBar
+                    back={<div>
+                        <Link className='back' to='/classes'>
+                            Back to all classes
+                        </Link>
+                        <br></br>
+                        <Link className='back' to={`/classes/${sectionId}`}>
+                            Back to class overview
+                        </Link>
+                    </div>}
+                />
 
                 <main className="main-content w-100">
                     <section className='container-fluid' id='assignment'>

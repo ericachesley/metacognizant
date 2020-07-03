@@ -4,7 +4,8 @@ class Overview extends React.Component {
         this.state = {
             sections: [],
             addClass: false,
-            joinClass: false
+            joinClass: false,
+            modal: true
         };
         this.toggleAdd = this.toggleAdd.bind(this);
         this.toggleJoin = this.toggleJoin.bind(this);
@@ -16,6 +17,9 @@ class Overview extends React.Component {
         sessionStorage.removeItem('sectionName');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem('studentName');
+        if (sessionStorage.getItem('overviewModal')) {
+            this.setState({ modal: false })
+        }
         this.getSections();
     }
 
@@ -47,6 +51,11 @@ class Overview extends React.Component {
         }
     }
 
+    closeModal = () => {
+        this.setState({ modal: false });
+        sessionStorage.setItem('overviewModal', 'seen')
+    }
+
     render() {
         const teacherSections = [];
         const studentSections = [];
@@ -66,6 +75,24 @@ class Overview extends React.Component {
             <div className="everything-holder d-flex align-items-stretch h-100">
 
                 <SideBar />
+
+                {this.state.modal ?
+                    <div className='modal targeted'>
+                        <a href='#' onClick={this.closeModal}>X</a>
+                        <div className='modal-content targeted shadow'>
+                            <b>Hello {sessionStorage.getItem('name').split(' ')[0]}!</b>
+                            <br></br>
+                            Welcome to your class overview page.
+                            <br></br><br></br>
+                            Here you can see classes to which you <br></br>
+                            are assigned as a teacher (under the <br></br>
+                            apple) and classes to which you are <br></br>
+                            assigned as a student (the backpack).
+                            <br></br><br></br>
+                            You can also create new classes to teach, <br></br>
+                            or join additional classes as a student!
+                        </div>
+                    </div> : null}
 
                 <main className="main-content w-100">
                     <section className='container-fluid' id='overview'>

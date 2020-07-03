@@ -244,6 +244,15 @@ thead {
     margin-left: 25%; */
 }
 
+.modal.targeted {
+    left: 8%;
+    top: 7%;
+    background-color: transparent;
+    width: fit-content;
+    z-index: 1200;
+    text-align: left;
+}
+
 /* Modal Content/Box */
 
 .modal-content {
@@ -255,6 +264,18 @@ thead {
     width: 55%;
     text-align: center;
     /* Could be more or less, depending on screen size */
+}
+
+.modal-content.targeted {
+    width: fit-content;
+    background-color: #F4B339;
+    border-color: #F4B339;
+    margin: 0;
+}
+
+.modal.targeted a {
+    color: whitesmoke;
+
 }
 
 hr {
