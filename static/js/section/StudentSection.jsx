@@ -26,16 +26,15 @@ class StudentSection extends React.Component {
         var now = luxon.DateTime.local();
         const assignmentButtonsToday = [];
         const assignmentButtonsPast = [];
-        const assignmentButtonsFuture = [];
 
         for (const assignment of this.state.assignments) {
-            const date = assignment.date
+            const date = assignment.date;
             const dt = luxon.DateTime.fromHTTP(date);
-            const dtLocal = dt.toLocal()
+            const dtLocal = dt.toLocal();
 
             const button = <AssignmentButton
+                weekDay={dtLocal.weekdayLong}
                 getPras={this.getPras}
-                res={assignment.res}
                 late={dtLocal < now && assignment.res == false}
                 assignment={assignment}
                 sectionId={this.props.sectionId}
@@ -46,13 +45,9 @@ class StudentSection extends React.Component {
                 assignmentButtonsToday.push(button);
             } else if (dtLocal < now) {
                 assignmentButtonsPast.push(button);
-            } else {
-                assignmentButtonsFuture.push(button);
             }
         }
-        return [assignmentButtonsToday,
-            assignmentButtonsPast,
-            assignmentButtonsFuture]
+        return [assignmentButtonsToday, assignmentButtonsPast]
     }
 
     closeModal = () => {
@@ -61,10 +56,8 @@ class StudentSection extends React.Component {
     }
 
     render() {
-        let assignmentButtonsToday, assignmentButtonsPast, assignmentButtonsFuture
-        [assignmentButtonsToday,
-            assignmentButtonsPast,
-            assignmentButtonsFuture] = this.sortAssignments();
+        let assignmentButtonsToday, assignmentButtonsPast;
+        [assignmentButtonsToday, assignmentButtonsPast] = this.sortAssignments();
 
         return (
             <div className='container-fluid'>
@@ -91,33 +84,23 @@ class StudentSection extends React.Component {
                     </div> : null}
 
                 <div className='row d-flex align-items-start'>
-                    <div className='col-12 m-3'>
-                        <h3>View assignments</h3>
-                        <div className='card-deck'>
-                            <div className='card rounded shadow p-3 rounded'>
-                                <p>Past assignments</p>
-                                {
-                                    assignmentButtonsPast[0] == undefined ?
-                                        <div><p><i>No past assignments</i></p></div> :
-                                        <div>{assignmentButtonsPast}</div>
-                                }
-                            </div>
-                            <div className='card rounded shadow p-3 rounded'>
-                                <p>Today's assignment</p>
-                                {
-                                    assignmentButtonsToday[0] == undefined ?
-                                        <div><p><i>Nothing assigned for today</i></p></div> :
-                                        <div>{assignmentButtonsToday}</div>
-                                }
-                            </div>
-                            <div className='card rounded shadow p-3 rounded'>
-                                <p>Upcoming assignments</p>
-                                {
-                                    assignmentButtonsFuture[0] == undefined ?
-                                        <div><p><i>No upcoming assignments</i></p></div> :
-                                        <div>{assignmentButtonsFuture}</div>
-                                }
-                            </div>
+                    <div className='col-12'>
+                        <h3 className='m-3'>View assignments</h3>
+                        <div className='card m-3 rounded shadow p-3 rounded'>
+                            <p>Today's assignment</p>
+                            {
+                                assignmentButtonsToday[0] == undefined ?
+                                    <div><p><i>Nothing assigned for today</i></p></div> :
+                                    <div>{assignmentButtonsToday}</div>
+                            }
+                        </div>
+                        <div className='card m-3 rounded shadow p-3 rounded'>
+                            <p>Past assignments</p>
+                            {
+                                assignmentButtonsPast[0] == undefined ?
+                                    <div><p><i>No past assignments</i></p></div> :
+                                    <div>{assignmentButtonsPast.reverse()}</div>
+                            }
                         </div>
                     </div>
                 </div>

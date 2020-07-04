@@ -29,7 +29,7 @@ class AssignmentButton extends React.Component {
                 status = 'late';
             }
 
-            if (this.props.res) {
+            if (this.props.assignment.res) {
                 status += ' res'
             } else {
                 status += ' no-res'
@@ -46,8 +46,9 @@ class AssignmentButton extends React.Component {
                     <button type='assignment_button'
                         id={this.props.assignment['pras_id']}
                         className={status+' '+'btn btn-secondary assignment-btn'}
-                        onClick={this.handleClick}>
-                        {dtLocal}
+                        onClick={this.handleClick}
+                        style={{'textAlign':'left'}}>
+                        <b>{this.props.weekDay}, {dtLocal}</b>: {this.props.assignment.prompt}
                     </button>
                 </div>
             )

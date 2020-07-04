@@ -339,5 +339,9 @@ hr {
     border-color: whitesmoke;
 }
 
+.card {
+    text-align: center;
+}
+
 
 /* green #75A878 blue #3E8689 yellow #F4B339 gray #343B40 */

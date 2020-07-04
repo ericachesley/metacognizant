@@ -50,30 +50,20 @@ class TeacherSection extends React.Component {
             const date = assignment.date
             const dt = luxon.DateTime.fromHTTP(date);
             const dtLocal = dt.toLocal()
+
+            const button = <AssignmentButton
+                weekDay={dtLocal.weekdayLong}
+                assignment={assignment}
+                sectionId={this.props.sectionId}
+                key={assignment['pras_id']}
+            />
+
             if (dtLocal.year == now.year && dtLocal.ordinal == now.ordinal) {
-                assignmentButtonsToday.push(
-                    <AssignmentButton
-                        assignment={assignment}
-                        sectionId={this.props.sectionId}
-                        key={assignment['pras_id']}
-                    />
-                )
+                assignmentButtonsToday.push(button);
             } else if (dtLocal < now) {
-                assignmentButtonsPast.push(
-                    <AssignmentButton
-                        assignment={assignment}
-                        sectionId={this.props.sectionId}
-                        key={assignment['pras_id']}
-                    />
-                )
+                assignmentButtonsPast.push(button);
             } else {
-                assignmentButtonsFuture.push(
-                    <AssignmentButton
-                        assignment={assignment}
-                        sectionId={this.props.sectionId}
-                        key={assignment['pras_id']}
-                    />
-                )
+                assignmentButtonsFuture.push(button);
             }
         }
         return [assignmentButtonsToday,
@@ -154,7 +144,7 @@ class TeacherSection extends React.Component {
                         </div> : null}
 
                     <div className='row d-flex align-items-start'>
-                        <div className='col-12 m-3'>
+                        <div className='col-12 mt-3'>
                             <h3>Responses by assignment</h3>
                             <a href='#' onClick={this.toggleView}>
                                 View by student
@@ -173,39 +163,38 @@ class TeacherSection extends React.Component {
                             }
                         </div>
                     </div>
-                    <div className='card-deck'>
-                        <div className='card rounded shadow p-3 rounded'>
-                            <p>Past assignments</p>
-                            {
-                                assignmentButtonsPast[0] == undefined ?
-                                    <div><p><i>No past assignments</i></p></div> :
-                                    <div>{assignmentButtonsPast}</div>
-                            }
-                        </div>
-                        <div className='card rounded shadow p-3 rounded'>
-                            <p>Today's assignment</p>
-                            {
-                                assignmentButtonsToday[0] == undefined ?
-                                    <div><p><i>Nothing assigned for today</i></p></div> :
-                                    <div>{assignmentButtonsToday}</div>
-                            }
-                        </div>
-                        <div className='card rounded shadow p-3 rounded'>
-                            <p>Upcoming assignments</p>
-                            {
-                                assignmentButtonsFuture[0] == undefined ?
-                                    <div><p><i>No upcoming assignments</i></p></div> :
-                                    <div>{assignmentButtonsFuture}</div>
-                            }
-                        </div>
+                    <div className='card m-3 rounded shadow p-3 rounded'>
+                        <p><b>Today's assignment</b></p>
+                        {
+                            assignmentButtonsToday[0] == undefined ?
+                                <div><p><i>Nothing assigned for today</i></p></div> :
+                                <div>{assignmentButtonsToday}</div>
+                        }
                     </div>
+                    <div className='card m-3 rounded shadow p-3 rounded'>
+                        <p><b>Upcoming assignments</b></p>
+                        {
+                            assignmentButtonsFuture[0] == undefined ?
+                                <div><p><i>No upcoming assignments</i></p></div> :
+                                <div>{assignmentButtonsFuture}</div>
+                        }
+                    </div>
+                    <div className='card m-3 rounded shadow p-3 rounded'>
+                        <p><b>Past assignments</b></p>
+                        {
+                            assignmentButtonsPast[0] == undefined ?
+                                <div><p><i>No past assignments</i></p></div> :
+                                <div>{assignmentButtonsPast.reverse()}</div>
+                        }
+                    </div>
+
                 </div>
             )
         } else {
             return (
                 <div className='container-fluid'>
                     <div className='row d-flex align-items-start'>
-                        <div className='col-12 m-3'>
+                        <div className='col-12 my-3'>
                             <h3>Responses by student</h3>
                             <a href='#' onClick={this.toggleView}>
                                 View by assignment
