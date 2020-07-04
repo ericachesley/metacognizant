@@ -90,7 +90,9 @@ class App extends React.Component {
           </Route>
           <Route path='/'>
             {userId ?
-              <Redirect to='/classes' /> :
+              (userId == 1 ?
+                <Redirect to='/admin' /> :
+                <Redirect to='/classes' />) :
               <Landing setLoggedIn={this.setLoggedIn} />
             }
           </Route>

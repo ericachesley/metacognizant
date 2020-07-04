@@ -1,6 +1,9 @@
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loggedOut: false
+    };
     this.handleLogout = this.handleLogout.bind(this);
   }
 
@@ -13,6 +16,7 @@ class NavBar extends React.Component {
         if (response.ok) {
           sessionStorage.clear();
           this.props.refresh();
+          this.setState({ loggedOut: true });
         }
       });
   }
@@ -22,8 +26,8 @@ class NavBar extends React.Component {
       <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark justify-content-between">
         <Link className="navbar-brand" to='/'>
           <img src="/static/images/MetacognizantLogoTiny.png" height="40" className="d-inline-block" alt="" />
-            Metacognizant
-        </Link>
+              Metacognizant
+          </Link>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -31,14 +35,17 @@ class NavBar extends React.Component {
           <div className="nav-item dropdown">
             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Welcome, {sessionStorage.getItem('name').split(' ')[0]}!
-            </a>
+              </a>
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
               <a className="dropdown-item" href="#" onClick={this.handleLogout}>Log Out</a>
             </div>
           </div> :
           <a className="nav-link" href="/#login-holder" id="navbarDropdown">
             Log in
-        </a>}
+          </a>}
+        {this.state.loggedOut ?
+          <Redirect to='/' /> :
+          null}
       </nav>
     )
   }
