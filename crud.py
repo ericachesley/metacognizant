@@ -16,6 +16,8 @@ bcrypt = Bcrypt(server.app)
 def create_user(first, last, email, password, g_id=None, g_credentials=None):
     if password is not None:
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    else:
+        hashed_password = None
 
     user = User(first_name=first,
                 last_name=last,
