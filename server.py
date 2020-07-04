@@ -13,7 +13,7 @@ import httplib2
 from oauth2client import client
 
 app = Flask(__name__)
-app.secret_key = 'mygreatsecretkey'
+app.secret_key = 'APP_SECRET_KEY'
 bcrypt = Bcrypt(app)
 
 
