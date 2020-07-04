@@ -58,27 +58,37 @@ class CreateAssignment extends React.Component {
         }
     }
 
-    convertDate(date) {
+    convertDate(date, region) {
         const year = Number(date.slice(0, 4));
         const month = Number(date.slice(5, 7));
         const day = Number(date.slice(8, 10));
         const dtLocal = luxon.DateTime.local(year, month, day, 23, 59, 59);
+        if (region == 'local') {
+            return dtLocal;
+        }
         const dtUtc = dtLocal.toUTC();
-        return dtUtc
+        if (region == 'utc') {
+            return dtUtc;
+        }
     }
 
     handleSubmit(evt) {
         evt.preventDefault();
+        var now = luxon.DateTime.local();
+        const dtLocal = this.convertDate(this.state.date, 'local');
+
         if (this.state.selectedSections.size == 0 ||
             this.state.selectedPrompt == 'select-one' ||
             this.state.date == null) {
             alert('One or more fields is missing. Please try again.')
+        } else if (dtLocal.year <= now.year && dtLocal.ordinal < now.ordinal) {
+            alert('An assignment may not be created for a date that has already passed.');
         } else {
             this.setState({ loading: true })
             const formData = {
                 'selectedSections': Array.from(this.state.selectedSections),
                 'selectedPrompt': this.state.selectedPrompt,
-                'date': this.convertDate(this.state.date),
+                'date': this.convertDate(this.state.date, 'utc'),
                 'newPrompt': this.state.newPrompt
             }
             fetch('/api/assign_prompt', {
@@ -142,8 +152,8 @@ class CreateAssignment extends React.Component {
                 {this.state.modal ?
                     <div className='modal targeted'>
                         <a href='#' onClick={this.closeModal}>X</a>
-                            <div className='modal-content targeted shadow'>
-                                When you create a new assignment you <br></br>
+                        <div className='modal-content targeted shadow'>
+                            When you create a new assignment you <br></br>
                                 can choose from the list of suggested <br></br>
                                 prompts, or you can create your own. <br></br>
                                 Any prompt that you write yourself <br></br>
