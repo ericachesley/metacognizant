@@ -21,8 +21,6 @@ Users can sign up, and create and join classes all within the app if desired, or
 
 Visit Metacognizant online at <http://metacognizant.org>.
 
-# 
-
 ## Features
 
 #### Login
@@ -56,8 +54,6 @@ Reflections assigned to a class associated with Google automatically get pushed 
 Color-coded sentiment analysis bars (generated with MonkeyLearn's text classification API) allow teachers to quickly gauge overall feelings in a class and identify students for whom a follow up check in may be helpful.
 
 ![SeeResponsesGif](static/gifs/sentiment.gif)
-
-# 
 
 ## Installation
 
@@ -104,7 +100,7 @@ Start your server.
 $ python3 server.py
 ```
 
-Now you can visit metacognizant at `localhost:5000`! Your admin password and admin@metacognizant.org will give you 
+Now you can visit metacognizant at `localhost:5000`!
 
 
 [this repository]: https://github.com/ericachesley/metacognizant.git
